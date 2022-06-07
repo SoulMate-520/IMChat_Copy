@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -11,6 +12,7 @@ import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.example.imchat.R;
 import com.example.imchat.adapter.viewPageAdapter;
+import com.example.imchat.chat.view.ChatActivity;
 import com.example.imchat.main.fragment.ContentFragment1;
 import com.example.imchat.main.fragment.ContentFragment2;
 import com.example.imchat.main.fragment.ContentFragment3;
@@ -45,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
 		setViewPager();
 		//底部导航栏
 		setBottomNavigationBar();
+
+		//测试用
+		startActivity(new Intent(this, ChatActivity.class));
+
 
 	}
 
