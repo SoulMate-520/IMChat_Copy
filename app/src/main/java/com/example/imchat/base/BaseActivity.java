@@ -12,7 +12,7 @@ import java.util.List;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.event.ContactNotifyEvent;
 import cn.jpush.im.android.api.event.LoginStateChangeEvent;
-import zzw.imtest.util.L;
+
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -26,8 +26,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
-        setContentView(getLayoutId());
 
+//        setContentView(getLayoutId());
 
 
         //订阅接收消息,子类只要重写onEvent就能收到消息
@@ -66,9 +66,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void onEventMainThread(LoginStateChangeEvent event){
         LoginStateChangeEvent.Reason reason = event.getReason();
         if(reason == LoginStateChangeEvent.Reason.user_logout){
-            L.t("登录失效，重新登录");
+//            L.t("登录失效，重新登录");
         }else if(reason == LoginStateChangeEvent.Reason.user_password_change){
-            L.t("修改密码，重新登录");
+//            L.t("修改密码，重新登录");
         }
 
         if(!isFinishing()){
@@ -99,7 +99,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
             if(!has){
                 friendApply.add(event);
-                L.t("收到了好友邀请");
+//                L.t("收到了好友邀请");
             }
 
         }
