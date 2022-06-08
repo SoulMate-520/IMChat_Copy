@@ -9,6 +9,8 @@ import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 
 import java.util.List;
 
+import cn.jpush.im.android.api.model.Message;
+
 /**
  * @author Soul Mate
  * @brief 简单的功能介绍
@@ -22,7 +24,6 @@ public class viewPageAdapter extends FragmentPagerAdapter {
 	public viewPageAdapter(@NonNull FragmentManager fm,List<Fragment> fragmentList) {
 		super(fm);
 		this.fragmentList = fragmentList;
-
 	}
 
 	@NonNull @Override public Fragment getItem(int position) {
