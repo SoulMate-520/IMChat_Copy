@@ -12,16 +12,20 @@ import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.example.imchat.R;
 import com.example.imchat.adapter.viewPageAdapter;
+import com.example.imchat.base.BaseActivity;
 import com.example.imchat.chat.view.ChatActivity;
 import com.example.imchat.main.fragment.ContentFragment1;
 import com.example.imchat.main.fragment.ContentFragment2;
 import com.example.imchat.main.fragment.ContentFragment3;
-
+import com.example.imchat.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.api.BasicCallback;
+
+public class MainActivity extends BaseActivity {
 
 	//底部导航栏三方件
 	private BottomNavigationBar bottomNavigationBar;
@@ -35,11 +39,14 @@ public class MainActivity extends AppCompatActivity {
 
 	private androidx.fragment.app.FragmentManager fragmentManager;
 
+	@Override public int getLayoutId() {
+		return R.layout.activity_main;
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+//		setContentView(R.layout.activity_main);
 
 		initComponent();
 
@@ -49,10 +56,21 @@ public class MainActivity extends AppCompatActivity {
 		setBottomNavigationBar();
 
 		//测试用
-		startActivity(new Intent(this, ChatActivity.class));
+		//i=0才成功 密码错误：Invalid password
+		JMessageClient.login("123456", "123456", new BasicCallback() {
+			@Override public void gotResult(int i, String s) {
+				LogUtil.d(""+i);
+				LogUtil.d(s);
+			}
+		});
+
+//		startActivity(new Intent(this, ChatActivity.class));
 
 
 	}
+
+
+
 
 	private void setViewPager() {
 		fragmentManager = getSupportFragmentManager();
@@ -155,6 +173,12 @@ public class MainActivity extends AppCompatActivity {
 				});
 	}
 
+	/**
+	 * 退出
+	 */
+	@Override protected void onDestroy() {
+		super.onDestroy();
 
-
+		JMessageClient.logout();
+	}
 }

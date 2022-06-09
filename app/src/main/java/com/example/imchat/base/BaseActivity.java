@@ -27,7 +27,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
 
-//        setContentView(getLayoutId());
+        setContentView(getLayoutId());
 
 
         //订阅接收消息,子类只要重写onEvent就能收到消息
@@ -35,9 +35,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
 
-
-        initData();
-        initView();
+//
+//        initData();
+//        initView();
 
 
 
@@ -46,12 +46,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
 
-
-
-
-    protected abstract void initView();
-
-    protected abstract void initData();
+//    protected abstract void initView();
+//
+//    protected abstract void initData();
 
 
     @Override

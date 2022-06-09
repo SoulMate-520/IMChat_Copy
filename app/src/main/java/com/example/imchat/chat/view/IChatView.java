@@ -2,5 +2,6 @@ package com.example.imchat.chat.view;
 
 public interface IChatView {
 
-	public void onSend();
+	public void sendSuccess();
+	public void sendFailed();
 }
