@@ -1,14 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/main_bg">
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".main.fragment.ContentFragment3">
+        android:layout_height="46dp"
+        android:background="@color/blue"
+        >
 
-    <!-- TODO: Update blank fragment layout -->
+        <TextView
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我"
+            android:textColor="#ffffffff"
+            android:textSize="15dp"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_info"
+        android:layout_width="match_parent"
+        android:layout_height="101dp"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/iv_head"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="13dp"
+            android:background="@color/blue" />
+
+        <TextView
+            android:id="@+id/tv_username"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="99dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="hahhah"
+            android:textColor="#ff000000"
+            android:textSize="11dp"
+            />
+
+    </RelativeLayout>
+
+    <View android:layout_width="match_parent" android:layout_height="14dp"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_scanner"
+        android:layout_width="match_parent"
+        android:layout_height="39dp"
+        android:background="@color/white">
+
+        <ImageView
+            android:layout_width="21dp"
+            android:layout_height="21dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="49dp"
+            android:text="扫一扫"
+            android:textColor="#ff000000"
+            android:textSize="12dp" />
+
+        <ImageView
+            android:layout_width="7dp"
+            android:layout_height="11dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
+
+            />
+
+    </RelativeLayout>
+
+
+    <View android:layout_width="match_parent" android:layout_height="14dp"/>
+
+
     <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="这是我的碎片" />
+        android:id="@+id/tv_exit"
+        android:layout_marginTop="19dp"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="336dp"
+        android:layout_height="38dp"
+        android:text="退出登陆"
+        android:textColor="#ffffffff"
+        android:textSize="15dp"
+        />
 
-</FrameLayout>
+
+</LinearLayout>
