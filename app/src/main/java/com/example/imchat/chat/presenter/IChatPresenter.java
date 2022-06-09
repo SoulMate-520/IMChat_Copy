@@ -12,7 +12,8 @@ import cn.jpush.im.android.api.model.UserInfo;
 public interface IChatPresenter {
 
 
-	void doSend(int type,Message message);
+
+	void doSend(Message message);
 
 	UserInfo getUserInfo();
 	List<Message> getListMessage();

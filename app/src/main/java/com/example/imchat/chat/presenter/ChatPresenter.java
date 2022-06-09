@@ -39,41 +39,52 @@ public class ChatPresenter implements IChatPresenter {
 	}
 
 	/**
-	 * 1 为文本
-	 * @param type
+	 *
 	 * @param
 	 */
 	@Override
-	public void doSend(int type,Message message) {
+	public void doSend(Message message) {
 
+		//监听
+		message.setOnSendCompleteCallback(new BasicCallback() {
+			@Override public void gotResult(int i, String s) {
+				LogUtil.d("消息发送状态"+i);
+				if (i == 0) { //成功
+					mChatView.sendSuccess();
+				} else {
 
-
-		if(type==1){
-
-			//监听
-			message.setOnSendCompleteCallback(new BasicCallback() {
-				@Override public void gotResult(int i, String s) {
-					LogUtil.d(s);
-					if(i==0){ //成功
-						mChatView.sendSuccess();
-					}else{
-
-						mChatView.sendFailed();
-					}
-
+					mChatView.sendFailed();
 				}
-			});
 
-		}else if(type == 2){ //语音
-
-		}else if(type == 3){//图片
-
-		}
-
+			}
+		});
 
 		JMessageClient.sendMessage(message);
 
 	}
+
+//	@Override public void doSend(int type, String text) {
+//
+//		Message message = JMessageClient.createSingleTextMessage(userName,null);
+//
+//		//监听
+//		message.setOnSendCompleteCallback(new BasicCallback() {
+//			@Override public void gotResult(int i, String s) {
+//				LogUtil.d(s);
+//				if(i==0){ //成功
+//					LogUtil.d(i+"");
+//					mChatView.sendSuccess();
+//				}else{
+//
+//					mChatView.sendFailed();
+//				}
+//
+//			}
+//		});
+//		JMessageClient.sendMessage(message);
+//
+//
+//	}
 
 	public UserInfo getUserInfo(){
 		return (UserInfo) conversation.getTargetInfo();
@@ -81,7 +92,14 @@ public class ChatPresenter implements IChatPresenter {
 
 	@Override
 	public List<Message> getListMessage() {
-		return conversation.getAllMessage();
+
+		if(conversation==null){
+			return null;
+
+		}else{
+
+			return conversation.getAllMessage();
+		}
 	}
 
 

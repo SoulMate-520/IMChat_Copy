@@ -23,6 +23,9 @@ import com.example.imchat.util.LogUtil;
 import com.example.imchat.widget.RecordButton;
 import com.example.imchat.widget.StateButton;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.jpush.im.android.api.JMessageClient;
@@ -65,7 +68,7 @@ public class ChatActivity extends BaseActivity implements IChatView {
 
 	//需要传进来的参数
 	//目标用户
-	private String userName;
+	private String userName = "654321";
 	private String userNameTitle = "传过来";
 
 
@@ -117,8 +120,14 @@ public class ChatActivity extends BaseActivity implements IChatView {
 		//对方
 		mTitle.setText(userNameTitle);
 
+		List<Message> messageList=new ArrayList<>();
+		messageList.add(JMessageClient.createSingleTextMessage(userName,null,"2345"));
+
 		ChatAdapter chatAdapter=new ChatAdapter(this);
-		chatAdapter.setData(mPresenter.getListMessage());
+
+//		chatAdapter.setData(mPresenter.getListMessage());
+		chatAdapter.setData(messageList);
+
 
 		mRvChat.setAdapter(chatAdapter);
 
@@ -167,7 +176,9 @@ public class ChatActivity extends BaseActivity implements IChatView {
 				//正在发送转圈圈？
 
 
-				mPresenter.doSend(1,message);
+				mPresenter.doSend(message);
+
+//				mPresenter.doSend(1,text);
 
 
 
