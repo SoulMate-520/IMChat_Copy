@@ -6,6 +6,7 @@ import com.example.imchat.chat.view.IChatView;
 import com.example.imchat.util.LogUtil;
 
 import java.io.File;
+import java.util.List;
 
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.model.Conversation;
@@ -40,16 +41,14 @@ public class ChatPresenter implements IChatPresenter {
 	/**
 	 * 1 为文本
 	 * @param type
-	 * @param text
-	 * @param file
+	 * @param
 	 */
-	@Override public void doSend(int type, String text, File file) {
+	@Override
+	public void doSend(int type,Message message) {
 
 
-		Message message = null;
 
 		if(type==1){
-			message = JMessageClient.createSingleTextMessage(userName, null,  text);
 
 			//监听
 			message.setOnSendCompleteCallback(new BasicCallback() {
@@ -78,6 +77,11 @@ public class ChatPresenter implements IChatPresenter {
 
 	public UserInfo getUserInfo(){
 		return (UserInfo) conversation.getTargetInfo();
+	}
+
+	@Override
+	public List<Message> getListMessage() {
+		return conversation.getAllMessage();
 	}
 
 

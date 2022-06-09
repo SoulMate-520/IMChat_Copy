@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
-import android.os.Message;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -15,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.imchat.R;
+import com.example.imchat.adapter.ChatAdapter;
 import com.example.imchat.base.BaseActivity;
 import com.example.imchat.chat.presenter.ChatPresenter;
 import com.example.imchat.chat.presenter.IChatPresenter;
@@ -27,6 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.model.Conversation;
+import cn.jpush.im.android.api.model.Message;
 import cn.jpush.im.android.api.model.UserInfo;
 import cn.jpush.im.api.BasicCallback;
 
@@ -64,7 +65,8 @@ public class ChatActivity extends BaseActivity implements IChatView {
 
 	//需要传进来的参数
 	//目标用户
-	private String userName = "传过来";
+	private String userName;
+	private String userNameTitle = "传过来";
 
 
 
@@ -113,7 +115,12 @@ public class ChatActivity extends BaseActivity implements IChatView {
 //				.bindEmojiData();
 
 		//对方
-		mTitle.setText(userName);
+		mTitle.setText(userNameTitle);
+
+		ChatAdapter chatAdapter=new ChatAdapter(this);
+		chatAdapter.setData(mPresenter.getListMessage());
+
+		mRvChat.setAdapter(chatAdapter);
 
 
 
@@ -153,12 +160,14 @@ public class ChatActivity extends BaseActivity implements IChatView {
 				String text = mEtContent.getText().toString();
 				mEtContent.setText("");
 
-				//RecyclerView视图回到底部
+				Message message = JMessageClient.createSingleTextMessage(userName,null,text);
 
+				//RecyclerView视图回到底部
+				chatAdapter.addData(message);
 				//正在发送转圈圈？
 
 
-				mPresenter.doSend(1,text,null);
+				mPresenter.doSend(1,message);
 
 
 

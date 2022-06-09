@@ -64,7 +64,7 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 
-//		startActivity(new Intent(this, ChatActivity.class));
+		startActivity(new Intent(this, ChatActivity.class));
 
 
 	}
