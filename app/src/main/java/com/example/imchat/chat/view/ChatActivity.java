@@ -185,10 +185,15 @@ public class ChatActivity extends BaseActivity implements IChatView {
 
                 Message message = JMessageClient.createSingleTextMessage(userName, null, text);
 
-//                if (message != null)
-                //RecyclerView视图回到底部
                 chatAdapter.addData(message);
-                //正在发送转圈圈？
+
+                //聊天记录更新到最底部
+                if (chatAdapter.getItemCount() > 0) {
+                    mRvChat.scrollToPosition(chatAdapter.getItemCount() - 1);
+                }
+
+                //正在发送转圈圈
+                chatAdapter.notifyItemChanged(chatAdapter.getItemCount() - 1, "going");
 
                 mPresenter.doSend(message, chatAdapter.getItemCount() - 1);
 
@@ -197,6 +202,12 @@ public class ChatActivity extends BaseActivity implements IChatView {
 
             }
         });
+
+
+        //初始化的聊天记录更新到最底部
+        if (chatAdapter.getItemCount() > 0) {
+            mRvChat.scrollToPosition(chatAdapter.getItemCount() - 1);
+        }
 
 
     }
@@ -307,13 +318,15 @@ public class ChatActivity extends BaseActivity implements IChatView {
     @Override
     public void sendSuccess(int index) {
         //转圈圈消失
-        chatAdapter.notifyItemChanged(chatAdapter.getItemCount()-1,"success");
+        chatAdapter.notifyItemChanged(index,"success");
+////                chatAdapter.notifyItemChanged(index,"going");
+//        chatAdapter.notifyItemChanged(chatAdapter.getItemCount()-1,"fail");
     }
 
     @Override
     public void sendFailed(int index) {
         //转圈圈变感叹号
-        chatAdapter.notifyItemChanged(chatAdapter.getItemCount()-1,"fail");
+        chatAdapter.notifyItemChanged(index,"fail");
 
     }
 }
