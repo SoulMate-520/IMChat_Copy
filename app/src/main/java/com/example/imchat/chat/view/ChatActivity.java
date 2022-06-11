@@ -307,12 +307,13 @@ public class ChatActivity extends BaseActivity implements IChatView {
     @Override
     public void sendSuccess(int index) {
         //转圈圈消失
-//        chatAdapter.notifyItemChanged(chatAdapter.getItemCount()-1,"success");
+        chatAdapter.notifyItemChanged(chatAdapter.getItemCount()-1,"success");
     }
 
     @Override
     public void sendFailed(int index) {
         //转圈圈变感叹号
         chatAdapter.notifyItemChanged(chatAdapter.getItemCount()-1,"fail");
+
     }
 }

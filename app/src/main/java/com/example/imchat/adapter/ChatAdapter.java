@@ -1,7 +1,7 @@
 package com.example.imchat.adapter;
 
 import android.content.Context;
-import android.media.Image;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.imchat.R;
+import com.example.imchat.util.LogUtil;
 import com.example.imchat.util.TimeFormat;
 import com.example.imchat.widget.CircleImageView;
 
@@ -50,7 +51,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void addData(Message message) {
         mLinkedList.addLast(message);
         notifyItemInserted(mLinkedList.size());
-        notifyItemChanged(mLinkedList.size()-1,"going");
+//        notifyItemChanged(mLinkedList.size() - 1, "going");
     }
 
     //判断消息类型，返回不同布局ID
@@ -101,23 +102,27 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List<Object> payloads) {
-        if (payloads.isEmpty()){
+        if (payloads.isEmpty()) {
             super.onBindViewHolder(holder, position, payloads);
             return;
         }
         SendTextViewHolder sendHolder = (SendTextViewHolder) holder;
-        for (Object payload:payloads) {
+        for (Object payload : payloads) {
+            LogUtil.d(String.valueOf(payload));
             switch (String.valueOf(payload)) {
-                case "going":
+                case "going": {
                     sendHolder.progress.setVisibility(View.VISIBLE);
                     break;
-                case "fail":
+                }
+                case "fail": {
                     sendHolder.fail.setVisibility(View.VISIBLE);
                     sendHolder.progress.setVisibility(View.INVISIBLE);
                     break;
-                case "success":
+                }
+                case "success": {
                     sendHolder.progress.setVisibility(View.INVISIBLE);
                     break;
+                }
                 default:
                     break;
             }
@@ -212,8 +217,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             time = itemView.findViewById(R.id.item_tv_time);
             header = itemView.findViewById(R.id.chat_item_header);
             content = itemView.findViewById(R.id.chat_item_content_text);
-            fail=itemView.findViewById(R.id.chat_item_fail);
-            progress=itemView.findViewById(R.id.chat_item_progress);
+            fail = itemView.findViewById(R.id.chat_item_fail);
+            progress = itemView.findViewById(R.id.chat_item_progress);
         }
     }
 
