@@ -44,7 +44,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     //增添数据
     public void addData(Message message) {
-        mLinkedList.add(message);
+        mLinkedList.addLast(message);
         notifyItemInserted(mLinkedList.size());
     }
 
@@ -52,6 +52,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemViewType(int position) {
         Message message = mLinkedList.get(position);
+        if (message == null)
+            System.out.println(mLinkedList.size() + "aaaaa");
         if (message.getContentType() == ContentType.text) {
             if (message.getDirect() == MessageDirect.send)
                 return SEND_TEXT;
