@@ -50,6 +50,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void addData(Message message) {
         mLinkedList.addLast(message);
         notifyItemInserted(mLinkedList.size());
+        notifyItemChanged(mLinkedList.size()-1,"going");
     }
 
     //判断消息类型，返回不同布局ID

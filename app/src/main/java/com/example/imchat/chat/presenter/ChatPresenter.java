@@ -49,11 +49,10 @@ public class ChatPresenter implements IChatPresenter {
 		//监听
 		message.setOnSendCompleteCallback(new BasicCallback() {
 			@Override public void gotResult(int i, String s) {
-				LogUtil.d("消息发送状态"+i);
+				LogUtil.d("消息发送状态"+i+s);
 				if (i == 0) { //成功
 					mChatView.sendSuccess(index);
 				} else {
-
 					mChatView.sendFailed(index);
 				}
 
