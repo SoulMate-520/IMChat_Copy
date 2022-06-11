@@ -24,8 +24,17 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.imchat.R;
+import com.example.imchat.emoji.EmojiAdapter;
+import com.example.imchat.emoji.EmojiBean;
+import com.example.imchat.emoji.EmojiDao;
+import com.example.imchat.emoji.EmojiVpAdapter;
+import com.example.imchat.widget.IndicatorView;
 import com.example.imchat.widget.RecordButton;
 
 import java.util.ArrayList;
@@ -64,81 +73,81 @@ public class ChatUiHelper {
     }
 
     public static final int EVERY_PAGE_SIZE = 21;
-//    private List<EmojiBean> mListEmoji;
-//
-//    public ChatUiHelper bindEmojiData() {
-//
-//        mListEmoji = EmojiDao.getInstance().getEmojiBean();
-//        //  LogUtil.d("获取到的表情集合"+Arrays.asList(mListEmoji));
-//        LinearLayout homeEmoji = mActivity.findViewById(R.id.home_emoji);
-//        ViewPager vpEmoji = mActivity.findViewById(R.id.vp_emoji);
-//        final IndicatorView indEmoji = mActivity.findViewById(R.id.ind_emoji);
-//        LinearLayout.LayoutParams layoutParams12 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//        LayoutInflater inflater = LayoutInflater.from(mActivity);
-//        //将RecyclerView放至ViewPager中：
-//        int pageSize = EVERY_PAGE_SIZE;
-//        EmojiBean mEmojiBean = new EmojiBean();
-//        mEmojiBean.setId(0);
-//        mEmojiBean.setUnicodeInt(000);
-//        int deleteCount = (int) Math.ceil(mListEmoji.size() * 1.0 / EVERY_PAGE_SIZE);//要显示的删除键的数量
-//        LogUtil.d("" + deleteCount);
-//        //添加删除键
-//        for (int i = 1; i < deleteCount + 1; i++) {
-//            if (i == deleteCount) {
-//                mListEmoji.add(mListEmoji.size(), mEmojiBean);
-//            } else {
-//                mListEmoji.add(i * EVERY_PAGE_SIZE - 1, mEmojiBean);
-//            }
-//            LogUtil.d("添加次数" + i);
-//
-//        }
-//
-//
-//        int pageCount = (int) Math.ceil((mListEmoji.size()) * 1.0 / pageSize);//一共的页数
-//        LogUtil.d("总共的页数:" + pageCount);
-//        List<View> viewList = new ArrayList<View>();
-//        for (int index = 0; index < pageCount; index++) {
-//            //每个页面创建一个recycleview
-//            RecyclerView recyclerView = (RecyclerView) inflater.inflate(R.layout.item_emoji_vprecy, vpEmoji, false);
-//            recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 7));
-//            EmojiAdapter entranceAdapter;
-//            if (index == pageCount - 1) {
-//                //最后一页的数据
-//                List<EmojiBean> lastPageList = mListEmoji.subList(index * EVERY_PAGE_SIZE, mListEmoji.size());
-//                entranceAdapter = new EmojiAdapter(lastPageList, index, EVERY_PAGE_SIZE);
-//            } else {
-//                entranceAdapter = new EmojiAdapter(mListEmoji.subList(index * EVERY_PAGE_SIZE, (index + 1) * EVERY_PAGE_SIZE), index, EVERY_PAGE_SIZE);
-//            }
-//            entranceAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-//                @Override
-//                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-//                    EmojiBean mEmojiBean = (EmojiBean) adapter.getData().get(position);
-//                    if (mEmojiBean.getId() == 0) {
-//                        //如果是删除键
-//                        mEditText.dispatchKeyEvent(new KeyEvent(
-//                                KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
-//                    } else {
-//                        mEditText.append(((EmojiBean) adapter.getData().get(position)).getUnicodeInt());
-//                    }
-//
-//
-//                }
-//            });
-//            recyclerView.setAdapter(entranceAdapter);
-//            viewList.add(recyclerView);
-//        }
-//        EmojiVpAdapter adapter = new EmojiVpAdapter(viewList);
-//        vpEmoji.setAdapter(adapter);
-//        indEmoji.setIndicatorCount(vpEmoji.getAdapter().getCount());
-//        indEmoji.setCurrentIndicator(vpEmoji.getCurrentItem());
-//        vpEmoji.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-//            @Override
-//            public void onPageSelected(int position) {
-//                indEmoji.setCurrentIndicator(position);
-//            }
-//        });
-//        return this;
-//    }
+    private List<EmojiBean> mListEmoji;
+
+    public ChatUiHelper bindEmojiData() {
+
+        mListEmoji = EmojiDao.getInstance().getEmojiBean();
+        //  LogUtil.d("获取到的表情集合"+Arrays.asList(mListEmoji));
+        LinearLayout homeEmoji = mActivity.findViewById(R.id.home_emoji);
+        ViewPager vpEmoji = mActivity.findViewById(R.id.vp_emoji);
+        final IndicatorView indEmoji = mActivity.findViewById(R.id.ind_emoji);
+        LinearLayout.LayoutParams layoutParams12 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LayoutInflater inflater = LayoutInflater.from(mActivity);
+        //将RecyclerView放至ViewPager中：
+        int pageSize = EVERY_PAGE_SIZE;
+        EmojiBean mEmojiBean = new EmojiBean();
+        mEmojiBean.setId(0);
+        mEmojiBean.setUnicodeInt(000);
+        int deleteCount = (int) Math.ceil(mListEmoji.size() * 1.0 / EVERY_PAGE_SIZE);//要显示的删除键的数量
+        LogUtil.d("" + deleteCount);
+        //添加删除键
+        for (int i = 1; i < deleteCount + 1; i++) {
+            if (i == deleteCount) {
+                mListEmoji.add(mListEmoji.size(), mEmojiBean);
+            } else {
+                mListEmoji.add(i * EVERY_PAGE_SIZE - 1, mEmojiBean);
+            }
+            LogUtil.d("添加次数" + i);
+
+        }
+
+
+        int pageCount = (int) Math.ceil((mListEmoji.size()) * 1.0 / pageSize);//一共的页数
+        LogUtil.d("总共的页数:" + pageCount);
+        List<View> viewList = new ArrayList<View>();
+        for (int index = 0; index < pageCount; index++) {
+            //每个页面创建一个recycleview
+            RecyclerView recyclerView = (RecyclerView) inflater.inflate(R.layout.item_emoji_vprecy, vpEmoji, false);
+            recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 7));
+            EmojiAdapter entranceAdapter;
+            if (index == pageCount - 1) {
+                //最后一页的数据
+                List<EmojiBean> lastPageList = mListEmoji.subList(index * EVERY_PAGE_SIZE, mListEmoji.size());
+                entranceAdapter = new EmojiAdapter(lastPageList, index, EVERY_PAGE_SIZE);
+            } else {
+                entranceAdapter = new EmojiAdapter(mListEmoji.subList(index * EVERY_PAGE_SIZE, (index + 1) * EVERY_PAGE_SIZE), index, EVERY_PAGE_SIZE);
+            }
+            entranceAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                    EmojiBean mEmojiBean = (EmojiBean) adapter.getData().get(position);
+                    if (mEmojiBean.getId() == 0) {
+                        //如果是删除键
+                        mEditText.dispatchKeyEvent(new KeyEvent(
+                                KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
+                    } else {
+                        mEditText.append(((EmojiBean) adapter.getData().get(position)).getUnicodeInt());
+                    }
+
+
+                }
+            });
+            recyclerView.setAdapter(entranceAdapter);
+            viewList.add(recyclerView);
+        }
+        EmojiVpAdapter adapter = new EmojiVpAdapter(viewList);
+        vpEmoji.setAdapter(adapter);
+        indEmoji.setIndicatorCount(vpEmoji.getAdapter().getCount());
+        indEmoji.setCurrentIndicator(vpEmoji.getCurrentItem());
+        vpEmoji.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                indEmoji.setCurrentIndicator(position);
+            }
+        });
+        return this;
+    }
 
 
     //绑定整体界面布局

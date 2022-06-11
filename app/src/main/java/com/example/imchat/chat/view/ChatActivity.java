@@ -114,14 +114,12 @@ public class ChatActivity extends BaseActivity implements IChatView {
         //对方
         mTitle.setText(userNameTitle);
 
-        List<Message> messageList = new ArrayList<>();
-        messageList.add(JMessageClient.createSingleTextMessage(userName, null, "2345"));
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRvChat.setLayoutManager(linearLayoutManager);
 
         ChatAdapter chatAdapter = new ChatAdapter(this);
-        chatAdapter.setData(messageList);
+        chatAdapter.setData(mPresenter.getListMessage());
         mRvChat.setAdapter(chatAdapter);
 
         //底部布局弹出,聊天列表上滑

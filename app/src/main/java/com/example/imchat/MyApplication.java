@@ -18,10 +18,12 @@ public class MyApplication extends Application {
 	 * 保证唯一一个context
 	 */
 	private static Context context;
+	private static Application mApplication;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		mApplication=this;
 		//LitePal初始化，需要context
 		context = getApplicationContext();
 		LitePal.initialize(context);
@@ -33,6 +35,10 @@ public class MyApplication extends Application {
 
 	public static Context getContext() {
 		return context;
+	}
+
+	public static Application getmApplication() {
+		return mApplication;
 	}
 
 }
