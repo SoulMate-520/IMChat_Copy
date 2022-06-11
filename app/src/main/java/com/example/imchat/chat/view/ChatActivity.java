@@ -187,10 +187,7 @@ public class ChatActivity extends BaseActivity implements IChatView {
 
                 chatAdapter.addData(message);
 
-                //聊天记录更新到最底部
-                if (chatAdapter.getItemCount() > 0) {
-                    mRvChat.scrollToPosition(chatAdapter.getItemCount() - 1);
-                }
+                updateRecordToBottom();
 
                 //正在发送转圈圈
                 chatAdapter.notifyItemChanged(chatAdapter.getItemCount() - 1, "going");
@@ -203,15 +200,20 @@ public class ChatActivity extends BaseActivity implements IChatView {
             }
         });
 
-
-        //初始化的聊天记录更新到最底部
-        if (chatAdapter.getItemCount() > 0) {
-            mRvChat.scrollToPosition(chatAdapter.getItemCount() - 1);
-        }
+        updateRecordToBottom();
 
 
     }
 
+    /**
+     * 聊天记录显示到最下方
+     */
+    private void updateRecordToBottom() {
+        //初始化的聊天记录更新到最底部
+        if (chatAdapter.getItemCount() > 0) {
+            mRvChat.scrollToPosition(chatAdapter.getItemCount() - 1);
+        }
+    }
 
     /**
      *  接收在线消息

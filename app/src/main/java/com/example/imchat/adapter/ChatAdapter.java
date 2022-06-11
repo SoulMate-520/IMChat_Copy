@@ -50,6 +50,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     //增添数据
     public void addData(Message message) {
         mLinkedList.addLast(message);
+
         notifyItemInserted(mLinkedList.size());
 //        notifyItemChanged(mLinkedList.size() - 1, "going");
     }
@@ -108,7 +109,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
         SendTextViewHolder sendHolder = (SendTextViewHolder) holder;
         for (Object payload : payloads) {
-            LogUtil.d(String.valueOf(payload));
+            LogUtil.d("发送状态"+String.valueOf(payload));
             switch (String.valueOf(payload)) {
                 case "going": {
                     sendHolder.progress.setVisibility(View.VISIBLE);
