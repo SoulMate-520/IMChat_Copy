@@ -32,7 +32,8 @@ public class ChatPresenter implements IChatPresenter {
 
 	public ChatPresenter(IChatView mChatView,String userName) {
 		this.mChatView = mChatView;
-		conversation = Conversation.createSingleConversation(userName, null);
+		conversation = Conversation.createSingleConversation(userName);
+
 		this.userName = userName;
 
 
