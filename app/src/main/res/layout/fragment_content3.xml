@@ -95,8 +95,9 @@
         android:layout_gravity="center_horizontal"
         android:layout_width="336dp"
         android:layout_height="38dp"
+        android:background="#ffffffff"
         android:text="退出登陆"
-        android:textColor="#ffffffff"
+        android:textColor="#000"
         android:textSize="15dp"
         />
 
