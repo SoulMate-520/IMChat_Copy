@@ -1,11 +1,15 @@
 package com.example.imchat.adapter;
 
 import android.content.Context;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.imchat.R;
@@ -63,8 +67,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return super.getItemViewType(position);
     }
 
-
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case SEND_TEXT: {
                 return new SendTextViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text_send, parent, false));
@@ -77,7 +80,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         switch (getItemViewType(position)) {
             case SEND_TEXT: {
                 onBindSendTextViewHolder(holder, position);
@@ -93,6 +96,31 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemCount() {
         return mLinkedList.size();
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if (payloads.isEmpty()){
+            super.onBindViewHolder(holder, position, payloads);
+            return;
+        }
+        SendTextViewHolder sendHolder = (SendTextViewHolder) holder;
+        for (Object payload:payloads) {
+            switch (String.valueOf(payload)) {
+                case "going":
+                    sendHolder.progress.setVisibility(View.VISIBLE);
+                    break;
+                case "fail":
+                    sendHolder.fail.setVisibility(View.VISIBLE);
+                    sendHolder.progress.setVisibility(View.INVISIBLE);
+                    break;
+                case "success":
+                    sendHolder.progress.setVisibility(View.INVISIBLE);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     public void onBindSendTextViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
@@ -134,7 +162,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public void onBindReceiveTextViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        SendTextViewHolder holder = (SendTextViewHolder) viewHolder;
+        ReceiveTextViewHolder holder = (ReceiveTextViewHolder) viewHolder;
         Message message = mLinkedList.get(position);
         //设置时间
         if (position == 0) {
@@ -175,23 +203,29 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         TextView time;
         CircleImageView header;
         TextView content;
+        ImageView fail;
+        ProgressBar progress;
 
         public SendTextViewHolder(View itemView) {
             super(itemView);
             time = itemView.findViewById(R.id.item_tv_time);
             header = itemView.findViewById(R.id.chat_item_header);
             content = itemView.findViewById(R.id.chat_item_content_text);
+            fail=itemView.findViewById(R.id.chat_item_fail);
+            progress=itemView.findViewById(R.id.chat_item_progress);
         }
     }
 
     static class ReceiveTextViewHolder extends RecyclerView.ViewHolder {
-
+        TextView time;
+        CircleImageView header;
+        TextView content;
 
         public ReceiveTextViewHolder(View itemView) {
             super(itemView);
-            TextView time = itemView.findViewById(R.id.item_tv_time);
-            CircleImageView header = itemView.findViewById(R.id.chat_item_header);
-            TextView content = itemView.findViewById(R.id.chat_item_content_text);
+            time = itemView.findViewById(R.id.item_tv_time);
+            header = itemView.findViewById(R.id.chat_item_header);
+            content = itemView.findViewById(R.id.chat_item_content_text);
         }
     }
 

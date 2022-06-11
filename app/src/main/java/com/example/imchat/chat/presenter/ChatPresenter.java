@@ -44,17 +44,17 @@ public class ChatPresenter implements IChatPresenter {
 	 * @param
 	 */
 	@Override
-	public void doSend(Message message) {
+	public void doSend(Message message,int index) {
 
 		//监听
 		message.setOnSendCompleteCallback(new BasicCallback() {
 			@Override public void gotResult(int i, String s) {
 				LogUtil.d("消息发送状态"+i);
 				if (i == 0) { //成功
-					mChatView.sendSuccess();
+					mChatView.sendSuccess(index);
 				} else {
 
-					mChatView.sendFailed();
+					mChatView.sendFailed(index);
 				}
 
 			}

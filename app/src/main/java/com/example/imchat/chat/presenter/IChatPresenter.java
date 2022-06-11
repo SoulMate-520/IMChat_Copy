@@ -13,7 +13,7 @@ public interface IChatPresenter {
 
 
 
-	void doSend(Message message);
+	void doSend(Message message,int index);
 
 	UserInfo getUserInfo();
 	List<Message> getListMessage();

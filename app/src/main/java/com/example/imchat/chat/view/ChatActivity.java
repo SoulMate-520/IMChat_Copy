@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -79,7 +80,7 @@ public class ChatActivity extends BaseActivity implements IChatView {
 
     //需要传进来的参数
     //目标用户
-    private String userName = "654321";
+    private String userName = "123456";
     private String userNameTitle = "传过来";
 
 
@@ -125,6 +126,7 @@ public class ChatActivity extends BaseActivity implements IChatView {
                 .bindAudioBtn(mBtnAudio)
                 .bindAudioIv(mIvAudio)
 				.bindEmojiData();
+
 
         //对方
         mTitle.setText(userNameTitle);
@@ -174,7 +176,6 @@ public class ChatActivity extends BaseActivity implements IChatView {
             }
         });
 
-
         //发送文本信息
         mBtnSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,12 +186,12 @@ public class ChatActivity extends BaseActivity implements IChatView {
                 Message message = JMessageClient.createSingleTextMessage(userName, null, text);
 
 //                if (message != null)
-                    //RecyclerView视图回到底部
-                    chatAdapter.addData(message);
+                //RecyclerView视图回到底部
+                chatAdapter.addData(message);
                 //正在发送转圈圈？
+                chatAdapter.notifyItemChanged(chatAdapter.getItemCount()-1,"going");
 
-
-                mPresenter.doSend(message);
+                mPresenter.doSend(message, chatAdapter.getItemCount() - 1);
 
 //				mPresenter.doSend(1,text);
 
@@ -305,16 +306,17 @@ public class ChatActivity extends BaseActivity implements IChatView {
 
 
     @Override
-    public void sendSuccess() {
+    public void sendSuccess(int index) {
         //转圈圈消失
+        chatAdapter.notifyItemChanged(chatAdapter.getItemCount()-1,"success");
 
 
     }
 
     @Override
-    public void sendFailed() {
+    public void sendFailed(int index) {
         //转圈圈变感叹号
-
+        chatAdapter.notifyItemChanged(chatAdapter.getItemCount()-1,"fail");
 
     }
 }
