@@ -28,6 +28,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int SEND_TEXT = R.layout.item_text_send;
     private static final int RECEIVE_TEXT = R.layout.item_text_receive;
+    private static final int SEND_VOICE = R.layout.item_voice_send;
+    private static final int RECEIVE_VOICE = R.layout.item_voice_receive;
 
     LinkedList<Message> mLinkedList = new LinkedList();
 
@@ -55,9 +57,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     //首部增添数据（用于上滑刷新）
     public void addDataFirst(List<Message> messages) {
         if (messages != null) {
-
-            LogUtil.d(messages.size()+"");
-
             for (int i = messages.size() - 1; i >= 0; i--){
                 mLinkedList.addFirst(messages.get(i));
                 notifyItemInserted(0);
@@ -74,6 +73,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 return SEND_TEXT;
             else if (message.getDirect() == MessageDirect.receive)
                 return RECEIVE_TEXT;
+        }else if(message.getContentType()==ContentType.voice){
+            if (message.getDirect() == MessageDirect.send)
+                return SEND_VOICE;
+            else if (message.getDirect() == MessageDirect.receive)
+                return RECEIVE_VOICE;
         }
         return super.getItemViewType(position);
     }
@@ -84,6 +88,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 return new SendTextViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text_send, parent, false));
             }
             case RECEIVE_TEXT: {
+                return new ReceiveTextViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text_receive, parent, false));
+            }
+            case SEND_VOICE:{
+                return new SendTextViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text_send, parent, false));
+            }
+            case RECEIVE_VOICE:{
                 return new ReceiveTextViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text_receive, parent, false));
             }
         }
@@ -103,11 +113,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
 
         }
-    }
-
-    @Override
-    public int getItemCount() {
-        return mLinkedList.size();
     }
 
     @Override
@@ -137,6 +142,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     break;
             }
         }
+    }
+
+    @Override
+    public int getItemCount() {
+        return mLinkedList.size();
     }
 
     public void onBindSendTextViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
