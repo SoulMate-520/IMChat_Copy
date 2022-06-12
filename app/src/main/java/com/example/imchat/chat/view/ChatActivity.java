@@ -63,14 +63,16 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
     @BindView(R.id.swipe_chat)
     SwipeRefreshLayout mSwipeRefresh;//下拉刷新
 
+    private  ChatUiHelper mUiHelper;
+
     private IChatPresenter mPresenter;
 
     private ChatAdapter chatAdapter = new ChatAdapter(this);
 
     //需要传进来的参数
     //目标用户
-    private String userName = "123456";
-    private String userNameTitle = "传过来";
+    private String userName = "654321";
+
 
     //会话聊天消息
     List<Message> messageList;
@@ -88,7 +90,7 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
 //		userName = savedInstanceState.getString("userName");
 
         //目标user账号
-        mPresenter = new ChatPresenter(this, "654321");
+        mPresenter = new ChatPresenter(this, userName);
 
         initUI();
 
@@ -109,7 +111,7 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
         ButterKnife.bind(this);
 
         //底部的ui操作
-        final ChatUiHelper mUiHelper = ChatUiHelper.with(this);
+        mUiHelper = ChatUiHelper.with(this);
         mUiHelper.bindContentLayout(mLlContent)
                 .bindttToSendButton(mBtnSend)
                 .bindEditText(mEtContent)
@@ -123,8 +125,8 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
                 .bindEmojiData();
 
 
-        //对方
-        mTitle.setText(userNameTitle);
+        //标题
+        mTitle.setText(mPresenter.getTitle());
 
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -178,7 +180,7 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
             }
         });
 
-        //返回按钮
+        //左上角返回按钮
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,6 +220,30 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
             mRvChat.scrollToPosition(chatAdapter.getItemCount() - 1);
         }
     }
+
+    /**
+     * 系统返回键收起键盘
+     */
+    public void onBackPressed(){
+
+        if(mUiHelper.isSoftInputShown()||mUiHelper.isBottomLayoutShown()){
+            //收起
+            mUiHelper.hideBottomLayout(false);
+            mUiHelper.hideSoftInput();
+            mEtContent.clearFocus();
+            mIvEmo.setImageResource(R.mipmap.ic_emoji);
+
+        }else{
+            //退出
+            super.onBackPressed();
+
+        }
+
+
+
+
+    }
+
 
     /**
      * 接收在线消息
@@ -348,7 +374,8 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
                 mRvChat.scrollToPosition(topIndex);
                 topIndex -= 10;
             }
-            mSwipeRefresh.setRefreshing(false);
         }
+        //转圈圈消失
+        mSwipeRefresh.setRefreshing(false);
     }
 }

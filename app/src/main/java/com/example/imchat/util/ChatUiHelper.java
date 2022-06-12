@@ -366,6 +366,8 @@ public class ChatUiHelper {
                        showBottomLayout();//两者都没显示，直接显示表情布局
                   }
               }
+
+
             }
         });
         return this;
@@ -549,4 +551,12 @@ public class ChatUiHelper {
     }
 
 
+    /**
+     * 是否显示底部栏
+     *
+     * @return
+     */
+    public boolean isBottomLayoutShown() {
+        return mBottomLayout.isShown();
+    }
 }

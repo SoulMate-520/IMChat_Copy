@@ -94,14 +94,24 @@ public class ChatPresenter implements IChatPresenter {
 	@Override
 	public List<Message> getListMessage() {
 
-		if(conversation==null){
-			return null;
+//		if(conversation==null){
+//			return null;
+//
+//		}else{
+//
+//		}
 
-		}else{
+		return conversation.getAllMessage();
 
-			return conversation.getAllMessage();
-		}
 	}
 
+	/**
+	 * 昵称或username
+	 * @return
+	 */
+	@Override public String getTitle() {
+//		UserInfo userInfo = conversation.getTitle()
+		return conversation.getTitle();
+	}
 
 }
