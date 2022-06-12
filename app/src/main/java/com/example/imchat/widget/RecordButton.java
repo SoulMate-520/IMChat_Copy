@@ -22,6 +22,7 @@ import android.widget.TextView;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.example.imchat.R;
+import com.example.imchat.util.LogUtil;
 
 import java.io.File;
 
@@ -185,7 +186,7 @@ public class RecordButton extends AppCompatButton {
              stopRecording();
             recordDialog.dismiss();
         }
-//        LogUtil.d("录音完成的路径:"+mFile);
+        LogUtil.d("录音完成的路径:"+mFile);
         MediaPlayer mediaPlayer = new MediaPlayer();
         try {
             mediaPlayer.setDataSource(mFile);

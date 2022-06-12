@@ -1,5 +1,6 @@
 package com.example.imchat.chat.view;
 
+import android.app.Application;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,9 +21,12 @@ import com.example.imchat.base.BaseActivity;
 import com.example.imchat.chat.presenter.ChatPresenter;
 import com.example.imchat.chat.presenter.IChatPresenter;
 import com.example.imchat.util.ChatUiHelper;
+import com.example.imchat.util.LogUtil;
 import com.example.imchat.widget.RecordButton;
 import com.example.imchat.widget.StateButton;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -211,6 +216,38 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
         });
 
         updateRecordToBottom();
+
+        //录音结束回调
+        ((RecordButton) mBtnAudio).setOnFinishedRecordListener(new RecordButton.OnFinishedRecordListener() {
+            @Override
+            public void onFinishedRecord(String audioPath, int duration) {
+                LogUtil.d("录音结束回调");
+
+//                File file = new File(audioPath);
+//                if (file.exists()) {
+//
+//                    //发送语音
+//                    Message message = null;
+//
+//                    try {
+//                        message = JMessageClient.createSingleVoiceMessage(userName, null, file, duration);
+//                    } catch (FileNotFoundException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//
+//                    chatAdapter.addDataLast(message);
+//
+//                    updateRecordToBottom();
+//
+//                    mPresenter.doSend(message,chatAdapter.getItemCount() - 1);
+//
+//                }else{
+//
+//                    Toast.makeText(getBaseContext(),"请重新录音",Toast.LENGTH_SHORT).show();
+//                }
+            }
+        });
 
     }
 
