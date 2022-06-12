@@ -128,21 +128,24 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
         //标题
         mTitle.setText(mPresenter.getTitle());
 
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRvChat.setLayoutManager(linearLayoutManager);
 
         messageList = mPresenter.getListMessage();
-        topIndex = messageList.size() ;
 
         //初始化时最多加载15条消息
-        if(topIndex!=-1) {
+        if(messageList!=null) {
+            //获取顶部索引
+            topIndex = messageList.size() ;
+            //不够15条全部加载
             if (topIndex < 15) {
                 chatAdapter.setData(messageList);
+                //加载完毕
                 topIndex=-1;
             }
             else {
                 chatAdapter.setData(messageList.subList(topIndex - 15, topIndex));
+                //减去加载条数
                 topIndex -= 15;
             }
         }
@@ -358,21 +361,26 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
     public void sendFailed(int index) {
         //转圈圈变感叹号
         chatAdapter.notifyItemChanged(index, "fail");
-
     }
 
     @Override
     public void onRefresh() {
 
         //上滑刷新10条消息
+        //-1表示加载完成
         if (topIndex != -1) {
+            //不够10条全部加载
             if (topIndex < 10) {
                 chatAdapter.addDataFirst(messageList.subList(0,topIndex));
+                //滚动至顶部
                 mRvChat.scrollToPosition(0);
+                //已加载全部消息
                 topIndex = -1;
             } else {
                 chatAdapter.addDataFirst(messageList.subList(topIndex - 10, topIndex));
+                //滚动显示加载出来的最后一条
                 mRvChat.scrollToPosition(9);
+                //减去加载条数
                 topIndex -= 10;
             }
         }
