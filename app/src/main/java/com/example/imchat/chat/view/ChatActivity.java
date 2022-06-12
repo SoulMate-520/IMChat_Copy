@@ -1,10 +1,8 @@
 package com.example.imchat.chat.view;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,28 +19,19 @@ import com.example.imchat.base.BaseActivity;
 import com.example.imchat.chat.presenter.ChatPresenter;
 import com.example.imchat.chat.presenter.IChatPresenter;
 import com.example.imchat.util.ChatUiHelper;
-import com.example.imchat.util.LogUtil;
 import com.example.imchat.widget.RecordButton;
 import com.example.imchat.widget.StateButton;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.jpush.im.android.api.JMessageClient;
-import cn.jpush.im.android.api.content.EventNotificationContent;
-import cn.jpush.im.android.api.content.TextContent;
-import cn.jpush.im.android.api.event.ContactNotifyEvent;
-import cn.jpush.im.android.api.event.LoginStateChangeEvent;
 import cn.jpush.im.android.api.event.MessageEvent;
-import cn.jpush.im.android.api.model.Conversation;
-import cn.jpush.im.android.api.model.GroupInfo;
 import cn.jpush.im.android.api.model.Message;
 import cn.jpush.im.api.BasicCallback;
 
-public class ChatActivity extends BaseActivity implements IChatView {
+public class ChatActivity extends BaseActivity implements IChatView, SwipeRefreshLayout.OnRefreshListener {
 
     //代替findView
     @BindView(R.id.iv_chat_back)
@@ -82,6 +71,12 @@ public class ChatActivity extends BaseActivity implements IChatView {
     //目标用户
     private String userName = "123456";
     private String userNameTitle = "传过来";
+
+    //会话聊天消息
+    List<Message> messageList;
+
+    //顶部消息索引
+    int topIndex;
 
 
     @Override
@@ -125,7 +120,7 @@ public class ChatActivity extends BaseActivity implements IChatView {
                 .bindToEmojiButton(mIvEmo)
                 .bindAudioBtn(mBtnAudio)
                 .bindAudioIv(mIvAudio)
-				.bindEmojiData();
+                .bindEmojiData();
 
 
         //对方
@@ -135,24 +130,32 @@ public class ChatActivity extends BaseActivity implements IChatView {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRvChat.setLayoutManager(linearLayoutManager);
 
+        messageList = mPresenter.getListMessage();
+        topIndex = messageList.size() - 1;
 
-        chatAdapter.setData(mPresenter.getListMessage());
+        //初始化时最多加载15条消息
+        if (topIndex < 15)
+            chatAdapter.setData(messageList);
+        else {
+            chatAdapter.setData(messageList.subList(topIndex - 14, topIndex));
+            topIndex -= 15;
+        }
         mRvChat.setAdapter(chatAdapter);
 
         //底部布局弹出,聊天列表上滑
         mRvChat.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-				if (bottom < oldBottom) {
-					mRvChat.post(new Runnable() {
-						@Override
-						public void run() {
-							if (chatAdapter.getItemCount() > 0) {
-								mRvChat.scrollToPosition(chatAdapter.getItemCount() - 1);
-							}
-						}
-					});
-				}
+                if (bottom < oldBottom) {
+                    mRvChat.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (chatAdapter.getItemCount() > 0) {
+                                mRvChat.scrollToPosition(chatAdapter.getItemCount() - 1);
+                            }
+                        }
+                    });
+                }
             }
         });
 
@@ -170,7 +173,8 @@ public class ChatActivity extends BaseActivity implements IChatView {
 
         //返回按钮
         mIvBack.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 //结束
                 finish();
             }
@@ -185,23 +189,16 @@ public class ChatActivity extends BaseActivity implements IChatView {
 
                 Message message = JMessageClient.createSingleTextMessage(userName, null, text);
 
-                chatAdapter.addData(message);
+                chatAdapter.addDataLast(message);
 
                 updateRecordToBottom();
 
-                //正在发送转圈圈
-                chatAdapter.notifyItemChanged(chatAdapter.getItemCount() - 1, "going");
-
                 mPresenter.doSend(message, chatAdapter.getItemCount() - 1);
-
-//				mPresenter.doSend(1,text);
-
 
             }
         });
 
         updateRecordToBottom();
-
 
     }
 
@@ -216,42 +213,43 @@ public class ChatActivity extends BaseActivity implements IChatView {
     }
 
     /**
-     *  接收在线消息
+     * 接收在线消息
      **/
     public void onEvent(MessageEvent event) {
 
         //判断是否当前会话
-        if(userName.equals(event.getMessage().getFromUser().getUserName())){
+        if (userName.equals(event.getMessage().getFromUser().getUserName())) {
 
             Message message = event.getMessage();
             //设置已读
             message.setHaveRead(new BasicCallback() {
-                @Override public void gotResult(int i, String s) {
+                @Override
+                public void gotResult(int i, String s) {
                 }
             });
 
 //            获取消息类型，如text voice image eventNotification等。
             switch (message.getContentType()) {
-            case file://文件
+                case file://文件
 
-                break;
-            case text://文本
+                    break;
+                case text://文本
 
-                chatAdapter.addData(message);
+                    chatAdapter.addDataLast(message);
 
-                break;
-            case image://图片
+                    break;
+                case image://图片
 
-                break;
-            case video://视频
+                    break;
+                case video://视频
 
-                break;
-            case location://位置
+                    break;
+                case location://位置
 
-                break;
-            case voice://声音
+                    break;
+                case voice://声音
 
-                break;
+                    break;
             }
 
 
@@ -320,15 +318,24 @@ public class ChatActivity extends BaseActivity implements IChatView {
     @Override
     public void sendSuccess(int index) {
         //转圈圈消失
-        chatAdapter.notifyItemChanged(index,"success");
-////                chatAdapter.notifyItemChanged(index,"going");
-//        chatAdapter.notifyItemChanged(chatAdapter.getItemCount()-1,"fail");
+        chatAdapter.notifyItemChanged(index, "success");
     }
 
     @Override
     public void sendFailed(int index) {
         //转圈圈变感叹号
-        chatAdapter.notifyItemChanged(index,"fail");
+        chatAdapter.notifyItemChanged(index, "fail");
 
+    }
+
+    @Override
+    public void onRefresh() {
+        //上滑刷新10条消息
+        if (topIndex < 10)
+            chatAdapter.addDataFirst(messageList);
+        else {
+            chatAdapter.addDataFirst(messageList.subList(topIndex - 9, topIndex));
+            topIndex -= 10;
+        }
     }
 }

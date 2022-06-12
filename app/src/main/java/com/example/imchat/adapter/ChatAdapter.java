@@ -38,28 +38,33 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     //设置数据
-    public void setData(List<Message> list) {
-        if (list != null) {
+    public void setData(List<Message> messages) {
+        if (messages != null) {
             mLinkedList.clear();
-            mLinkedList.addAll(list);
+            mLinkedList.addAll(messages);
             notifyDataSetChanged();
         }
     }
 
-    //增添数据
-    public void addData(Message message) {
+    //尾部增添数据（用于新发消息）
+    public void addDataLast(Message message) {
         mLinkedList.addLast(message);
-
         notifyItemInserted(mLinkedList.size());
-//        notifyItemChanged(mLinkedList.size() - 1, "going");
+    }
+
+    //首部增添数据（用于上滑刷新）
+    public void addDataFirst(List<Message> messages) {
+        if (messages != null) {
+            for (int i = messages.size() - 1; i >= 0; i--){
+                mLinkedList.addFirst(messages.get(i));
+            }
+        }
     }
 
     //判断消息类型，返回不同布局ID
     @Override
     public int getItemViewType(int position) {
         Message message = mLinkedList.get(position);
-        if (message == null)
-            System.out.println(mLinkedList.size() + "aaaaa");
         if (message.getContentType() == ContentType.text) {
             if (message.getDirect() == MessageDirect.send)
                 return SEND_TEXT;
@@ -108,7 +113,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
         SendTextViewHolder sendHolder = (SendTextViewHolder) holder;
         for (Object payload : payloads) {
-            LogUtil.d("发送状态"+String.valueOf(payload));
+            LogUtil.d("发送状态" + String.valueOf(payload));
             switch (String.valueOf(payload)) {
                 case "going": {
                     sendHolder.progress.setVisibility(View.VISIBLE);
@@ -167,6 +172,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         switch (message.getStatus()) {
+            case created:
             case send_going: {
                 holder.progress.setVisibility(View.VISIBLE);
                 break;
