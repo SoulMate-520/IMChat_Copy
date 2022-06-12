@@ -134,12 +134,19 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
         topIndex = messageList.size() - 1;
 
         //初始化时最多加载15条消息
-        if (topIndex < 15)
-            chatAdapter.setData(messageList);
-        else {
-            chatAdapter.setData(messageList.subList(topIndex - 14, topIndex));
-            topIndex -= 15;
+        if(topIndex!=-1) {
+            if (topIndex < 15) {
+                chatAdapter.setData(messageList);
+                topIndex=-1;
+            }
+            else {
+                chatAdapter.setData(messageList.subList(topIndex - 14, topIndex));
+                topIndex -= 15;
+            }
         }
+
+        mSwipeRefresh.setOnRefreshListener(this);
+
         mRvChat.setAdapter(chatAdapter);
 
         //底部布局弹出,聊天列表上滑
@@ -331,11 +338,17 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
     @Override
     public void onRefresh() {
         //上滑刷新10条消息
-        if (topIndex < 10)
-            chatAdapter.addDataFirst(messageList);
-        else {
-            chatAdapter.addDataFirst(messageList.subList(topIndex - 9, topIndex));
-            topIndex -= 10;
+        if (topIndex != -1) {
+            if (topIndex < 10) {
+                chatAdapter.addDataFirst(messageList);
+                mRvChat.scrollToPosition(topIndex);
+                topIndex = -1;
+            } else {
+                chatAdapter.addDataFirst(messageList.subList(topIndex - 9, topIndex));
+                mRvChat.scrollToPosition(topIndex);
+                topIndex -= 10;
+            }
+            mSwipeRefresh.setRefreshing(false);
         }
     }
 }

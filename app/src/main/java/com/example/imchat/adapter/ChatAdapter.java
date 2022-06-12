@@ -58,6 +58,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             for (int i = messages.size() - 1; i >= 0; i--){
                 mLinkedList.addFirst(messages.get(i));
             }
+            notifyItemRangeInserted(0,messages.size()-1);
         }
     }
 
