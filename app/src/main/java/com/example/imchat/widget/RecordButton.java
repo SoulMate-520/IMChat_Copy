@@ -192,7 +192,7 @@ public class RecordButton extends AppCompatButton {
             mediaPlayer.setDataSource(mFile);
             mediaPlayer.prepare();
             mediaPlayer.getDuration();
-//            LogUtil.d("获取到的时长:"+mediaPlayer.getDuration()/1000);
+            LogUtil.d("获取到的时长:"+mediaPlayer.getDuration()/1000);
         }catch (Exception e){
 
         }
@@ -227,15 +227,16 @@ public class RecordButton extends AppCompatButton {
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
         File file = new File(mFile);
-//        LogUtil.d("创建文件的路径:"+mFile);
-//        LogUtil.d("文件创建成功:"+file.exists());
+        LogUtil.d("创建文件的路径:"+mFile);
+        LogUtil.d("文件创建成功:"+file.exists());
         mRecorder.setOutputFile(mFile);
          try {
             mRecorder.prepare();
             mRecorder.start();
         }catch (Exception e){
-//            LogUtil.d("preparestart异常,重新开始录音:"+e.toString());
+            LogUtil.d("preparestart异常,重新开始录音:"+e.toString());
              e.printStackTrace();
             mRecorder.release();
             mRecorder = null ;
