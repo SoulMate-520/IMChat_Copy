@@ -133,17 +133,17 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
         mRvChat.setLayoutManager(linearLayoutManager);
 
         messageList = mPresenter.getListMessage();
-        topIndex = messageList.size() - 1;
+        topIndex = messageList.size() ;
 
         //初始化时最多加载15条消息
         if(topIndex!=-1) {
-            if (topIndex < 3) {
+            if (topIndex < 15) {
                 chatAdapter.setData(messageList);
                 topIndex=-1;
             }
             else {
-                chatAdapter.setData(messageList.subList(topIndex - 2, topIndex));
-                topIndex -= 3;
+                chatAdapter.setData(messageList.subList(topIndex - 15, topIndex));
+                topIndex -= 15;
             }
         }
 
@@ -366,14 +366,14 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
 
         //上滑刷新10条消息
         if (topIndex != -1) {
-            if (topIndex < 3) {
-                chatAdapter.addDataFirst(messageList);
-                mRvChat.scrollToPosition(topIndex);
+            if (topIndex < 10) {
+                chatAdapter.addDataFirst(messageList.subList(0,topIndex));
+                mRvChat.scrollToPosition(0);
                 topIndex = -1;
             } else {
-                chatAdapter.addDataFirst(messageList.subList(topIndex - 2, topIndex));
-                mRvChat.scrollToPosition(3);
-                topIndex -= 3;
+                chatAdapter.addDataFirst(messageList.subList(topIndex - 10, topIndex));
+                mRvChat.scrollToPosition(9);
+                topIndex -= 10;
             }
         }
         //转圈圈消失

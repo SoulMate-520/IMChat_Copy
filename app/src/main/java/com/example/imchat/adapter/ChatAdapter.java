@@ -55,6 +55,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     //首部增添数据（用于上滑刷新）
     public void addDataFirst(List<Message> messages) {
         if (messages != null) {
+
+            LogUtil.d(messages.size()+"");
+
             for (int i = messages.size() - 1; i >= 0; i--){
                 mLinkedList.addFirst(messages.get(i));
                 notifyItemInserted(0);
