@@ -1,7 +1,6 @@
 package com.example.imchat.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -166,6 +165,24 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (message != null) {
             holder.content.setText(((TextContent) message.getContent()).getText());
         }
+
+        switch (message.getStatus()) {
+            case send_going: {
+                holder.progress.setVisibility(View.VISIBLE);
+                break;
+            }
+            case send_fail: {
+                holder.fail.setVisibility(View.VISIBLE);
+                holder.progress.setVisibility(View.INVISIBLE);
+                break;
+            }
+            case send_success: {
+                holder.progress.setVisibility(View.INVISIBLE);
+                break;
+            }
+            default:
+                break;
+        }
     }
 
     public void onBindReceiveTextViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
@@ -204,6 +221,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (message != null) {
             holder.content.setText(((TextContent) message.getContent()).getText());
         }
+
     }
 
     static class SendTextViewHolder extends RecyclerView.ViewHolder {

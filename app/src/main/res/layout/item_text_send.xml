@@ -73,7 +73,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/chat_item_layout_content"
-            android:visibility="invisible" />
+            android:visibility="visible" />
     </RelativeLayout>
 
 </LinearLayout>
