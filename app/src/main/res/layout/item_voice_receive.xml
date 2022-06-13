@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_text_receive"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/ll_text_receive"
     android:orientation="vertical"
     android:padding="5dp">
 
@@ -20,23 +19,19 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_height="wrap_content">
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp">
 
-        <CircleImageView
+        <com.example.imchat.widget.CircleImageView
             android:id="@+id/chat_item_header"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginRight="5dp"
             android:layout_alignParentLeft="true"
+            android:layout_marginRight="5dp"
             android:scaleType="centerInside"
-            android:src="@mipmap/ic_head_default_left"
-            />
-
-
-
+            android:src="@mipmap/ic_head_default_left" />
 
 
         <LinearLayout
@@ -50,17 +45,17 @@
             android:orientation="horizontal">
 
             <RelativeLayout
-                android:id="@+id/rlAudio"
+                android:id="@+id/rlVoice"
                 android:layout_width="65dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/message_text_receive">
 
                 <ImageView
-                    android:id="@+id/ivAudio"
+                    android:id="@+id/ivVoice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:background="@drawable/audio_animation_left_list"/>
+                    android:background="@drawable/voice_animation_left_list" />
 
             </RelativeLayout>
 
@@ -69,7 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="0''"/>
+                android:text="0''" />
 
 
         </LinearLayout>
