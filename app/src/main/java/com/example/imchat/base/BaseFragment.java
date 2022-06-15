@@ -1,6 +1,7 @@
 package com.example.imchat.base;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.imchat.util.ActivityUtil;
+
 public abstract class BaseFragment extends Fragment {
+
 
     public abstract int getLayoutId();
 

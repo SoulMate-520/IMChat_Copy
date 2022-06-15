@@ -18,7 +18,12 @@
         <item name="android:windowContentOverlay">@null</item>
 
     </style>
-
+    <!--红点-->
+    <style name="NoticeSpot">
+        <item name="android:background">@drawable/notice_spot</item>
+        <item name="android:layout_width">10dp</item>
+        <item name="android:layout_height">10dp</item>
+    </style>
 
     <!--默认样式-->
     <style name="picture_my_style" parent="Theme.AppCompat.Light.DarkActionBar">

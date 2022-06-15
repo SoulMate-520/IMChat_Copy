@@ -3,12 +3,16 @@ package com.example.imchat.main.fragment;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.example.imchat.R;
+
+import butterknife.BindView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,6 +21,10 @@ import com.example.imchat.R;
  */
 public class ContentFragment2 extends Fragment {
 
+	@BindView(R.id.recyc_cont)
+	RecyclerView mRecyclerView;
+	@BindView(R.id.relat_new_friend)
+	RelativeLayout mRelativeLayout;
 	// TODO: Rename parameter arguments, choose names that match
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 	private static final String ARG_PARAM1 = "param1";

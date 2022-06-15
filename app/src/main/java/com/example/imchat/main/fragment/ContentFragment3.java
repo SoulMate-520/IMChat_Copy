@@ -3,19 +3,26 @@ package com.example.imchat.main.fragment;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.example.imchat.R;
+import com.example.imchat.base.BaseFragment;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ContentFragment3#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ContentFragment3 extends Fragment {
+public class ContentFragment3 extends BaseFragment {
+
 
 	// TODO: Rename parameter arguments, choose names that match
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -56,8 +63,24 @@ public class ContentFragment3 extends Fragment {
 		}
 	}
 
+	@Override
+	public int getLayoutId() {
+		return 0;
+	}
+
 	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_content3, container, false);
+		View view = inflater.inflate(R.layout.fragment_content3, container, false);
+		return view;
+	}
+
+	@Override
+	protected void initView() {
+
+	}
+
+	@Override
+	protected void initData() {
+
 	}
 }
