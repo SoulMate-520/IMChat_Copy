@@ -76,7 +76,7 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
 
     //需要传进来的参数
     //目标用户
-    private String userName = "654321";
+    private String userName = "123456";
 
 
     //会话聊天消息
@@ -160,21 +160,18 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
         mRvChat.setAdapter(chatAdapter);
 
         //底部布局弹出,聊天列表上滑
-        mRvChat.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                if (bottom < oldBottom) {
-                    mRvChat.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (chatAdapter.getItemCount() > 0) {
-                                mRvChat.scrollToPosition(chatAdapter.getItemCount() - 1);
-                            }
-                        }
-                    });
-                }
-            }
-        });
+//        mRvChat.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+//            @Override
+//            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+//                if (bottom < oldBottom) {
+////                    mRvChat.post(new Runnable() {
+////                        @Override
+////                        public void run() {
+////                        }
+////                    });
+//                }
+//            }
+//        });
 
         //点击空白区域关闭键盘和底部栏
         mRvChat.setOnTouchListener(new View.OnTouchListener() {
@@ -308,7 +305,11 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
                     break;
                 case text://文本
 
+                    messageList.add(message);
+
                     chatAdapter.addDataLast(message);
+
+                    updateRecordToBottom();
 
                     break;
                 case image://图片

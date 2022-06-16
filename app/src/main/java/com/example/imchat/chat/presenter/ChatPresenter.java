@@ -39,7 +39,7 @@ public class ChatPresenter implements IChatPresenter {
 
 	}
 
-	/**
+	/**。
 	 *
 	 * @param
 	 */
@@ -53,7 +53,6 @@ public class ChatPresenter implements IChatPresenter {
 				if (i == 0) { //成功
 					mChatView.sendSuccess(index);
 				} else {
-
 					mChatView.sendFailed(index);
 				}
 
