@@ -64,7 +64,7 @@ public class MainActivity extends BaseActivity {
 
 		//测试用
 		//i=0才成功 密码错误：Invalid password
-		JMessageClient.login("654321", "654321", new BasicCallback() {
+		JMessageClient.login("123456", "123456", new BasicCallback() {
 			@Override public void gotResult(int i, String s) {
 				LogUtil.d(""+i);
 				LogUtil.d(s);

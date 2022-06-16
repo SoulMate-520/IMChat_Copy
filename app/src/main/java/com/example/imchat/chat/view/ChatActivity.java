@@ -76,7 +76,7 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
 
     //需要传进来的参数
     //目标用户
-    private String userName = "123456";
+    private String userName = "654321";
 
 
     //会话聊天消息
@@ -160,18 +160,19 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
         mRvChat.setAdapter(chatAdapter);
 
         //底部布局弹出,聊天列表上滑
-//        mRvChat.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-//            @Override
-//            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-//                if (bottom < oldBottom) {
-////                    mRvChat.post(new Runnable() {
-////                        @Override
-////                        public void run() {
-////                        }
-////                    });
-//                }
-//            }
-//        });
+        mRvChat.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if (bottom < oldBottom) {
+                    mRvChat.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateRecordToBottom();
+                        }
+                    });
+                }
+            }
+        });
 
         //点击空白区域关闭键盘和底部栏
         mRvChat.setOnTouchListener(new View.OnTouchListener() {
@@ -203,6 +204,7 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
 
                 Message message = JMessageClient.createSingleTextMessage(userName, null, text);
 
+//                messageList.add(message);
                 chatAdapter.addDataLast(message);
 
                 updateRecordToBottom();
@@ -298,33 +300,43 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
                 }
             });
 
-//            获取消息类型，如text voice image eventNotification等。
-            switch (message.getContentType()) {
-                case file://文件
+//            messageList.add(message);
 
-                    break;
-                case text://文本
-
-                    messageList.add(message);
-
+            runOnUiThread(new Runnable() {
+                @Override public void run() {
                     chatAdapter.addDataLast(message);
-
+                    chatAdapter.notifyItemChanged(chatAdapter.getItemCount()-1);
                     updateRecordToBottom();
+                }
+            });
 
-                    break;
-                case image://图片
 
-                    break;
-                case video://视频
 
-                    break;
-                case location://位置
 
-                    break;
-                case voice://声音
+//            //            获取消息类型，如text voice image eventNotification等。
+//            switch (message.getContentType()) {
+//                case file://文件
+//
+//                    break;
+//                case text://文本
+//
+//
+//                    break;
+//                case image://图片
+//
+//                    break;
+//                case video://视频
+//
+//                    break;
+//                case location://位置
+//
+//                    break;
+//                case voice://声音
+//
+//                    break;
+//            }
 
-                    break;
-            }
+
 
 
         }

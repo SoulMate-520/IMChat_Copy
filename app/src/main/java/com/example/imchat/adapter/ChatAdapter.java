@@ -52,8 +52,19 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     //尾部增添数据（用于新发消息）
     public void addDataLast(Message message) {
+
+
+
+        LogUtil.d(mLinkedList.size()+"*");
+
         mLinkedList.addLast(message);
-        notifyItemInserted(mLinkedList.size());
+        LogUtil.d(mLinkedList.size()+"**");
+
+//        notifyItemInserted(mLinkedList.size());
+
+
+
+        LogUtil.d(mLinkedList.size()+"***");
     }
 
     //首部增添数据（用于上滑刷新）
