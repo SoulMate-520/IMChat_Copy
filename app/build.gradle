@@ -78,5 +78,7 @@ dependencies {
     // 可选，适用于Android的中国地区词典
     implementation 'com.github.promeg:tinypinyin:2.0.3'
     implementation 'com.github.promeg:tinypinyin-lexicons-android-cncity:2.0.3'
+    //BaseQuickAdapter
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.46'
 
 }

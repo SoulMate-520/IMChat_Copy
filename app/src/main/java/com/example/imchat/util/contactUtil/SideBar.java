@@ -77,7 +77,7 @@ public class SideBar extends View {
     private String indexStr = "ABCDEFGHIJKLMNOPQRSTUVWXY#";
 
     public void setIndexStr(String indexStr) {
-        this.indexStr = indexStr;
+        this.indexStr = "ABCDEFGHIJKLMNOPQRSTUVWXY#";
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.example.imchat.chat.presenter.IChatPresenter;
 import com.example.imchat.chat.view.IChatView;
 import com.example.imchat.contact.model.IContactModel;
 import com.example.imchat.contact.view.IContactsView;
+import com.example.imchat.util.getNameUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +20,12 @@ import cn.jpush.im.android.api.model.UserInfo;
  * @description:
  * @version:
  */
-public class IContactPresenter {
+public class ContactPresenter {
 
     private IContactsView mContView;
     private IContactModel mContModel;
 
-    public IContactPresenter(IContactsView mContView, IContactModel mContModel){
+    public ContactPresenter(IContactsView mContView, IContactModel mContModel){
         this.mContView = mContView;
         this.mContModel = mContModel;
     }
@@ -38,7 +39,7 @@ public class IContactPresenter {
                     list.clear();
                     for(UserInfo userInfo : userInfoList){
                         ContactBean bean = new ContactBean();
-                        bean.setNickName(userInfo.getNickname());
+                        bean.setNickName(getNameUtil.getName(userInfo));
                         bean.setUserName(userInfo.getUserName());
                         list.add(bean);
                     }

@@ -14,7 +14,7 @@ import com.example.imchat.adapter.ContactAdapter;
 import com.example.imchat.base.BaseFragment;
 import com.example.imchat.bean.ContactBean;
 import com.example.imchat.contact.model.IContactModel;
-import com.example.imchat.contact.presenter.IContactPresenter;
+import com.example.imchat.contact.presenter.ContactPresenter;
 import com.example.imchat.util.ActivityUtil;
 
 import java.util.List;
@@ -34,12 +34,12 @@ public class ContactFragment extends BaseFragment implements IContactsView, ICon
     RelativeLayout newFriend;
 
     private ContactAdapter adapter;
-    private IContactPresenter presenter;
+    private ContactPresenter presenter;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter = new IContactPresenter(this,this);
+        presenter = new ContactPresenter(this,this);
         initData();
         initView();
     }
