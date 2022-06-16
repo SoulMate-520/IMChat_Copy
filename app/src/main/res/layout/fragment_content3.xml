@@ -9,17 +9,15 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="46dp"
-        android:background="@color/blue"
-        >
+        android:background="@color/blue">
 
         <TextView
-            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:text="我"
             android:textColor="#ffffffff"
-            android:textSize="15dp"
-            />
+            android:textSize="15dp" />
 
     </RelativeLayout>
 
@@ -39,14 +37,13 @@
 
         <TextView
             android:id="@+id/tv_username"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="99dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="99dp"
             android:text="hahhah"
             android:textColor="#ff000000"
-            android:textSize="11dp"
-            />
+            android:textSize="11dp" />
 
     </RelativeLayout>
 
