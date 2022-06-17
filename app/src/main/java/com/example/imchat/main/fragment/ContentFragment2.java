@@ -21,6 +21,9 @@ import com.example.imchat.contact.model.IContactModel;
 import com.example.imchat.contact.presenter.ContactPresenter;
 import com.example.imchat.contact.view.IContactsView;
 import com.example.imchat.util.ActivityUtil;
+import com.example.imchat.util.SortUtil;
+import com.example.imchat.util.contactUtil.CustomItemDecoration;
+import com.example.imchat.util.contactUtil.SideBar;
 
 import java.util.List;
 
@@ -38,7 +41,8 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 	RecyclerView mRecyclerView;
 	@BindView(R.id.relat_new_friend)
 	RelativeLayout mRelativeLayout;
-
+	private CustomItemDecoration decoration;
+	private SideBar sideBar;
 	private ContactAdapter adapter;
 	private ContactPresenter presenter;
 
@@ -96,6 +100,7 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 	@Override
 	protected void initView() {
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
 	}
 
 	@Override
@@ -111,7 +116,10 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 
 	@Override
 	public void sortData(List<ContactBean> list) {
-
+		SortUtil.sortData(list);
+		String tagsStr = SortUtil.getTags(list);
+		sideBar.setIndexStr(tagsStr);
+		decoration.setDatas(list, tagsStr);
 	}
 
 	@Override

@@ -28,7 +28,6 @@ public class ConversationPresenter {
         this.mConversationView = mConversationView;
     }
     public void getConversation(MessageEvent event, List<Conversation> list){
-//        List<Conversation> list = new ArrayList<>();
         boolean handlable = false;
         Message msg = event.getMessage();
         if (msg.getTargetType() == ConversationType.single){

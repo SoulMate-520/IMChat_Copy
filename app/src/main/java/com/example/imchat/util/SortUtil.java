@@ -1,33 +1,25 @@
 package com.example.imchat.util;
 
-import android.view.View;
-
 import com.example.imchat.bean.ContactBean;
 import com.github.promeg.pinyinhelper.Pinyin;
-
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
+/**
+ * @author: yzy
+ * @date: 2022/6/17 20:09
+ * @description: 给列表数据进行排序
+ * @version:
+ */
 
-
-public class CommonUtil {
-//    /**
-//     * 测量View的宽高
-//     *
-//     * @param view View
-//     */
-//    public static void measureWidthAndHeight(View view) {
-//        int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-//        int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-//        view.measure(widthMeasureSpec, heightMeasureSpec);
-//    }
+public class SortUtil {
 
     /**
-     * 对数据进行排序
-     *
-     * @param list 要进行排序的数据源
+     * 设置tag
+     * @param list
      */
     public static void sortData(List<ContactBean> list) {
         if (list == null || list.size() == 0) return;
@@ -35,6 +27,9 @@ public class CommonUtil {
             ContactBean bean = list.get(i);
             String tag = Pinyin.toPinyin(bean.getNickName().substring(0, 1).charAt(0)).substring(0, 1);
             if (tag.matches("[A-Z]")) {
+                bean.setIndexTag(tag);
+            } else if(tag.matches("[a-z]")){
+                tag = tag.toUpperCase(Locale.ROOT);
                 bean.setIndexTag(tag);
             } else {
                 bean.setIndexTag("#");
@@ -54,10 +49,6 @@ public class CommonUtil {
         });
     }
 
-    /**
-     * @param beans 数据源
-     * @return tags 返回一个包含所有Tag字母在内的字符串
-     */
     public static String getTags(List<ContactBean> beans) {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < beans.size(); i++) {
