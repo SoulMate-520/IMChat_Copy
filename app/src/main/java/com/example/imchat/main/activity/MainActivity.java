@@ -18,6 +18,7 @@ import com.example.imchat.R;
 import com.example.imchat.adapter.viewPageAdapter;
 import com.example.imchat.base.BaseActivity;
 import com.example.imchat.chat.view.ChatActivity;
+import com.example.imchat.contact.view.ContactFragment;
 import com.example.imchat.main.fragment.ContentFragment1;
 import com.example.imchat.main.fragment.ContentFragment2;
 import com.example.imchat.main.fragment.ContentFragment3;
@@ -134,6 +135,7 @@ public class MainActivity extends BaseActivity {
 		fragmentList.add(contentFragment1);
 		fragmentList.add(contentFragment2);
 		fragmentList.add(contentFragment3);
+
 
 		mViewPager.setAdapter(new viewPageAdapter(fragmentManager,fragmentList));
 

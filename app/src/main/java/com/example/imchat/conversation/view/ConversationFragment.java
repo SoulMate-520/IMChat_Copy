@@ -37,12 +37,11 @@ public class ConversationFragment extends BaseFragment implements IConversationV
     RecyclerView mRecyclerView;
 
     ConversationAdapter adapter;
-    List<Conversation> list ;
     ConversationPresenter presenter;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter = new ConversationPresenter(this);
+
         initData();
         initView();
     }
@@ -59,6 +58,7 @@ public class ConversationFragment extends BaseFragment implements IConversationV
     @Override
     protected void initData() {
         //订阅接收消息,子类只要重写onEvent就能收到消息
+        presenter = new ConversationPresenter(this);
         JMessageClient.registerEventReceiver(this);
     }
 

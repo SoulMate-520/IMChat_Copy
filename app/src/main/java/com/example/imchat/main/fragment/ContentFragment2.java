@@ -2,7 +2,10 @@ package com.example.imchat.main.fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -11,20 +14,34 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.example.imchat.R;
+import com.example.imchat.adapter.ContactAdapter;
+import com.example.imchat.base.BaseFragment;
+import com.example.imchat.bean.ContactBean;
+import com.example.imchat.contact.model.IContactModel;
+import com.example.imchat.contact.presenter.ContactPresenter;
+import com.example.imchat.contact.view.IContactsView;
+import com.example.imchat.util.ActivityUtil;
+
+import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ContentFragment2#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ContentFragment2 extends Fragment {
+public class ContentFragment2 extends BaseFragment implements IContactsView, IContactModel {
 
 	@BindView(R.id.recyc_cont)
 	RecyclerView mRecyclerView;
 	@BindView(R.id.relat_new_friend)
 	RelativeLayout mRelativeLayout;
+
+	private ContactAdapter adapter;
+	private ContactPresenter presenter;
+
 	// TODO: Rename parameter arguments, choose names that match
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 	private static final String ARG_PARAM1 = "param1";
@@ -64,8 +81,42 @@ public class ContentFragment2 extends Fragment {
 		}
 	}
 
-	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_content2, container, false);
+	@Override
+	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		View view = inflater.inflate(getLayoutId(), container, false);
+		ButterKnife.bind(this, view);
+		return view;
+	}
+
+	@Override
+	public int getLayoutId() {
+		return R.layout.fragment_content2;
+	}
+
+	@Override
+	protected void initView() {
+		mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+	}
+
+	@Override
+	protected void initData() {
+		presenter = new ContactPresenter(this,this);
+	}
+
+	@Override
+	public void setContactsList(List<ContactBean> userList) {
+		adapter = new ContactAdapter(userList);
+		mRecyclerView.setAdapter(adapter);
+	}
+
+	@Override
+	public void sortData(List<ContactBean> list) {
+
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		presenter.getContactsList();
 	}
 }

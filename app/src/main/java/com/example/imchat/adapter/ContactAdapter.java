@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.imchat.R;
 import com.example.imchat.bean.ContactBean;
+import com.example.imchat.util.ActivityUtil;
+import com.example.imchat.util.MyApplication;
 
 import org.litepal.LitePal;
 
@@ -39,23 +41,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyRecycl
           this.contactBeanList = contactBeanList;
     }
 
-    public void addAll(List<ContactBean> beans) {
-        if (contactBeanList.size() > 0) {
-            contactBeanList.clear();
-        }
-        contactBeanList.addAll(beans);
-        notifyDataSetChanged();
-    }
-
-    public void add(ContactBean bean, int position) {
-        contactBeanList.add(position, bean);
-        notifyItemInserted(position);
-    }
-
-    public void add(ContactBean bean) {
-        contactBeanList.add(bean);
-        notifyItemChanged(contactBeanList.size() - 1);
-    }
 
     @NonNull
     @Override
@@ -65,7 +50,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyRecycl
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 2022/6/13 跳转逻辑 
+                // TODO: 2022/6/13 跳转逻辑
             }
         });
         return holder;

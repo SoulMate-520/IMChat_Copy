@@ -43,12 +43,13 @@ public class ContactPresenter {
                         bean.setUserName(userInfo.getUserName());
                         list.add(bean);
                     }
-                    mContModel.sortData(list);
+//                    mContModel.sortData(list);
                     mContView.setContactsList(list);
                 } else {
                     //获取好友列表失败
                 }
             }
         });
+
     }
 }

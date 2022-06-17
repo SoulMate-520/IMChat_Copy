@@ -6,22 +6,6 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="46dp"
-        android:background="@color/blue">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="通讯录"
-            android:textColor="#ffffffff"
-            android:textSize="15dp" />
-
-    </RelativeLayout>
-
-
-    <RelativeLayout
         android:id="@+id/relat_new_friend"
         android:layout_width="match_parent"
         android:layout_height="71dp"
