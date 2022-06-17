@@ -67,6 +67,11 @@ public class ContactFragment extends BaseFragment implements IContactsView, ICon
     }
 
     @Override
+    public void initEvents(List<ContactBean> userList) {
+
+    }
+
+    @Override
     public void sortData(List<ContactBean> list) {
 
     }

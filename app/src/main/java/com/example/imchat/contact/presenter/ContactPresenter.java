@@ -45,6 +45,7 @@ public class ContactPresenter {
                     }
                     mContModel.sortData(list);
                     mContView.setContactsList(list);
+                    mContView.initEvents(list);
                 } else {
                     //获取好友列表失败
                 }

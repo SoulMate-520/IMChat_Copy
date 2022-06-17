@@ -16,4 +16,9 @@ public interface IContactsView {
 
     void setContactsList(List<ContactBean> userList);
 
+    /**
+     * 处理字母导航与列表的连接
+     * @param userList
+     */
+    void initEvents(List<ContactBean> userList);
 }

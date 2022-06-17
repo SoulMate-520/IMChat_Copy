@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,8 +42,10 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 	RecyclerView mRecyclerView;
 	@BindView(R.id.relat_new_friend)
 	RelativeLayout mRelativeLayout;
+	@BindView(R.id.side_bar)
+	SideBar sideBar;
+	private LinearLayoutManager layoutManager;
 	private CustomItemDecoration decoration;
-	private SideBar sideBar;
 	private ContactAdapter adapter;
 	private ContactPresenter presenter;
 
@@ -99,19 +102,36 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 
 	@Override
 	protected void initView() {
-		mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
+		mRecyclerView.setLayoutManager(layoutManager = new LinearLayoutManager(getContext()));
+		mRecyclerView.addItemDecoration(decoration = new CustomItemDecoration(getContext()));
 	}
 
 	@Override
 	protected void initData() {
 		presenter = new ContactPresenter(this,this);
+
 	}
 
 	@Override
 	public void setContactsList(List<ContactBean> userList) {
 		adapter = new ContactAdapter(userList);
 		mRecyclerView.setAdapter(adapter);
+	}
+
+	@Override
+	public void initEvents(List<ContactBean> userList) {
+		sideBar.setIndexChangeListener(new SideBar.indexChangeListener() {
+			@Override
+			public void indexChanged(String tag) {
+				if (TextUtils.isEmpty(tag) || userList.size() <= 0) return;
+				for (int i = 0; i < userList.size(); i++) {
+					if (tag.equals(userList.get(i).getIndexTag())) {
+						layoutManager.scrollToPositionWithOffset(i, 0);
+						return;
+					}
+				}
+			}
+		});
 	}
 
 	@Override
