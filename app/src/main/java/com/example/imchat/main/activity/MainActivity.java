@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 
+import com.example.imchat.MyApplication;
 import com.example.imchat.R;
 import com.example.imchat.adapter.viewPageAdapter;
 import com.example.imchat.base.BaseActivity;
@@ -65,14 +66,16 @@ public class MainActivity extends BaseActivity {
 
 		//测试用
 		//i=0才成功 密码错误：Invalid password
+
 		JMessageClient.login("123456", "123456", new BasicCallback() {
 			@Override public void gotResult(int i, String s) {
 				LogUtil.d(""+i);
 				LogUtil.d(s);
+
+				startActivity(new Intent(MyApplication.getContext(),ChatActivity.class));
 			}
 		});
 
-		startActivity(new Intent(this, ChatActivity.class));
 
 
 	}

@@ -235,6 +235,8 @@ public class RecordButton extends AppCompatButton {
          try {
             mRecorder.prepare();
             mRecorder.start();
+
+
         }catch (Exception e){
             LogUtil.d("preparestart异常,重新开始录音:"+e.toString());
              e.printStackTrace();
@@ -242,8 +244,9 @@ public class RecordButton extends AppCompatButton {
             mRecorder = null ;
             startRecording();
         }
-       /* mThread = new  ObtainDecibelThread();
-        mThread.start();*/
+         //分贝大小
+        mThread = new  ObtainDecibelThread();
+        mThread.start();
     }
 
 
@@ -281,14 +284,14 @@ public class RecordButton extends AppCompatButton {
 
         @Override
         public void run() {
-//            LogUtil.d("检测到的分贝001:");
+            LogUtil.d("检测到的分贝001:");
             while (running) {
                 if (mRecorder == null || !running) {
                     break;
                 }
                // int x = recorder.getMaxAmplitude(); //振幅
                 int db =   mRecorder.getMaxAmplitude() / 600;
-//                LogUtil.d("检测到的分贝002:"+mRecorder);
+                LogUtil.d("检测到的分贝002:"+db);
                 if (db != 0 && y>=0) {
 
 

@@ -1,11 +1,16 @@
 package com.example.imchat.chat.view;
 
+import android.app.Application;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.FileUtils;
 import android.provider.MediaStore;
 import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,11 +22,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.imchat.MyApplication;
 import com.example.imchat.R;
 import com.example.imchat.adapter.ChatAdapter;
 import com.example.imchat.base.BaseActivity;
 import com.example.imchat.chat.presenter.ChatPresenter;
 import com.example.imchat.chat.presenter.IChatPresenter;
+import com.example.imchat.util.AudioPlayManager;
 import com.example.imchat.util.ChatUiHelper;
 import com.example.imchat.util.LogUtil;
 import com.example.imchat.widget.RecordButton;
@@ -29,6 +36,11 @@ import com.example.imchat.widget.StateButton;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -81,7 +93,7 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
 
     //需要传进来的参数
     //目标用户
-    private String userName = "123456";
+    private String userName = "654321";
 
 
     //会话聊天消息
@@ -262,6 +274,8 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
         });
     }
 
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -269,15 +283,24 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
         if (requestCode == 0 && resultCode == RESULT_OK && data != null) {
             //图库
 
-            String pathResult = null;  // 获取图片路径的方法调用
+            String path = null;
             try {
                 Uri uri = data.getData();
-                pathResult = uri.getPath();
-                LogUtil.d("图片路径===" + pathResult);
+                Cursor cursor = MyApplication.getContext().getContentResolver().query(uri, null, null, null, null);
+                if (cursor.moveToFirst()) {
+                    try {
+                        path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                cursor.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            File file = new File(pathResult);
+            LogUtil.d(path);
+
+            File file = new File(path);
             if (file.exists()) {
 
                 //发送语音
@@ -305,6 +328,7 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
 
 
 
+
     /**
      * 聊天记录显示到最下方
      */
@@ -329,6 +353,9 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
 
         } else {
             //退出
+
+            //关闭语音播放
+            AudioPlayManager.getInstance().stopPlay();
             super.onBackPressed();
 
         }
@@ -365,88 +392,9 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
             });
 
 
-//            //            获取消息类型，如text voice image eventNotification等。
-//            switch (message.getContentType()) {
-//                case file://文件
-//
-//                    break;
-//                case text://文本
-//
-//
-//                    break;
-//                case image://图片
-//
-//                    break;
-//                case video://视频
-//
-//                    break;
-//                case location://位置
-//
-//                    break;
-//                case voice://声音
-//
-//                    break;
-//            }
-
 
         }
 
-//        //获取事件发生的会话对象
-//        Conversation conversation = event.getConversation();
-//        Message newMessage = event.getMessage();//获取此次离线期间会话收到的新消息列表
-//        System.out.println(String.format(Locale.SIMPLIFIED_CHINESE, "收到一条来自%s的在线消息。\n", conversation.getTargetId()));
-//
-//
-//                final Message message = event.getMessage();//获取消息对象
-//                TextContent textContent = (TextContent) message.getContent();
-//                Log.i("接收到的对方的消息：",""+ textContent.getText());
-//
-//
-//                //获取消息类型，如text voice image eventNotification等。
-//                switch (message.getContentType()) {
-//                //处理事件提醒消息，此处message的contentType类型为eventNotification。
-//                case eventNotification:
-//                    //获取事件发生的群的群信息
-//                    GroupInfo groupInfo = (GroupInfo) message.getTargetInfo();
-//                    //获取事件具体的内容对象
-//                    EventNotificationContent eventNotificationContent = (EventNotificationContent)message.getContent();
-//                    //获取事件具体类型
-//                    switch (eventNotificationContent.getEventNotificationType()){
-//                    case group_member_added:
-//                        //群成员加群事件
-//                        break;
-//                    case group_member_removed:
-//                        //群成员被踢事件
-//                        break;
-//                    case group_member_exit:
-//                        //群成员退群事件
-//                        break;
-//                    case group_info_updated://since 2.2.1
-//                        //群信息变更事件
-//                        break;
-//
-//                    }
-//                    break;
-//
-//                case file://文件
-//
-//                    break;
-//                case text://文本
-//
-//                    break;
-//                case image://图片
-//
-//                    break;
-//                case video://视频
-//
-//                    break;
-//                case location:
-//
-//                    break;
-//                case voice://声音
-//
-//                    break;
-//                }
 
     }
 

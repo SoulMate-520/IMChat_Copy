@@ -55,7 +55,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:background="@drawable/voice_animation_left_list" />
+                    android:background="@mipmap/voice_animation_list_left_3" />
 
             </RelativeLayout>
 
