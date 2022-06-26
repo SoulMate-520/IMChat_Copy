@@ -8,12 +8,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.imchat.MyApplication;
 import com.example.imchat.R;
 import com.example.imchat.main.activity.MainActivity;
 
@@ -24,9 +26,11 @@ import cn.jpush.im.api.BasicCallback;
 
 public class LoginActivity extends AppCompatActivity {
 
+    //控件
     private TextView loginSub, loginGoRegister;
     private EditText loginUserNameETxt, loginPwdETxt;
-    
+
+    //数据
     private String loginUserName, loginPwd;
 
     /**
@@ -52,11 +56,13 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("userName", loginUserName);
                     startActivity(intent);
+                }else{
+                    Toast.makeText(MyApplication.getContext(), "登录失败！", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        return -1;
+        return 0;
     }
 
     /**
@@ -64,6 +70,8 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void goRegister(){
         //跳转注册页面
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+        startActivity(intent);
     }
 
     @Override

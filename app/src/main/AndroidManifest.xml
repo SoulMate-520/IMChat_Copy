@@ -1,61 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        package="com.example.imchat">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.imchat">
+
+    <uses-permission android:name="com.example.imchat.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- Required for jmrtc -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
     <application
-
-            tools:replace="android:icon, android:theme"
-
-            android:name=".MyApplication"
-            android:allowBackup="true"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name"
-            android:roundIcon="@mipmap/ic_launcher_round"
-            android:supportsRtl="true"
-            android:theme="@style/Theme.IMChat">
-
-        <activity android:name=".chat.view.ChatActivity"
-                android:screenOrientation="portrait"
-                android:windowSoftInputMode="stateHidden" >
-
+        android:name=".MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.IMChat"
+        tools:replace="android:icon, android:theme">
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="true">
         </activity>
+        <activity
+            android:name=".chat.view.ChatActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".main.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-
-
-        <!-- Required SDK 核心功能 -->
+        </activity> <!-- Required SDK 核心功能 -->
         <!-- 可配置android:process参数将PushService放在其他进程中 -->
         <!-- 如果JCore使用的是2.0.0及以上版本可移除本配置 -->
         <service
-                android:name="cn.jpush.android.service.PushService"
-                android:enabled="true"
-                android:exported="false">
+            android:name="cn.jpush.android.service.PushService"
+            android:enabled="true"
+            android:exported="false">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.REGISTER" />
                 <action android:name="cn.jpush.android.intent.REPORT" />
                 <action android:name="cn.jpush.android.intent.PushService" />
                 <action android:name="cn.jpush.android.intent.PUSH_TIME" />
             </intent-filter>
-        </service><!-- Since JCore2.0.0 Required SDK核心功能 -->
+        </service> <!-- Since JCore2.0.0 Required SDK核心功能 -->
         <!-- 这个Service要继承JCommonService -->
         <service
-                android:name=".service.IMService"
-                android:process=":pushcore">
+            android:name=".service.IMService"
+            android:process=":pushcore">
             <intent-filter>
                 <action android:name="cn.jiguang.user.service.action" />
             </intent-filter>
         </service> <!-- Required SDK核心功能 -->
         <receiver
-                android:name="cn.jpush.android.service.PushReceiver"
-                android:enabled="true"
-                android:exported="false">
+            android:name="cn.jpush.android.service.PushReceiver"
+            android:enabled="true"
+            android:exported="false">
             <intent-filter android:priority="1000">
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
 
@@ -74,62 +84,20 @@
             </intent-filter>
         </receiver> <!-- Required SDK核心功能 -->
         <receiver
-                android:name="cn.jpush.android.service.AlarmReceiver"
-                android:exported="false" /> <!-- Required since JCore 1.1.7. SDK 核心功能 -->
+            android:name="cn.jpush.android.service.AlarmReceiver"
+            android:exported="false" /> <!-- Required since JCore 1.1.7. SDK 核心功能 -->
         <provider
-                android:name="cn.jpush.android.service.DataProvider"
-                android:authorities="com.example.imchat.DataProvider"
-                android:exported="false" /> <!-- Required since JMessage 2.7.0 SDK 核心功能 -->
+            android:name="cn.jpush.android.service.DataProvider"
+            android:authorities="com.example.imchat.DataProvider"
+            android:exported="false" /> <!-- Required since JMessage 2.7.0 SDK 核心功能 -->
         <provider
-                android:name="cn.jpush.im.android.helpers.ipc.IMProvider"
-                android:authorities="com.example.imchat.IMProvider"
-                android:exported="false" /> <!-- Required JMessage SDK核心功能 -->
+            android:name="cn.jpush.im.android.helpers.ipc.IMProvider"
+            android:authorities="com.example.imchat.IMProvider"
+            android:exported="false" /> <!-- Required JMessage SDK核心功能 -->
         <receiver
-                android:name="cn.jpush.im.android.helpers.IMReceiver"
-                android:enabled="true"
-                android:exported="false" />
-
-<!--        &lt;!&ndash; since JCore 1.8.0 option 可选项。用于同一设备中不同应用的 jiguang 服务相互拉起的功能。 &ndash;&gt;-->
-<!--        &lt;!&ndash; 若不启用该功能可删除该组件，或把 enabled 设置成 false ；拉起服务被关闭，App 不会通过拉起服务拉起其他的 App，也不会被其他 App 拉起。 &ndash;&gt;-->
-<!--        <service-->
-<!--                android:name="cn.jpush.android.service.DaemonService"-->
-<!--                android:enabled="true"-->
-<!--                android:exported="true">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="cn.jpush.android.intent.DaemonService" />-->
-
-<!--                <category android:name="zzw.imtest" />-->
-<!--            </intent-filter>-->
-<!--        </service> &lt;!&ndash; Required. For publish channel feature &ndash;&gt;-->
-<!--        &lt;!&ndash; JPUSH_CHANNEL 是为了方便开发者统计APK分发渠道。 &ndash;&gt;-->
-<!--        &lt;!&ndash; 例如: &ndash;&gt;-->
-<!--        &lt;!&ndash; 发到 Google Play 的APK可以设置为 google-play; &ndash;&gt;-->
-<!--        &lt;!&ndash; 发到其他市场的 APK 可以设置为 xxx-market。 &ndash;&gt;-->
-<!--        &lt;!&ndash; 目前这个渠道统计功能的报表还未开放。 &ndash;&gt;-->
-
-
+            android:name="cn.jpush.im.android.helpers.IMReceiver"
+            android:enabled="true"
+            android:exported="false" />
     </application>
-
-
-    <uses-permission android:name="com.example.imchat.permission.JPUSH_MESSAGE" />
-    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- Required for jmrtc -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-
-
-
-
 
 </manifest>
