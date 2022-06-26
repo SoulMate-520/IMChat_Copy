@@ -222,29 +222,29 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
             public void onFinishedRecord(String audioPath, int duration) {
                 LogUtil.d("录音结束回调");
 
-//                File file = new File(audioPath);
-//                if (file.exists()) {
-//
-//                    //发送语音
-//                    Message message = null;
-//
-//                    try {
-//                        message = JMessageClient.createSingleVoiceMessage(userName, null, file, duration);
-//                    } catch (FileNotFoundException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//
-//                    chatAdapter.addDataLast(message);
-//
-//                    updateRecordToBottom();
-//
-//                    mPresenter.doSend(message,chatAdapter.getItemCount() - 1);
-//
-//                }else{
-//
-//                    Toast.makeText(getBaseContext(),"请重新录音",Toast.LENGTH_SHORT).show();
-//                }
+                File file = new File(audioPath);
+                if (file.exists()) {
+
+                    //发送语音
+                    Message message = null;
+
+                    try {
+                        message = JMessageClient.createSingleVoiceMessage(userName, null, file, duration);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    chatAdapter.addDataLast(message);
+
+                    updateRecordToBottom();
+
+                    mPresenter.doSend(message,chatAdapter.getItemCount() - 1);
+
+                }else{
+
+                    Toast.makeText(getBaseContext(),"请重新录音",Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

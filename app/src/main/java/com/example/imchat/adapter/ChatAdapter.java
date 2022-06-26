@@ -1,6 +1,7 @@
 package com.example.imchat.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.imchat.R;
+import com.example.imchat.util.AudioPlayManager;
 import com.example.imchat.util.LogUtil;
 import com.example.imchat.util.TimeFormat;
 import com.example.imchat.widget.BubbleImageView;
@@ -325,7 +327,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.voice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //这里设置。。。
+
 
             }
         });
