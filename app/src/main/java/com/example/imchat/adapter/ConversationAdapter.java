@@ -130,7 +130,7 @@ public class ConversationAdapter extends BaseQuickAdapter<Conversation, BaseView
                 break;
         }
 
-        helper.setText(R.id.tv_content,contentStr);
+        helper.setText(R.id.tv_conv_mess,contentStr);
     }
 
 
