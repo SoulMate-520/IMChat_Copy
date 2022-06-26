@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.imchat.R;
 import com.example.imchat.util.AudioPlayManager;
+import com.example.imchat.util.IAudioPlayListener;
 import com.example.imchat.util.LogUtil;
 import com.example.imchat.util.TimeFormat;
 import com.example.imchat.widget.BubbleImageView;
@@ -327,8 +328,24 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.voice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //这里设置。。。
+                LogUtil.d("路径"+voiceContent.getLocalPath());
+                AudioPlayManager.getInstance().startPlay(mContext, Uri.parse(voiceContent.getLocalPath()), new IAudioPlayListener() {
+                    @Override
+                    public void onStart(Uri var1) {
 
+                    }
 
+                    @Override
+                    public void onStop(Uri var1) {
+
+                    }
+
+                    @Override
+                    public void onComplete(Uri var1) {
+
+                    }
+                });
             }
         });
 
