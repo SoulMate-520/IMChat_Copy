@@ -15,11 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.imchat.R;
 import com.example.imchat.util.LogUtil;
 import com.example.imchat.util.TimeFormat;
+import com.example.imchat.widget.BubbleImageView;
 import com.example.imchat.widget.CircleImageView;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
+import cn.jpush.im.android.api.callback.DownloadCompletionCallback;
+import cn.jpush.im.android.api.content.ImageContent;
 import cn.jpush.im.android.api.content.TextContent;
 import cn.jpush.im.android.api.content.VoiceContent;
 import cn.jpush.im.android.api.enums.ContentType;
@@ -32,6 +36,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int RECEIVE_TEXT = R.layout.item_text_receive;
     private static final int SEND_VOICE = R.layout.item_voice_send;
     private static final int RECEIVE_VOICE = R.layout.item_voice_receive;
+    private static final int SEND_IMAGE = R.layout.item_image_send;
+    private static final int RECEIVE_IMAGE = R.layout.item_image_receive;
 
     LinkedList<Message> mLinkedList = new LinkedList();
 
@@ -52,19 +58,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     //尾部增添数据（用于新发消息）
     public void addDataLast(Message message) {
-
-
-
-        LogUtil.d(mLinkedList.size()+"*");
-
         mLinkedList.addLast(message);
-        LogUtil.d(mLinkedList.size()+"**");
-
-//        notifyItemInserted(mLinkedList.size());
-
-
-
-        LogUtil.d(mLinkedList.size()+"***");
     }
 
     //首部增添数据（用于上滑刷新）
@@ -91,6 +85,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 return SEND_VOICE;
             else if (message.getDirect() == MessageDirect.receive)
                 return RECEIVE_VOICE;
+        }else if (message.getContentType() == ContentType.image) {
+            if (message.getDirect() == MessageDirect.send)
+                return SEND_IMAGE;
+            else if (message.getDirect() == MessageDirect.receive)
+                return RECEIVE_IMAGE;
         }
         return super.getItemViewType(position);
     }
@@ -108,6 +107,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
             case RECEIVE_VOICE: {
                 return new ReceiveVoiceViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text_receive, parent, false));
+            }
+            case SEND_IMAGE: {
+                return new SendVoiceViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image_send, parent, false));
+            }
+            case RECEIVE_IMAGE: {
+                return new ReceiveVoiceViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image_receive, parent, false));
             }
         }
         return null;
@@ -132,6 +137,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 onBindReceiveVoiceViewHolder(holder, position);
                 return;
             }
+            case SEND_IMAGE:{
+                onBindSendImageViewHolder(holder, position);
+                return;
+            }
+            case RECEIVE_IMAGE:{
+                onBindReceiveImageViewHolder(holder, position);
+                return;
+            }
         }
     }
 
@@ -147,6 +160,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             LogUtil.d("发送状态" + String.valueOf(payload));
             switch (String.valueOf(payload)) {
                 case "going": {
+                    sendHolder.fail.setVisibility(View.INVISIBLE);
                     sendHolder.progress.setVisibility(View.VISIBLE);
                     break;
                 }
@@ -156,6 +170,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     break;
                 }
                 case "success": {
+                    sendHolder.progress.setVisibility(View.INVISIBLE);
                     sendHolder.progress.setVisibility(View.INVISIBLE);
                     break;
                 }
@@ -311,6 +326,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             @Override
             public void onClick(View v) {
                 //这里设置。。。
+
             }
         });
 
@@ -388,6 +404,119 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     }
 
+    public void onBindSendImageViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        SendImageViewHolder holder = (SendImageViewHolder) viewHolder;
+        Message message = mLinkedList.get(position);
+        if (message == null)
+            return;
+        //设置时间
+        if (position == 0) {
+            TimeFormat timeFormat = new TimeFormat(mContext, message.getCreateTime());
+            holder.time.setText(timeFormat.getDetailTime());
+            holder.time.setVisibility(View.VISIBLE);
+        } else {
+            Message oldMessage = mLinkedList.get(position - 1);
+
+            if (oldMessage != null) {
+
+                long oldTime = oldMessage.getCreateTime();
+                long newTime = message.getCreateTime();
+
+                // 如果两条消息之间的间隔超过五分钟则显示时间
+                if (newTime - oldTime > 300000) {
+                    TimeFormat timeFormat = new TimeFormat(mContext, newTime);
+                    holder.time.setText(timeFormat.getDetailTime());
+                    holder.time.setVisibility(View.VISIBLE);
+                } else {
+                    holder.time.setVisibility(View.GONE);
+                }
+
+            } else {
+                holder.time.setVisibility(View.GONE);
+            }
+        }
+
+        //头像》》
+
+        //语音内容
+        ImageContent imageContent=(ImageContent) message.getContent();
+
+        //设置语音播放
+        holder.picture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //这里设置。。。
+            }
+        });
+
+        //消息状态（用于历史消息）
+        switch (message.getStatus()) {
+            case created:
+            case send_going: {
+                holder.progress.setVisibility(View.VISIBLE);
+                break;
+            }
+            case send_fail: {
+                holder.fail.setVisibility(View.VISIBLE);
+                holder.progress.setVisibility(View.INVISIBLE);
+                break;
+            }
+            case send_success: {
+                holder.progress.setVisibility(View.INVISIBLE);
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
+    public void onBindReceiveImageViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        ReceiveImageViewHolder holder = (ReceiveImageViewHolder) viewHolder;
+        Message message = mLinkedList.get(position);
+        if (message == null)
+            return;
+        //设置时间
+        if (position == 0) {
+            TimeFormat timeFormat = new TimeFormat(mContext, message.getCreateTime());
+            holder.time.setText(timeFormat.getDetailTime());
+            holder.time.setVisibility(View.VISIBLE);
+        } else {
+            Message oldMessage = mLinkedList.get(position - 1);
+
+            if (oldMessage != null) {
+
+                long oldTime = oldMessage.getCreateTime();
+                long newTime = message.getCreateTime();
+
+                // 如果两条消息之间的间隔超过五分钟则显示时间
+                if (newTime - oldTime > 300000) {
+                    TimeFormat timeFormat = new TimeFormat(mContext, newTime);
+                    holder.time.setText(timeFormat.getDetailTime());
+                    holder.time.setVisibility(View.VISIBLE);
+                } else {
+                    holder.time.setVisibility(View.GONE);
+                }
+
+            } else {
+                holder.time.setVisibility(View.GONE);
+            }
+        }
+
+        //头像》》
+
+        //语音内容
+        VoiceContent voiceContent=(VoiceContent) message.getContent();
+
+        //设置语音播放
+        holder.picture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //这里设置。。。
+            }
+        });
+
+    }
+
     static class SendTextViewHolder extends RecyclerView.ViewHolder {
         TextView time;
         CircleImageView header;
@@ -449,6 +578,36 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             header = itemView.findViewById(R.id.chat_item_header);
             duration = itemView.findViewById(R.id.tv_duration);
             voice = itemView.findViewById(R.id.rlVoice);
+        }
+    }
+
+    static class SendImageViewHolder extends RecyclerView.ViewHolder {
+        TextView time;
+        CircleImageView header;
+        BubbleImageView picture;
+        ImageView fail;
+        ProgressBar progress;
+
+        public SendImageViewHolder(View itemView) {
+            super(itemView);
+            time = itemView.findViewById(R.id.item_tv_time);
+            header = itemView.findViewById(R.id.chat_item_header);
+            picture = itemView.findViewById(R.id.bivPic);
+            fail = itemView.findViewById(R.id.chat_item_fail);
+            progress = itemView.findViewById(R.id.chat_item_progress);
+        }
+    }
+
+    static class ReceiveImageViewHolder extends RecyclerView.ViewHolder {
+        TextView time;
+        CircleImageView header;
+        BubbleImageView picture;
+
+        public ReceiveImageViewHolder(View itemView) {
+            super(itemView);
+            time = itemView.findViewById(R.id.item_tv_time);
+            header = itemView.findViewById(R.id.chat_item_header);
+            picture = itemView.findViewById(R.id.bivPic);
         }
     }
 

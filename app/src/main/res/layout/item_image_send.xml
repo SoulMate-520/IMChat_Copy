@@ -23,7 +23,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp">
 
-        <com.hrl.chaui.widget.CircleImageView
+        <com.example.imchat.widget.CircleImageView
             android:id="@+id/chat_item_header"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -44,7 +44,7 @@
             android:orientation="horizontal">
 
 
-            <com.hrl.chaui.widget.BubbleImageView
+            <com.example.imchat.widget.BubbleImageView
                 android:id="@+id/bivPic"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
