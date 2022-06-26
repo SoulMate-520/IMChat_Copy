@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.imchat.R;
 import com.example.imchat.util.AudioPlayManager;
+import com.example.imchat.util.GlideUtils;
 import com.example.imchat.util.IAudioPlayListener;
 import com.example.imchat.util.LogUtil;
 import com.example.imchat.util.TimeFormat;
@@ -529,10 +530,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         //头像》》
 
-        //语音内容
+        //图片内容
         ImageContent imageContent = (ImageContent) message.getContent();
 
-        //设置语音播放
+        //设置缩略图
+        GlideUtils.loadChatImage(mContext,imageContent.getLocalThumbnailPath(),holder.picture);
+
+        //设置图片点击
         holder.picture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -595,10 +599,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         //头像》》
 
-        //语音内容
-        VoiceContent voiceContent = (VoiceContent) message.getContent();
+        //图片内容
+        ImageContent imageContent = (ImageContent) message.getContent();
 
-        //设置语音播放
+        //设置缩略图
+        GlideUtils.loadChatImage(mContext,imageContent.getLocalThumbnailPath(),holder.picture);
+
+        //设置图片点击
         holder.picture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,7 +1,9 @@
 package com.example.imchat.chat.view;
 
-import android.app.Application;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -67,8 +69,11 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
     LinearLayout mLlAdd;//添加布局
     @BindView(R.id.swipe_chat)
     SwipeRefreshLayout mSwipeRefresh;//下拉刷新
+    @BindView(R.id.ivPhoto)
+    ImageView mIvPhoto;//相册
 
-    private  ChatUiHelper mUiHelper;
+
+    private ChatUiHelper mUiHelper;
 
     private IChatPresenter mPresenter;
 
@@ -76,7 +81,7 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
 
     //需要传进来的参数
     //目标用户
-    private String userName = "654321";
+    private String userName = "123456";
 
 
     //会话聊天消息
@@ -139,16 +144,15 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
         messageList = mPresenter.getListMessage();
 
         //初始化时最多加载15条消息
-        if(messageList!=null) {
+        if (messageList != null) {
             //获取顶部索引
-            topIndex = messageList.size() ;
+            topIndex = messageList.size();
             //不够15条全部加载
             if (topIndex < 15) {
                 chatAdapter.setData(messageList);
                 //加载完毕
-                topIndex=-1;
-            }
-            else {
+                topIndex = -1;
+            } else {
                 chatAdapter.setData(messageList.subList(topIndex - 15, topIndex));
                 //减去加载条数
                 topIndex -= 15;
@@ -239,16 +243,67 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
 
                     updateRecordToBottom();
 
-                    mPresenter.doSend(message,chatAdapter.getItemCount() - 1);
+                    mPresenter.doSend(message, chatAdapter.getItemCount() - 1);
 
-                }else{
+                } else {
 
-                    Toast.makeText(getBaseContext(),"请重新录音",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "请重新录音", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
+        //打开相册
+        mIvPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent picture = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(picture, 0);
+            }
+        });
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 0 && resultCode == RESULT_OK && data != null) {
+            //图库
+
+            String pathResult = null;  // 获取图片路径的方法调用
+            try {
+                Uri uri = data.getData();
+                pathResult = uri.getPath();
+                LogUtil.d("图片路径===" + pathResult);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            File file = new File(pathResult);
+            if (file.exists()) {
+
+                //发送语音
+                Message message = null;
+
+                try {
+                    message = JMessageClient.createSingleImageMessage(userName, null, file);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+
+                chatAdapter.addDataLast(message);
+
+                updateRecordToBottom();
+
+                mPresenter.doSend(message, chatAdapter.getItemCount() - 1);
+
+            } else {
+
+                Toast.makeText(getBaseContext(), "请重新选择图片", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
 
     /**
      * 聊天记录显示到最下方
@@ -263,22 +318,20 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
     /**
      * 系统返回键收起键盘
      */
-    public void onBackPressed(){
+    public void onBackPressed() {
 
-        if(mUiHelper.isSoftInputShown()||mUiHelper.isBottomLayoutShown()){
+        if (mUiHelper.isSoftInputShown() || mUiHelper.isBottomLayoutShown()) {
             //收起
             mUiHelper.hideBottomLayout(false);
             mUiHelper.hideSoftInput();
             mEtContent.clearFocus();
             mIvEmo.setImageResource(R.mipmap.ic_emoji);
 
-        }else{
+        } else {
             //退出
             super.onBackPressed();
 
         }
-
-
 
 
     }
@@ -303,14 +356,13 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
 //            messageList.add(message);
 
             runOnUiThread(new Runnable() {
-                @Override public void run() {
+                @Override
+                public void run() {
                     chatAdapter.addDataLast(message);
-                    chatAdapter.notifyItemChanged(chatAdapter.getItemCount()-1);
+                    chatAdapter.notifyItemChanged(chatAdapter.getItemCount() - 1);
                     updateRecordToBottom();
                 }
             });
-
-
 
 
 //            //            获取消息类型，如text voice image eventNotification等。
@@ -335,8 +387,6 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
 //
 //                    break;
 //            }
-
-
 
 
         }
@@ -421,7 +471,7 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
         if (topIndex != -1) {
             //不够10条全部加载
             if (topIndex < 10) {
-                chatAdapter.addDataFirst(messageList.subList(0,topIndex));
+                chatAdapter.addDataFirst(messageList.subList(0, topIndex));
                 //滚动至顶部
                 mRvChat.scrollToPosition(0);
                 //已加载全部消息
