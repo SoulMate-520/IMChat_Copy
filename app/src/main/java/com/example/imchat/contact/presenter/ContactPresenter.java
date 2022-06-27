@@ -33,35 +33,8 @@ public class ContactPresenter {
         this.mContModel = mContModel;
     }
 
-//
-//    public void getContactsList(){
-//        list.clear();
-//        ContactManager.getFriendList(new GetUserInfoListCallback() {
-//            public void gotResult(int responseCode, String responseMessage, List<UserInfo> userInfoList) {
-//                if (0 == responseCode) {
-//                    //获取好友列表成功
-//                    list.clear();
-//                    for(UserInfo userInfo : userInfoList){
-//                        ContactBean bean = new ContactBean();
-//                        bean.setNickName(getNameUtil.getName(userInfo));
-//                        bean.setUserName(userInfo.getUserName());
-//                        list.add(bean);
-//                    }
-//
-//
-//                    mContModel.sortData(list);
-//                    mContView.setContactsList(list);
-//                    mContView.initEvents(list);
-//                } else {
-//                    //获取好友列表失败
-//                }
-//            }
-//        });
-//
-//    }
 
-    //运行时更新
-   public void updateData(){
+    public void getContactsList(){
         list.clear();
         ContactManager.getFriendList(new GetUserInfoListCallback() {
             public void gotResult(int responseCode, String responseMessage, List<UserInfo> userInfoList) {
@@ -75,9 +48,10 @@ public class ContactPresenter {
                         list.add(bean);
                     }
 
-                    mContView.update();
 
-
+                    mContModel.sortData(list);
+                    mContView.setContactsList(list);
+                    mContView.initEvents(list);
                 } else {
                     //获取好友列表失败
                 }
@@ -86,10 +60,36 @@ public class ContactPresenter {
 
     }
 
-    public void updateContact(){
-        mContModel.sortData(list);
-        mContView.setContactsList(list);
-        mContView.initEvents(list);
-    }
+    //运行时更新
+//   public void updateData(){
+//        list.clear();
+//        ContactManager.getFriendList(new GetUserInfoListCallback() {
+//            public void gotResult(int responseCode, String responseMessage, List<UserInfo> userInfoList) {
+//                if (0 == responseCode) {
+//                    //获取好友列表成功
+//                    list.clear();
+//                    for(UserInfo userInfo : userInfoList){
+//                        ContactBean bean = new ContactBean();
+//                        bean.setNickName(getNameUtil.getName(userInfo));
+//                        bean.setUserName(userInfo.getUserName());
+//                        list.add(bean);
+//                    }
+//
+//                    mContView.update();
+//
+//
+//                } else {
+//                    //获取好友列表失败
+//                }
+//            }
+//        });
+//
+//    }
+//
+//    public void updateContact(){
+//        mContModel.sortData(list);
+//        mContView.setContactsList(list);
+//        mContView.initEvents(list);
+//    }
 
 }

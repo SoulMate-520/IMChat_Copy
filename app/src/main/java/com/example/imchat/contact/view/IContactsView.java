@@ -22,5 +22,4 @@ public interface IContactsView {
      */
     void initEvents(List<ContactBean> userList);
 
-    void update();
 }

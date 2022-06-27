@@ -29,11 +29,12 @@
         android:background="@color/white"
         android:hint="用户名"
         android:layout_margin="10dp"
-        android:imeOptions="actionDone"
-        android:textAlignment="center"
+        android:imeOptions="actionSearch"
+        android:maxLines="1"
         android:textSize="30sp" />
 
     <RelativeLayout
+        android:visibility="invisible"
         android:id="@+id/rl_new_friend"
         android:layout_width="match_parent"
         android:layout_height="69dp"

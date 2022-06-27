@@ -43,16 +43,16 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 
 	@BindView(R.id.recyc_cont)
 	RecyclerView mRecyclerView;
-	@BindView(R.id.relat_new_friend)
-	RelativeLayout mRelativeLayout;
 	@BindView(R.id.side_bar)
 	SideBar sideBar;
+	@BindView(R.id.relat_new_friend)
+	RelativeLayout newFriend;
+	@BindView(R.id.relat_apply_friend)
+	RelativeLayout applyFriend;
 	private LinearLayoutManager layoutManager;
 	private CustomItemDecoration decoration;
 	private ContactAdapter adapter;
 	private ContactPresenter presenter;
-
-	RelativeLayout rlApply;
 
 	// TODO: Rename parameter arguments, choose names that match
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -97,21 +97,6 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(getLayoutId(), container, false);
 		ButterKnife.bind(this, view);
-
-
-		mRelativeLayout.setOnClickListener(new View.OnClickListener() {
-			@Override public void onClick(View v) {
-				startActivity(new Intent(getActivity(), NewFriendActivity.class));
-			}
-		});
-
-		rlApply =  view.findViewById(R.id.relat_apply_friend);
-		rlApply.setOnClickListener(new View.OnClickListener() {
-			@Override public void onClick(View v) {
-				startActivity(new Intent(getActivity(), ApplyFriendActivity.class));
-			}
-		});
-
 		return view;
 	}
 
@@ -124,9 +109,17 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 	protected void initView() {
 		mRecyclerView.setLayoutManager(layoutManager = new LinearLayoutManager(getContext()));
 		mRecyclerView.addItemDecoration(decoration = new CustomItemDecoration(getContext()));
+		newFriend.setOnClickListener(new View.OnClickListener() {
+			@Override public void onClick(View v) {
+				startActivity(new Intent(getActivity(), NewFriendActivity.class));
+			}
+		});
 
-
-
+		applyFriend.setOnClickListener(new View.OnClickListener() {
+			@Override public void onClick(View v) {
+				startActivity(new Intent(getActivity(), ApplyFriendActivity.class));
+			}
+		});
 	}
 
 	@Override
@@ -139,7 +132,6 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 	public void setContactsList(List<ContactBean> userList) {
 		adapter = new ContactAdapter(userList);
 		mRecyclerView.setAdapter(adapter);
-
 	}
 
 	@Override
@@ -166,24 +158,9 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 		decoration.setDatas(list, tagsStr);
 	}
 
-	public ContactPresenter getPresenter() {
-		return presenter;
-
-	}
-
-	//回调ui线程数据更新
-	public void update(){
-		getActivity().runOnUiThread(new Runnable() {
-			@Override public void run() {
-				presenter.updateContact();
-			}
-		});
-	}
-
 	@Override
 	public void onResume() {
 		super.onResume();
-
-		presenter.updateData();
+		presenter.getContactsList();
 	}
 }
