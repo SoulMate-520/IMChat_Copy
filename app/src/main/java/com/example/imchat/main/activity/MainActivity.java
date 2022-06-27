@@ -64,20 +64,6 @@ public class MainActivity extends BaseActivity {
 		//底部导航栏
 		setBottomNavigationBar();
 
-		//测试用
-		//i=0才成功 密码错误：Invalid password
-
-		JMessageClient.login("123456", "123456", new BasicCallback() {
-			@Override public void gotResult(int i, String s) {
-				LogUtil.d(""+i);
-				LogUtil.d(s);
-
-				startActivity(new Intent(MyApplication.getContext(),ChatActivity.class));
-			}
-		});
-
-
-
 	}
 
 	public void requestPower() {
