@@ -31,6 +31,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.content.EventNotificationContent;
+import cn.jpush.im.android.api.content.TextContent;
+import cn.jpush.im.android.api.event.ContactNotifyEvent;
+import cn.jpush.im.android.api.event.MessageEvent;
+import cn.jpush.im.android.api.model.GroupInfo;
+import cn.jpush.im.android.api.model.Message;
 import cn.jpush.im.api.BasicCallback;
 
 public class MainActivity extends BaseActivity {
@@ -71,20 +77,25 @@ public class MainActivity extends BaseActivity {
 		//测试用
 		//i=0才成功 密码错误：Invalid password
 
-		JMessageClient.login("654321", "654321", new BasicCallback() {
-			@Override public void gotResult(int i, String s) {
-				LogUtil.d(""+i);
-				LogUtil.d(s);
+//		JMessageClient.login("654321", "654321", new BasicCallback() {
+//			@Override public void gotResult(int i, String s) {
+//				LogUtil.d(""+i);
+//				LogUtil.d(s);
+//
+//				Intent intent = new Intent(getApplicationContext(),ChatActivity.class);
+//				intent.putExtra("userName","123456");
+//
+//				startActivity(intent);
+//
+////				ActivityUtil.actionStart(ChatActivity.class,"123456","userName");
+//
+//			}
+//		});
 
-				Intent intent = new Intent(getApplicationContext(),ChatActivity.class);
-				intent.putExtra("userName","123456");
+		Intent intent = new Intent(getApplicationContext(),ChatActivity.class);
+		intent.putExtra("userName","123456");
 
-				startActivity(intent);
-
-//				ActivityUtil.actionStart(ChatActivity.class,"123456","userName");
-
-			}
-		});
+		startActivity(intent);
 
 
 
@@ -252,6 +263,92 @@ public class MainActivity extends BaseActivity {
 
 
 
+	/**
+	 * 好友事件
+	 * 好友相关事件通知实体类ContactNotifyEvent
+	 */
+    public void onEvent(ContactNotifyEvent event) {
 
 
-}
+//    	getType()	Type	获取好友通知事件的具体类型。
+//      getReason()	String	获取事件发生的理由，该字段由对方发起请求时所填。
+//      getFromUsername()	String	获取事件发起者用户的username
+//      getfromUserAppKey()	String	获取事件发起者用户所属应用的appKey
+
+
+
+
+    }
+
+
+
+	/**
+	 * 消息/会话事件
+	 * 在线消息事件实体类 MessageEvent
+	 * @param event
+	 */
+	public void onEvent(MessageEvent event) {
+
+		//更新消息
+		runOnUiThread(new Runnable() {
+			@Override public void run() {
+				contentFragment1.getPresenter().getConversation();
+			}
+		});
+
+
+//		Log.i(TAG, "onEvent:" + "MessageEvent");
+//		final Message message = event.getMessage();//获取消息对象
+//		TextContent textContent = (TextContent) message.getContent();
+//		Log.i("接收到的对方的消息：", "" + textContent.getText());
+//
+//		//获取消息类型，如text voice image eventNotification等。
+//		switch (message.getContentType()) {
+//		//处理事件提醒消息，此处message的contentType类型为eventNotification。
+//		case eventNotification:
+//			//获取事件发生的群的群信息
+//			GroupInfo groupInfo = (GroupInfo) message.getTargetInfo();
+//			//获取事件具体的内容对象
+//			EventNotificationContent eventNotificationContent = (EventNotificationContent) message.getContent();
+//			//获取事件具体类型
+//			switch (eventNotificationContent.getEventNotificationType()) {
+//			case group_member_added:
+//				//群成员加群事件
+//				break;
+//			case group_member_removed:
+//				//群成员被踢事件
+//				break;
+//			case group_member_exit:
+//				//群成员退群事件
+//				break;
+//			case group_info_updated://since 2.2.1
+//				//群信息变更事件
+//				break;
+//
+//			}
+//			break;
+//
+//		case file://文件
+//
+//			break;
+//		case text://文本
+//
+//			break;
+//		case image://图片
+//
+//			break;
+//		case video://视频
+//
+//			break;
+//		case location:
+//
+//			break;
+//		case voice://声音
+//
+//			break;
+//		}
+	}
+
+
+
+	}

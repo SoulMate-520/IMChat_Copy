@@ -3,6 +3,7 @@ package com.example.imchat.conversation.presenter;
 import com.example.imchat.bean.ContactBean;
 import com.example.imchat.constant.Constant;
 import com.example.imchat.conversation.view.IConversationView;
+import com.example.imchat.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,11 +24,12 @@ import cn.jpush.im.android.api.model.UserInfo;
 public class ConversationPresenter {
 
     private IConversationView mConversationView;
+    private List<Conversation> list;
 
     public ConversationPresenter(IConversationView mConversationView){
         this.mConversationView = mConversationView;
     }
-    public void getConversation(MessageEvent event, List<Conversation> list){
+    public void getConversation(MessageEvent event ){
         boolean handlable = false;
         Message msg = event.getMessage();
         if (msg.getTargetType() == ConversationType.single){
@@ -55,12 +57,16 @@ public class ConversationPresenter {
 
     }
     public void getConversation(){
-        List<Conversation> list = new ArrayList<>();
+        list = new ArrayList<>();
         list.clear();
         if(JMessageClient.getConversationList()!=null){
             list.addAll(JMessageClient.getConversationList());
         }
 
         mConversationView.setConversation(list);
+    }
+
+    public List<Conversation> getList() {
+        return list;
     }
 }

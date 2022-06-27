@@ -331,6 +331,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 imageDialog.show();
 
                 View view = imageDialog.getView();
+                LogUtil.d("suo1"+imageContent.getLocalPath());
                 PhotoView photoView = view.findViewById(R.id.photo_view);
                 Button originPicture = view.findViewById(R.id.bt_originPicture);
 

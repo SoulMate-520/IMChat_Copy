@@ -48,7 +48,9 @@ public class ContentFragment1 extends BaseFragment implements IConversationView 
 	ConversationAdapter adapter;
 	ConversationPresenter presenter;
 
-
+	public ConversationPresenter getPresenter() {
+		return presenter;
+	}
 
 	// TODO: Rename parameter arguments, choose names that match
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -109,9 +111,9 @@ public class ContentFragment1 extends BaseFragment implements IConversationView 
 
 	@Override
 	protected void initData() {
-		//订阅接收消息,子类只要重写onEvent就能收到消息
+
 		presenter = new ConversationPresenter(this);
-//		JMessageClient.registerEventReceiver(this);
+
 	}
 
 	@Override
@@ -150,4 +152,8 @@ public class ContentFragment1 extends BaseFragment implements IConversationView 
 		super.onResume();
 		presenter.getConversation();
 	}
+
+
+
+
 }
