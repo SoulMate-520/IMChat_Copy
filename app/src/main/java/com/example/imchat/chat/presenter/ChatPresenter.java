@@ -104,13 +104,13 @@ public class ChatPresenter implements IChatPresenter {
 
 	}
 
-	/**
-	 * 昵称或username
-	 * @return
-	 */
-	@Override public String getTitle() {
-//		UserInfo userInfo = conversation.getTitle()
-		return conversation.getTitle();
-	}
+//	/**
+//	 * 昵称或username
+//	 * @return
+//	 */
+//	@Override public String getTitle() {
+////		UserInfo userInfo = conversation.getTitle()
+//		return conversation.getTitle();
+//	}
 
 }

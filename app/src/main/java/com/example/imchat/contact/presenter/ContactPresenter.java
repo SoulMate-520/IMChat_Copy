@@ -1,5 +1,6 @@
 package com.example.imchat.contact.presenter;
 
+import com.example.imchat.MyApplication;
 import com.example.imchat.bean.ContactBean;
 import com.example.imchat.chat.presenter.IChatPresenter;
 import com.example.imchat.chat.view.IChatView;
@@ -25,13 +26,43 @@ public class ContactPresenter {
     private IContactsView mContView;
     private IContactModel mContModel;
 
-    public ContactPresenter(IContactsView mContView, IContactModel mContModel){
+    private List<ContactBean> list = new ArrayList<>();
+
+    public ContactPresenter(IContactsView mContView){
         this.mContView = mContView;
         this.mContModel = mContModel;
     }
 
-    public void getContactsList(){
-        List<ContactBean> list = new ArrayList<>();
+//
+//    public void getContactsList(){
+//        list.clear();
+//        ContactManager.getFriendList(new GetUserInfoListCallback() {
+//            public void gotResult(int responseCode, String responseMessage, List<UserInfo> userInfoList) {
+//                if (0 == responseCode) {
+//                    //获取好友列表成功
+//                    list.clear();
+//                    for(UserInfo userInfo : userInfoList){
+//                        ContactBean bean = new ContactBean();
+//                        bean.setNickName(getNameUtil.getName(userInfo));
+//                        bean.setUserName(userInfo.getUserName());
+//                        list.add(bean);
+//                    }
+//
+//
+//                    mContModel.sortData(list);
+//                    mContView.setContactsList(list);
+//                    mContView.initEvents(list);
+//                } else {
+//                    //获取好友列表失败
+//                }
+//            }
+//        });
+//
+//    }
+
+    //运行时更新
+   public void updateData(){
+        list.clear();
         ContactManager.getFriendList(new GetUserInfoListCallback() {
             public void gotResult(int responseCode, String responseMessage, List<UserInfo> userInfoList) {
                 if (0 == responseCode) {
@@ -43,9 +74,10 @@ public class ContactPresenter {
                         bean.setUserName(userInfo.getUserName());
                         list.add(bean);
                     }
-                    mContModel.sortData(list);
-                    mContView.setContactsList(list);
-                    mContView.initEvents(list);
+
+                    mContView.update();
+
+
                 } else {
                     //获取好友列表失败
                 }
@@ -53,4 +85,11 @@ public class ContactPresenter {
         });
 
     }
+
+    public void updateContact(){
+        mContModel.sortData(list);
+        mContView.setContactsList(list);
+        mContView.initEvents(list);
+    }
+
 }

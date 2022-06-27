@@ -18,6 +18,11 @@ public class User  extends LitePalSupport {
 
 	private String passWord;
 
+	//改造为存别人发来的邀请
+	public User(String userName) {
+		this.userName = userName;
+	}
+
 	public String getUserName() {
 		return userName;
 	}

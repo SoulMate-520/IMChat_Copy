@@ -3,6 +3,7 @@ package com.example.imchat.util;
 import com.example.imchat.bean.User;
 
 import java.util.List;
+import org.litepal.crud.DataSupport;
 
 /**
  * @author Soul Mate
@@ -18,8 +19,16 @@ public class DataBaseHelper {
 	 * example
 	 * @return
 	 */
-	public static List<User> updateUser(User user){
-		return null;
+	public static void insertUser(User user){
+		user.save();
+	}
+
+	public static void deleteUser(User user){
+		user.delete();
+	}
+
+	public static List<User> getAllUser( ){
+		return DataSupport.findAll(User.class);
 	}
 
 

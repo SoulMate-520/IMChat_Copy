@@ -20,17 +20,22 @@ import com.example.imchat.MyApplication;
 import com.example.imchat.R;
 import com.example.imchat.adapter.viewPageAdapter;
 import com.example.imchat.base.BaseActivity;
+import com.example.imchat.bean.User;
 import com.example.imchat.chat.view.ChatActivity;
 import com.example.imchat.contact.view.ContactFragment;
 import com.example.imchat.main.fragment.ContentFragment1;
 import com.example.imchat.main.fragment.ContentFragment2;
 import com.example.imchat.main.fragment.ContentFragment3;
 import com.example.imchat.util.ActivityUtil;
+import com.example.imchat.util.DataBaseHelper;
 import com.example.imchat.util.LogUtil;
+
+import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.content.EventNotificationContent;
 import cn.jpush.im.android.api.content.TextContent;
@@ -57,6 +62,9 @@ public class MainActivity extends BaseActivity {
 	private androidx.fragment.app.FragmentManager fragmentManager;
 
 
+	View view;
+
+
 
 	@Override public int getLayoutId() {
 		return R.layout.activity_main;
@@ -66,6 +74,9 @@ public class MainActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 //		setContentView(R.layout.activity_main);
+
+		//数据库
+		LitePal.getDatabase();
 
 		//获取用户ID
 		Intent intent = getIntent();
@@ -205,6 +216,7 @@ public class MainActivity extends BaseActivity {
 		bottomNavigationBar =  findViewById(R.id.bottom_navigation_bar);
 		mTitle = findViewById(R.id.tv_title);
 		mViewPager = findViewById(R.id.viewPager);
+		view = findViewById(R.id.v_new);
 	}
 
 	/**
@@ -284,6 +296,30 @@ public class MainActivity extends BaseActivity {
 	 * 好友相关事件通知实体类ContactNotifyEvent
 	 */
     public void onEvent(ContactNotifyEvent event) {
+
+    	//别人请求添加我
+    	if(event.getType()== ContactNotifyEvent.Type.invite_received){
+
+    		//添加到本地数据库
+			DataBaseHelper.insertUser(new User(event.getFromUsername()));
+
+			runOnUiThread(new Runnable() {
+				@Override public void run() {
+					view.setVisibility(View.VISIBLE);
+				}
+			});
+		}
+
+    	//更新通讯录
+    	if( event.getType()== ContactNotifyEvent.Type.invite_accepted ){
+			runOnUiThread(new Runnable() {
+				@Override public void run() {
+					contentFragment2.getPresenter().updateData();
+				}
+			});
+		}
+
+
 
 
 //    	getType()	Type	获取好友通知事件的具体类型。

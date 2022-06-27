@@ -1,5 +1,6 @@
 package com.example.imchat.main.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,8 @@ import com.example.imchat.bean.ContactBean;
 import com.example.imchat.contact.model.IContactModel;
 import com.example.imchat.contact.presenter.ContactPresenter;
 import com.example.imchat.contact.view.IContactsView;
+import com.example.imchat.main.activity.ApplyFriendActivity;
+import com.example.imchat.main.activity.NewFriendActivity;
 import com.example.imchat.util.ActivityUtil;
 import com.example.imchat.util.SortUtil;
 import com.example.imchat.util.contactUtil.CustomItemDecoration;
@@ -48,6 +51,10 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 	private CustomItemDecoration decoration;
 	private ContactAdapter adapter;
 	private ContactPresenter presenter;
+	@BindView(R.id.relat_new_friend)
+	RelativeLayout rlNewFriend;
+	@BindView(R.id.relat_apply_friend)
+	RelativeLayout rlApply;
 
 	// TODO: Rename parameter arguments, choose names that match
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -104,11 +111,24 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 	protected void initView() {
 		mRecyclerView.setLayoutManager(layoutManager = new LinearLayoutManager(getContext()));
 		mRecyclerView.addItemDecoration(decoration = new CustomItemDecoration(getContext()));
+
+		rlNewFriend.setOnClickListener(new View.OnClickListener() {
+			@Override public void onClick(View v) {
+				startActivity(new Intent(getActivity(), NewFriendActivity.class));
+			}
+		});
+
+		rlApply.setOnClickListener(new View.OnClickListener() {
+			@Override public void onClick(View v) {
+				startActivity(new Intent(getActivity(), ApplyFriendActivity.class));
+			}
+		});
+
 	}
 
 	@Override
 	protected void initData() {
-		presenter = new ContactPresenter(this,this);
+		presenter = new ContactPresenter(this);
 
 	}
 
@@ -116,6 +136,7 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 	public void setContactsList(List<ContactBean> userList) {
 		adapter = new ContactAdapter(userList);
 		mRecyclerView.setAdapter(adapter);
+
 	}
 
 	@Override
@@ -142,9 +163,24 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 		decoration.setDatas(list, tagsStr);
 	}
 
+	public ContactPresenter getPresenter() {
+		return presenter;
+
+	}
+
+	//回调ui线程数据更新
+	public void update(){
+		getActivity().runOnUiThread(new Runnable() {
+			@Override public void run() {
+				presenter.updateContact();
+			}
+		});
+	}
+
 	@Override
 	public void onResume() {
 		super.onResume();
-		presenter.getContactsList();
+
+		presenter.updateData();
 	}
 }

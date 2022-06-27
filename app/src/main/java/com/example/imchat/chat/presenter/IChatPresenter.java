@@ -18,5 +18,5 @@ public interface IChatPresenter {
 	UserInfo getUserInfo();
 	List<Message> getListMessage();
 
-	String  getTitle();
+//	String  getTitle();
 }

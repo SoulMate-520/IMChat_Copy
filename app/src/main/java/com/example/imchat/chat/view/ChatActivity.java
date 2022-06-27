@@ -142,7 +142,7 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
 
 
         //标题
-        mTitle.setText(mPresenter.getTitle());
+        mTitle.setText(userName);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRvChat.setLayoutManager(linearLayoutManager);
