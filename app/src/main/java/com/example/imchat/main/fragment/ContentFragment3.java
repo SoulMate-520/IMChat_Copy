@@ -1,18 +1,26 @@
 package com.example.imchat.main.fragment;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.MediaStore;
 import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +30,8 @@ import com.example.imchat.R;
 import com.example.imchat.base.BaseFragment;
 import com.example.imchat.login.LoginActivity;
 import com.example.imchat.main.activity.MainActivity;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,8 +47,8 @@ public class ContentFragment3 extends BaseFragment {
     MainActivity activity;
 
     //获取控件
-    TextView exitTV;
-    TextView userNameTV;
+    TextView exitTV, userNameTV;
+    ImageView head;
     RelativeLayout updatePwdRL;
 
     //数据
@@ -98,6 +108,7 @@ public class ContentFragment3 extends BaseFragment {
         userNameTV = view.findViewById(R.id.tv_username);
         updatePwdRL = view.findViewById(R.id.rl_scanner);
         exitTV = view.findViewById(R.id.tv_exit);
+        head = view.findViewById(R.id.iv_head);
 
         //登出按钮点击事件
         exitTV.setOnClickListener(v -> activity.onDestroy());
@@ -107,9 +118,63 @@ public class ContentFragment3 extends BaseFragment {
         //修改密码点击事件
         updatePwdRL.setOnClickListener(v -> updatePwd());
 
+        //修改头像点击事件
+        head.setOnClickListener(v -> updateHead());
+
         return view;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 0 && resultCode == RESULT_OK && data != null) {
+            //图库
+            String path = null;
+            try {
+                Uri uri = data.getData();
+                Cursor cursor = MyApplication.getContext().getContentResolver().query(uri, null, null, null, null);
+                if (cursor.moveToFirst()) {
+                    try {
+                        path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                cursor.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            File file = new File(path);
+
+            String finalPath = path;
+            JMessageClient.updateUserAvatar(file, new BasicCallback() {
+                @Override
+                public void gotResult(int i, String s) {
+                    System.out.println(s);
+                    if (i == 0) {
+                        Toast.makeText(MyApplication.getContext(), "修改成功！", Toast.LENGTH_SHORT).show();
+                        head.setImageBitmap(BitmapFactory.decodeFile(finalPath));
+                    } else {
+                        Toast.makeText(MyApplication.getContext(), "修改失败！", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * 更改头像
+     */
+    private void updateHead() {
+        Intent picture = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(picture, 0);
+    }
+
+    /**
+     * 更改密码
+     */
     private void updatePwd() {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_update_password, null);
         final EditText updatePwd1ETxt = (EditText) dialogView.findViewById(R.id.update_pwd1);
@@ -131,10 +196,10 @@ public class ContentFragment3 extends BaseFragment {
                         JMessageClient.updateUserPassword(updatePwd1, updatePwd2, new BasicCallback() {
                             @Override
                             public void gotResult(int i, String s) {
-                                if (i == 0){
+                                if (i == 0) {
                                     Toast.makeText(MyApplication.getContext(), "修改成功！", Toast.LENGTH_SHORT).show();
                                     dialog.dismiss();
-                                }else {
+                                } else {
                                     Toast.makeText(MyApplication.getContext(), "修改失败！", Toast.LENGTH_SHORT).show();
                                 }
                             }
