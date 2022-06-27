@@ -17,8 +17,10 @@ import com.example.imchat.widget.CircleImageView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.jpush.im.android.api.ContactManager;
 import cn.jpush.im.android.api.callback.GetAvatarBitmapCallback;
 import cn.jpush.im.android.api.model.UserInfo;
+import cn.jpush.im.api.BasicCallback;
 
 public class ApplyFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<UserInfo> mUserInfoList=new ArrayList<>();
@@ -54,7 +56,17 @@ public class ApplyFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         holder.confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                ContactManager.acceptInvitation(userInfo.getUserName(), null, new BasicCallback() {
+                    @Override
+                    public void gotResult(int i, String s) {
+                            if(i==0){
+                                holder.confirm.setText("已同意");
+                                holder.confirm.setClickable(false);
+                            }else{
+                                Toast.makeText(MyApplication.getContext(), "同意失败！", Toast.LENGTH_SHORT).show();
+                            }
+                    }
+                });
             }
         });
     }

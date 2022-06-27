@@ -13,12 +13,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.imchat.MyApplication;
 import com.example.imchat.R;
+import com.example.imchat.bean.Constant;
 import com.example.imchat.widget.CircleImageView;
 
+import cn.jpush.im.android.api.ContactManager;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.callback.GetAvatarBitmapCallback;
 import cn.jpush.im.android.api.callback.GetUserInfoCallback;
 import cn.jpush.im.android.api.model.UserInfo;
+import cn.jpush.im.api.BasicCallback;
 
 public class NewFriendActivity extends AppCompatActivity {
 
@@ -61,7 +64,17 @@ public class NewFriendActivity extends AppCompatActivity {
                                     confirm.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-
+                                            ContactManager.sendInvitationRequest(userName, null, "", new BasicCallback() {
+                                                @Override
+                                                public void gotResult(int i, String s) {
+                                                    if(i==0){
+                                                        confirm.setText("已申请");
+                                                        confirm.setClickable(false);
+                                                    }else{
+                                                        Toast.makeText(MyApplication.getContext(), "发送失败！", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
                                         }
                                     });
                                 }else
