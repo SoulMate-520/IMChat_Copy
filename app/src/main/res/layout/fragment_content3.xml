@@ -18,7 +18,6 @@
             android:layout_height="75dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="13dp"
-            android:background="@color/blue"
             android:clickable="true"
             android:src="@mipmap/ic_head_default_right" />
 

@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import java.io.File;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.callback.GetAvatarBitmapCallback;
 import cn.jpush.im.android.api.callback.GetUserInfoCallback;
 import cn.jpush.im.android.api.model.UserInfo;
 import cn.jpush.im.api.BasicCallback;
@@ -55,7 +57,7 @@ public class ContentFragment3 extends BaseFragment {
 
     //数据
     String userName;
-    File headImage;
+    Bitmap headImage;
     String headImagePath;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -220,30 +222,38 @@ public class ContentFragment3 extends BaseFragment {
         //获取activity实例
         activity = (MainActivity) getActivity();
 
+        //初始化获取账号
+        userName = activity.getUserName();
+
         //初始化获取头像数据
         JMessageClient.getUserInfo(userName, new GetUserInfoCallback() {
             @Override
             public void gotResult(int i, String s, UserInfo userInfo) {
+                System.out.println(s);
                 if (i == 0){
-                    headImage = userInfo.getAvatarFile();
-                    headImagePath = headImage.getAbsolutePath();
+                    userInfo.getAvatarBitmap(new GetAvatarBitmapCallback() {
+                        @Override
+                        public void gotResult(int i, String s, Bitmap bitmap) {
+                            if (i == 0){
+                                headImage = bitmap;
+                                //更改头像布局
+                                head.setImageBitmap(headImage);
+                            }else {
+                                Toast.makeText(MyApplication.getContext(), "初始化头像失败！", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 } else {
                     Toast.makeText(MyApplication.getContext(), "初始化头像失败！", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        //初始化获取账号
-        userName = activity.getUserName();
     }
 
     @Override
     protected void initView() {
-        //更改头像布局
-        head.setImageBitmap(BitmapFactory.decodeFile(headImagePath));
-
         //更改账号布局
         userNameTV.setText(userName);
     }
-
 }
