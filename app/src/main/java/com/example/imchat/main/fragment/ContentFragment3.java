@@ -36,6 +36,8 @@ import java.io.File;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.callback.GetUserInfoCallback;
+import cn.jpush.im.android.api.model.UserInfo;
 import cn.jpush.im.api.BasicCallback;
 
 /**
@@ -53,6 +55,8 @@ public class ContentFragment3 extends BaseFragment {
 
     //数据
     String userName;
+    File headImage;
+    String headImagePath;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -213,12 +217,32 @@ public class ContentFragment3 extends BaseFragment {
 
     @Override
     protected void initData() {
+        //获取activity实例
         activity = (MainActivity) getActivity();
+
+        //初始化获取头像数据
+        JMessageClient.getUserInfo(userName, new GetUserInfoCallback() {
+            @Override
+            public void gotResult(int i, String s, UserInfo userInfo) {
+                if (i == 0){
+                    headImage = userInfo.getAvatarFile();
+                    headImagePath = headImage.getAbsolutePath();
+                } else {
+                    Toast.makeText(MyApplication.getContext(), "初始化头像失败！", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        //初始化获取账号
         userName = activity.getUserName();
     }
 
     @Override
     protected void initView() {
+        //更改头像布局
+        head.setImageBitmap(BitmapFactory.decodeFile(headImagePath));
+
+        //更改账号布局
         userNameTV.setText(userName);
     }
 
