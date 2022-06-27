@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     /**
      * 注册按钮点击方法
+     *
      * @return 0 注册成功; -1 账号密码错误，注册失败;
      */
     private int registerClicked() {
@@ -52,12 +54,17 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void gotResult(int i, String s) {
                 if (i == 0) {
+                    Toast toast = Toast.makeText(getContext(), "注册成功！", Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
                     //注册成功即登录,跳转页面
                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                     intent.putExtra("userName", registerUserName);
                     startActivity(intent);
-                }else{
-                    Toast.makeText(getContext(), "注册失败！", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast toast = Toast.makeText(getContext(), "注册失败！", Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
                 }
             }
         });
@@ -80,7 +87,9 @@ public class RegisterActivity extends AppCompatActivity {
         //注册按钮点击事件
         registerSub.setOnClickListener(view -> {
             if (registerClicked() == -1) {
-                Toast.makeText(getContext(), "账号或密码输入有误！", Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(getContext(), "账号或密码输入有误！", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
             }
         });
 

@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -65,11 +66,13 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(intent);
                     } else {
                         JMessageClient.logout();
-                        Toast.makeText(MyApplication.getContext(), "密码错误，登录失败！", Toast.LENGTH_SHORT).show();
-                    }
+                        Toast toast = Toast.makeText(MyApplication.getContext(), "密码错误，登录失败！", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();                    }
                 } else {
-                    Toast.makeText(MyApplication.getContext(), "登录失败！", Toast.LENGTH_SHORT).show();
-                }
+                    Toast toast = Toast.makeText(MyApplication.getContext(), "登录失败！", Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();                }
             }
         });
 
@@ -103,8 +106,9 @@ public class LoginActivity extends AppCompatActivity {
         //登录按钮点击事件
         loginSub.setOnClickListener(view -> {
             if (loginClicked() == -1) {
-                Toast.makeText(getContext(), "账号或密码输入有误！", Toast.LENGTH_SHORT).show();
-            }
+                Toast toast = Toast.makeText(MyApplication.getContext(), "账号或密码输入有误！", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();            }
         });
 
         //去注册按钮点击事件

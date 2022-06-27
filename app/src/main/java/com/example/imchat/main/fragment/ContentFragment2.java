@@ -52,8 +52,6 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 	private ContactAdapter adapter;
 	private ContactPresenter presenter;
 
-
-
 	RelativeLayout rlApply;
 
 	// TODO: Rename parameter arguments, choose names that match

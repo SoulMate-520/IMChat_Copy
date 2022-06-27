@@ -117,7 +117,9 @@ public class ContentFragment3 extends BaseFragment {
         head = view.findViewById(R.id.iv_head);
 
         //登出按钮点击事件
-        exitTV.setOnClickListener(v -> activity.onDestroy());
+        exitTV.setOnClickListener(v -> {
+            getActivity().onBackPressed();
+        });
 //        Intent intent = new Intent(activity.getBaseContext(), LoginActivity.class);
 //        startActivity(intent);
 
@@ -130,6 +132,12 @@ public class ContentFragment3 extends BaseFragment {
         return view;
     }
 
+    /**
+     * 更改头像，开图库
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -217,6 +225,9 @@ public class ContentFragment3 extends BaseFragment {
 
     }
 
+    /**
+     * 初始化数据
+     */
     @Override
     protected void initData() {
         //获取activity实例
@@ -230,16 +241,14 @@ public class ContentFragment3 extends BaseFragment {
             @Override
             public void gotResult(int i, String s, UserInfo userInfo) {
                 System.out.println(s);
-                if (i == 0){
+                if (i == 0) {
                     userInfo.getAvatarBitmap(new GetAvatarBitmapCallback() {
                         @Override
                         public void gotResult(int i, String s, Bitmap bitmap) {
-                            if (i == 0){
+                            if (i == 0) {
                                 headImage = bitmap;
                                 //更改头像布局
                                 head.setImageBitmap(headImage);
-                            }else {
-                                Toast.makeText(MyApplication.getContext(), "初始化头像失败！", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -251,6 +260,9 @@ public class ContentFragment3 extends BaseFragment {
 
     }
 
+    /**
+     * 初始化布局
+     */
     @Override
     protected void initView() {
         //更改账号布局
