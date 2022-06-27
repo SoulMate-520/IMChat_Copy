@@ -318,10 +318,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         //图片内容
         ImageContent imageContent = (ImageContent) message.getContent();
 
-        LogUtil.d("suo"+imageContent.getLocalThumbnailPath());
+        LogUtil.d("suo" + imageContent.getLocalThumbnailPath());
         //设置缩略图
-        GlideUtils.loadChatImage(mContext, imageContent.getLocalThumbnailPath(), holder.picture);
-
+        if (imageContent.getLocalThumbnailPath() != null)
+            GlideUtils.loadChatImage(mContext, imageContent.getLocalThumbnailPath(), holder.picture);
+        else
+            holder.picture.setImageResource(R.mipmap.default_img_failed);
         //设置图片点击
         holder.picture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -334,6 +336,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 LogUtil.d("suo1"+imageContent.getLocalPath());
                 PhotoView photoView = view.findViewById(R.id.photo_view);
                 Button originPicture = view.findViewById(R.id.bt_originPicture);
+
+                LogUtil.d(imageContent.getLocalThumbnailPath() + "diansuo");
+                LogUtil.d(imageContent.getLocalPath() + "dianyuan");
 
                 if (imageContent.getLocalPath() == null) {
                     photoView.setImageBitmap(BitmapFactory.decodeFile(imageContent.getLocalThumbnailPath()));

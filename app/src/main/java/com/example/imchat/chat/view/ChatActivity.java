@@ -300,7 +300,7 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
             LogUtil.d(path);
             if (file.exists()) {
 
-                //发送语音
+                //发送图片
                 Message message = null;
 
                 try {
@@ -317,7 +317,6 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
                 mPresenter.doSend(message, chatAdapter.getItemCount() - 1);
 
             } else {
-
                 Toast.makeText(getBaseContext(), "请重新选择图片", Toast.LENGTH_SHORT).show();
             }
         }
