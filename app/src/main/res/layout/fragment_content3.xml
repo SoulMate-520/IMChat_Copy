@@ -26,9 +26,9 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="99dp"
-            android:text="hahhah"
+            android:text="none"
             android:textColor="#ff000000"
-            android:textSize="11dp" />
+            android:textSize="18dp" />
 
     </RelativeLayout>
 
@@ -37,23 +37,25 @@
     <RelativeLayout
         android:id="@+id/rl_scanner"
         android:layout_width="match_parent"
-        android:layout_height="39dp"
-        android:background="@color/white">
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:clickable="true">
 
         <ImageView
             android:layout_width="21dp"
             android:layout_height="21dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="12dp" />
+            android:layout_marginLeft="18dp"
+            android:src="@mipmap/update_pwd" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="49dp"
-            android:text="扫一扫"
+            android:text="密码修改"
             android:textColor="#ff000000"
-            android:textSize="12dp" />
+            android:textSize="15dp" />
 
         <ImageView
             android:layout_width="7dp"
@@ -72,13 +74,14 @@
 
     <TextView
         android:id="@+id/tv_exit"
+        android:clickable="true"
         android:layout_marginTop="19dp"
         android:gravity="center"
         android:layout_gravity="center_horizontal"
-        android:layout_width="336dp"
-        android:layout_height="38dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:background="#ffffffff"
-        android:text="退出登陆"
+        android:text="退出"
         android:textColor="#000"
         android:textSize="15dp"
         />

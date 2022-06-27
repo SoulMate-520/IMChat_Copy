@@ -35,28 +35,35 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * 登录按钮点击方法
+     *
      * @return 0 登陆成功; -1 账号或密码错误,登录失败;
      */
-    private int loginClicked(){
+    private int loginClicked() {
         //获取文本框数据
         loginUserName = loginUserNameETxt.getText().toString();
         loginPwd = loginPwdETxt.getText().toString();
 
         //文本数据判空
-        if (TextUtils.isEmpty(loginPwd) || TextUtils.isEmpty(loginUserName)){
+        if (TextUtils.isEmpty(loginPwd) || TextUtils.isEmpty(loginUserName)) {
             return -1;
         }
 
-        //申请后台
+        //登录申请后台
         JMessageClient.login(loginUserName, loginPwd, new BasicCallback() {
             @Override
             public void gotResult(int i, String s) {
-                if (i == 0){
-                    //登录成功,跳转页面
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("userName", loginUserName);
-                    startActivity(intent);
-                }else{
+                if (i == 0) {
+                    //登录成功
+                    //判断密码正确与否
+                    if (JMessageClient.isCurrentUserPasswordValid(loginPwd)) {
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("userName", loginUserName);
+                        startActivity(intent);
+                    } else {
+                        JMessageClient.logout();
+                        Toast.makeText(MyApplication.getContext(), "密码错误，登录失败！", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
                     Toast.makeText(MyApplication.getContext(), "登录失败！", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -68,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * 去注册按钮点击方法
      */
-    private void goRegister(){
+    private void goRegister() {
         //跳转注册页面
         Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(intent);
@@ -88,8 +95,8 @@ public class LoginActivity extends AppCompatActivity {
 
         //登录按钮点击事件
         loginSub.setOnClickListener(view -> {
-            if (loginClicked() == -1){
-                Toast.makeText(getContext(),"账号或密码输入有误！",Toast.LENGTH_SHORT).show();
+            if (loginClicked() == -1) {
+                Toast.makeText(getContext(), "账号或密码输入有误！", Toast.LENGTH_SHORT).show();
             }
         });
 
