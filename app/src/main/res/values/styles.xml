@@ -21,9 +21,10 @@
     <!--红点-->
     <style name="NoticeSpot">
         <item name="android:background">@drawable/notice_spot</item>
-        <item name="android:layout_width">10dp</item>
-        <item name="android:layout_height">10dp</item>
+        <item name="android:layout_width">15dp</item>
+        <item name="android:layout_height">15dp</item>
     </style>
+
     <style name="NoticeSpot_num">
         <item name="android:background">@drawable/notice_spot</item>
         <item name="android:layout_width">15dp</item>

@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+        android:shape="oval">
 
-    <corners android:radius="5dp"/>
-    <solid android:color="#FF0000"/>
+        <!--    设置按钮圆角按钮的步骤-->
+        <!--    1.设置圆角的半径-->
+        <!--    2.设置按钮的颜色-->
+        <!--    3.设置边框大粗细和颜色-->
+
+        <size android:width="10dp" android:height="10dp"/>
+        <solid android:color="@color/red"/>
+
 </shape>
+

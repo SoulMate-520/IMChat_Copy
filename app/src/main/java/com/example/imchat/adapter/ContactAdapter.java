@@ -1,6 +1,7 @@
 package com.example.imchat.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.imchat.R;
 import com.example.imchat.bean.ContactBean;
+import com.example.imchat.chat.view.ChatActivity;
 import com.example.imchat.util.ActivityUtil;
 import com.example.imchat.util.MyApplication;
 
@@ -24,6 +26,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.jpush.im.android.api.model.Conversation;
+import cn.jpush.im.android.api.model.UserInfo;
 
 /**
  * @author: yzy
@@ -47,12 +51,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyRecycl
     public ContactAdapter.MyRecycleHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_contacts, parent, false);
         MyRecycleHolder holder = new MyRecycleHolder(view);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: 2022/6/13 跳转逻辑
-            }
-        });
+
         return holder;
     }
 
@@ -65,6 +64,26 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyRecycl
         if (bean != null) {
             holder.tv_name.setText(bean.getNickName());
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: 2022/6/13 跳转逻辑
+
+                //获取聊天的对象账号
+
+                ContactBean contactBean = contactBeanList.get(position);
+                String userName = contactBean.getUserName();
+
+                Intent intent = new Intent(MyApplication.getContext(),ChatActivity.class);
+                intent.putExtra("userName",userName);
+                com.example.imchat.MyApplication.getContext().startActivity(intent);
+                //用不了
+//                ActivityUtil.actionStart(ChatActivity.class,userName,"userName");
+
+
+            }
+        });
     }
 
     @Override

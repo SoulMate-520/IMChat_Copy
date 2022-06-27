@@ -9,6 +9,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
@@ -23,6 +24,7 @@ import com.example.imchat.contact.view.ContactFragment;
 import com.example.imchat.main.fragment.ContentFragment1;
 import com.example.imchat.main.fragment.ContentFragment2;
 import com.example.imchat.main.fragment.ContentFragment3;
+import com.example.imchat.util.ActivityUtil;
 import com.example.imchat.util.LogUtil;
 
 import java.util.ArrayList;
@@ -45,6 +47,8 @@ public class MainActivity extends BaseActivity {
 
 	private androidx.fragment.app.FragmentManager fragmentManager;
 
+
+
 	@Override public int getLayoutId() {
 		return R.layout.activity_main;
 	}
@@ -63,6 +67,28 @@ public class MainActivity extends BaseActivity {
 		setViewPager();
 		//底部导航栏
 		setBottomNavigationBar();
+
+		//测试用
+		//i=0才成功 密码错误：Invalid password
+
+		JMessageClient.login("654321", "654321", new BasicCallback() {
+			@Override public void gotResult(int i, String s) {
+				LogUtil.d(""+i);
+				LogUtil.d(s);
+
+				Intent intent = new Intent(getApplicationContext(),ChatActivity.class);
+				intent.putExtra("userName","123456");
+
+				startActivity(intent);
+
+//				ActivityUtil.actionStart(ChatActivity.class,"123456","userName");
+
+			}
+		});
+
+
+
+
 
 	}
 
@@ -223,4 +249,9 @@ public class MainActivity extends BaseActivity {
 
 		JMessageClient.logout();
 	}
+
+
+
+
+
 }

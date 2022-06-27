@@ -26,6 +26,7 @@ import com.example.imchat.adapter.ChatAdapter;
 import com.example.imchat.base.BaseActivity;
 import com.example.imchat.chat.presenter.ChatPresenter;
 import com.example.imchat.chat.presenter.IChatPresenter;
+import com.example.imchat.util.AudioPlayManager;
 import com.example.imchat.util.ChatUiHelper;
 import com.example.imchat.util.LogUtil;
 import com.example.imchat.widget.RecordButton;
@@ -85,7 +86,7 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
 
     //需要传进来的参数
     //目标用户
-    private String userName = "654321";
+    private String userName ;
 
     //会话聊天消息
     List<Message> messageList;
@@ -100,7 +101,9 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
 //		setContentView(R.layout.activity_chat);
 
 
-//		userName = savedInstanceState.getString("userName");
+        Intent intent = getIntent();
+
+		userName = intent.getStringExtra("userName");
 
         //目标user账号
         mPresenter = new ChatPresenter(this, userName);
@@ -197,6 +200,10 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //设置所有消息已读
+                JMessageClient.getSingleConversation(userName).resetUnreadCount();
+
                 //结束
                 finish();
             }
@@ -340,6 +347,13 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
 
         } else {
             //退出
+
+            //关闭语音播放
+            AudioPlayManager.getInstance().stopPlay();
+
+            //设置所有消息已读
+           JMessageClient.getSingleConversation(userName).resetUnreadCount();
+
             super.onBackPressed();
 
         }

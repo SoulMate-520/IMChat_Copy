@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.DisplayMetrics;
 
-/**
- * Created by MQ on 2016/12/16.
- */
 
 public class DpUtil {
     /**

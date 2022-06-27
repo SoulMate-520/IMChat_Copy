@@ -6,11 +6,7 @@ import android.graphics.BitmapFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-/**
- * @author huangrui
- * @date 2018/8/31 10:57
- * @desc
- */
+
 public class BitmapUtil {
 
 

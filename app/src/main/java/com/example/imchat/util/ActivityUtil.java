@@ -83,16 +83,19 @@ public class ActivityUtil {
     }
 
 
+    // TODO：有问题用不了
+
     /**
      * 携带一个数据跳转
      *
      * @param classes 需要跳转过去的Activity
      * @param data 传过去的数据
      */
-    public static void actionStart(Class classes, String data){
+    public static void actionStart(Class classes, String data,String param){
         Activity currentActivity = getCurrentActivity();
         Intent intent = new Intent(currentActivity, classes);
-        intent.putExtra("param1",data);
+        intent.putExtra(param,data);
+        LogUtil.d(data);
         currentActivity.startActivity(intent);
     }
 

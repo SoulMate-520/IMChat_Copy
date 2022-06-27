@@ -1,5 +1,6 @@
 package com.example.imchat.main.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,12 +12,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.example.imchat.MyApplication;
 import com.example.imchat.R;
 import com.example.imchat.adapter.ConversationAdapter;
 import com.example.imchat.base.BaseFragment;
+import com.example.imchat.bean.User;
+import com.example.imchat.chat.view.ChatActivity;
 import com.example.imchat.conversation.presenter.ConversationPresenter;
 import com.example.imchat.conversation.view.IConversationView;
 import com.example.imchat.util.ActivityUtil;
@@ -27,6 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.model.Conversation;
+import cn.jpush.im.android.api.model.UserInfo;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,8 +44,12 @@ public class ContentFragment1 extends BaseFragment implements IConversationView 
 	@BindView(R.id.recyc_conv)
 	RecyclerView mRecyclerView;
 
+
 	ConversationAdapter adapter;
 	ConversationPresenter presenter;
+
+
+
 	// TODO: Rename parameter arguments, choose names that match
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 	private static final String ARG_PARAM1 = "param1";
@@ -113,6 +123,19 @@ public class ContentFragment1 extends BaseFragment implements IConversationView 
 			@Override
 			public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
 				// TODO: 2022/6/17 跳转
+
+				//获取聊天的对象账号
+				Conversation conversation = (Conversation) adapter.getItem(position);
+				UserInfo userInfo = (UserInfo) conversation.getTargetInfo();
+				String userName = userInfo.getUserName();
+
+				Intent intent = new Intent(MyApplication.getContext(),ChatActivity.class);
+				intent.putExtra("userName","123456");
+
+				startActivity(intent);
+
+//				ActivityUtil.actionStart(ChatActivity.class,userName,"userName");
+
 			}
 		});
 	}

@@ -1,5 +1,6 @@
 package com.example.imchat.conversation.presenter;
 
+import com.example.imchat.bean.ContactBean;
 import com.example.imchat.constant.Constant;
 import com.example.imchat.conversation.view.IConversationView;
 
@@ -23,29 +24,28 @@ public class ConversationPresenter {
 
     private IConversationView mConversationView;
 
-    public ConversationPresenter(IConversationView mConversationView) {
+    public ConversationPresenter(IConversationView mConversationView){
         this.mConversationView = mConversationView;
     }
-
-    public void getConversation(MessageEvent event, List<Conversation> list) {
+    public void getConversation(MessageEvent event, List<Conversation> list){
         boolean handlable = false;
         Message msg = event.getMessage();
-        if (msg.getTargetType() == ConversationType.single) {
+        if (msg.getTargetType() == ConversationType.single){
             UserInfo userInfo = (UserInfo) msg.getTargetInfo();
 
-            for (Conversation conversation : list) {
+            for(Conversation conversation : list){
                 if (conversation.getType() == ConversationType.single) {
                     UserInfo userI = (UserInfo) conversation.getTargetInfo();
-                    if (userI.getUserName().equals(userInfo.getUserName())) {
+                    if(userI.getUserName().equals(userInfo.getUserName())){
                         conversation.updateConversationExtra(Constant.NEW_MESSAGE);
                         handlable = true;
                         mConversationView.setConversation(list);
                     }
                 }
             }
-            if (!handlable) {
+            if(!handlable){
                 Conversation conversation = JMessageClient.getSingleConversation(userInfo.getUserName());
-                if (conversation.getTargetInfo() instanceof UserInfo) {
+                if(conversation.getTargetInfo() instanceof UserInfo){
                     Conversation bean = conversation;
                     bean.updateConversationExtra(Constant.NEW_MESSAGE);
                     list.add(bean);
@@ -54,12 +54,13 @@ public class ConversationPresenter {
         }
 
     }
-
-    public void getConversation() {
+    public void getConversation(){
         List<Conversation> list = new ArrayList<>();
         list.clear();
-        if (JMessageClient.getConversationList() != null)
+        if(JMessageClient.getConversationList()!=null){
             list.addAll(JMessageClient.getConversationList());
+        }
+
         mConversationView.setConversation(list);
     }
 }

@@ -40,6 +40,7 @@ public class ConversationAdapter extends BaseQuickAdapter<Conversation, BaseView
         super(layoutResId, data);
     }
 
+
     @Override
     protected void convert(BaseViewHolder helper, Conversation item) {
         if(item.getTargetInfo() instanceof UserInfo){
@@ -59,6 +60,11 @@ public class ConversationAdapter extends BaseQuickAdapter<Conversation, BaseView
 
             helper.setText(R.id.tv_conv_name, getNameUtil.getName(userInfo));
         }
+
+
+
+
+
 //        else{
 //            GroupInfo groupInfo = (GroupInfo)item.getTargetInfo() ;
 //            groupInfo.getAvatarBitmap(new GetAvatarBitmapCallback(){
@@ -134,12 +140,30 @@ public class ConversationAdapter extends BaseQuickAdapter<Conversation, BaseView
     }
 
 
-        if(item.getExtra().equals(Constant.NEW_MESSAGE)){
-        helper.getView(R.id.v_new).setVisibility(View.VISIBLE);
+        //设置未读消息数
+        int count = item.getUnReadMsgCnt();
+        if(count>0){
 
-    }else{
-        helper.getView(R.id.v_new).setVisibility(View.GONE);
-    }
+            if(count>=99){
+                helper.setText(R.id.tv_new,String.valueOf(99));
+            }else{
+
+                helper.setText(R.id.tv_new,String.valueOf(count));
+            }
+
+        }else{
+            //不可见
+            helper.getView(R.id.rl_unread).setVisibility(View.INVISIBLE);
+        }
+
+
+
+        //        if(item.getExtra().equals(Constant.NEW_MESSAGE)){
+//        helper.getView(R.id.v_new).setVisibility(View.VISIBLE);
+//
+//    }else{
+//        helper.getView(R.id.v_new).setVisibility(View.GONE);
+//    }
 
 }
 
