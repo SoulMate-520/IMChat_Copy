@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
@@ -40,6 +41,8 @@ import cn.jpush.im.android.api.model.Message;
 import cn.jpush.im.api.BasicCallback;
 
 public class MainActivity extends BaseActivity {
+	//数据
+	private String userName;
 
 	//底部导航栏三方件
 	private BottomNavigationBar bottomNavigationBar;
@@ -64,6 +67,10 @@ public class MainActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 //		setContentView(R.layout.activity_main);
 
+		//获取用户ID
+		Intent intent = getIntent();
+		userName = intent.getStringExtra("userName");
+
 		// 申请多个权限。
 		requestPower();
 
@@ -71,6 +78,7 @@ public class MainActivity extends BaseActivity {
 
 		//初始化viewPager
 		setViewPager();
+
 		//底部导航栏
 		setBottomNavigationBar();
 
@@ -92,15 +100,22 @@ public class MainActivity extends BaseActivity {
 //			}
 //		});
 
-		Intent intent = new Intent(getApplicationContext(),ChatActivity.class);
-		intent.putExtra("userName","123456");
-
-		startActivity(intent);
 
 
 
+		Intent intent1 = new Intent(getApplicationContext(),ChatActivity.class);
+		intent1.putExtra("userName","123456");
+
+		startActivity(intent1);
 
 
+
+
+
+	}
+
+	public String getUserName(){
+		return userName;
 	}
 
 	public void requestPower() {
@@ -255,7 +270,8 @@ public class MainActivity extends BaseActivity {
 	/**
 	 * 退出
 	 */
-	@Override protected void onDestroy() {
+	@Override
+	public void onDestroy() {
 		super.onDestroy();
 
 		JMessageClient.logout();
