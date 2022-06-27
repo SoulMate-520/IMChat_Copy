@@ -12,6 +12,7 @@ import com.example.imchat.R;
 import com.example.imchat.adapter.ApplyFriendAdapter;
 import com.example.imchat.bean.User;
 import com.example.imchat.util.DataBaseHelper;
+import com.example.imchat.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,8 @@ public class ApplyFriendActivity extends AppCompatActivity {
                 });
             }
         }
+
+        LogUtil.d(userInfoList+"");
 
         ApplyFriendAdapter applyFriendAdapter = new ApplyFriendAdapter();
         applyFriendAdapter.setData(userInfoList);

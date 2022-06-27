@@ -1,8 +1,7 @@
 package com.example.imchat.bean;
 
 
-import org.litepal.annotation.Column;
-import org.litepal.crud.LitePalSupport;
+import org.litepal.crud.DataSupport;
 
 
 /**
@@ -11,12 +10,12 @@ import org.litepal.crud.LitePalSupport;
  * @date 2022-06-03 22:13
  */
 
-public class User  extends LitePalSupport {
+public class User  extends DataSupport {
 
 
 	private String userName;
 
-	private String passWord;
+
 
 	//改造为存别人发来的邀请
 	public User(String userName) {
@@ -31,11 +30,5 @@ public class User  extends LitePalSupport {
 		this.userName = userName;
 	}
 
-	public String getPassWord() {
-		return passWord;
-	}
 
-	public void setPassWord(String passWord) {
-		this.passWord = passWord;
-	}
 }

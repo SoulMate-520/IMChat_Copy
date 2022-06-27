@@ -91,10 +91,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyRecycl
         return contactBeanList.size();
     }
 
-    public void refreshList() {
-        LitePal.deleteAll(ContactBean.class);
-        LitePal.saveAll(contactBeanList);
-    }
+//    public void refreshList() {
+//        LitePal.deleteAll(ContactBean.class);
+//        LitePal.saveAll(contactBeanList);
+//    }
 
     public static class MyRecycleHolder extends RecyclerView.ViewHolder{
         @BindView(R.id.tv_cont_name)

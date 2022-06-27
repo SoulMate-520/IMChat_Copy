@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import org.litepal.LitePal;
+import org.litepal.LitePalApplication;
 
 import cn.jpush.im.android.api.JMessageClient;
 
@@ -13,7 +14,7 @@ import cn.jpush.im.android.api.JMessageClient;
  * @date 2022-06-04 0:31
  */
 
-public class MyApplication extends Application {
+public class MyApplication extends  LitePalApplication {
 	/**
 	 * 保证唯一一个context
 	 */

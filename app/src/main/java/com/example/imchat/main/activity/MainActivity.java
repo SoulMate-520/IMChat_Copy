@@ -74,9 +74,9 @@ public class MainActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 //		setContentView(R.layout.activity_main);
-
-		//数据库
-		LitePal.getDatabase();
+//
+//		//数据库
+//		LitePal.getDatabase();
 
 		//获取用户ID
 		Intent intent = getIntent();

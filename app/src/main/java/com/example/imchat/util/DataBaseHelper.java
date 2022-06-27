@@ -2,8 +2,14 @@ package com.example.imchat.util;
 
 import com.example.imchat.bean.User;
 
-import java.util.List;
+import org.litepal.LitePal;
+import org.litepal.LitePalApplication;
+import org.litepal.LitePalBase;
+import org.litepal.LitePalDB;
 import org.litepal.crud.DataSupport;
+
+import java.util.List;
+
 
 /**
  * @author Soul Mate

@@ -51,9 +51,9 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 	private CustomItemDecoration decoration;
 	private ContactAdapter adapter;
 	private ContactPresenter presenter;
-	@BindView(R.id.relat_new_friend)
-	RelativeLayout rlNewFriend;
-	@BindView(R.id.relat_apply_friend)
+
+
+
 	RelativeLayout rlApply;
 
 	// TODO: Rename parameter arguments, choose names that match
@@ -99,6 +99,21 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(getLayoutId(), container, false);
 		ButterKnife.bind(this, view);
+
+
+		mRelativeLayout.setOnClickListener(new View.OnClickListener() {
+			@Override public void onClick(View v) {
+				startActivity(new Intent(getActivity(), NewFriendActivity.class));
+			}
+		});
+
+		rlApply =  view.findViewById(R.id.relat_apply_friend);
+		rlApply.setOnClickListener(new View.OnClickListener() {
+			@Override public void onClick(View v) {
+				startActivity(new Intent(getActivity(), ApplyFriendActivity.class));
+			}
+		});
+
 		return view;
 	}
 
@@ -112,17 +127,7 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 		mRecyclerView.setLayoutManager(layoutManager = new LinearLayoutManager(getContext()));
 		mRecyclerView.addItemDecoration(decoration = new CustomItemDecoration(getContext()));
 
-		rlNewFriend.setOnClickListener(new View.OnClickListener() {
-			@Override public void onClick(View v) {
-				startActivity(new Intent(getActivity(), NewFriendActivity.class));
-			}
-		});
 
-		rlApply.setOnClickListener(new View.OnClickListener() {
-			@Override public void onClick(View v) {
-				startActivity(new Intent(getActivity(), ApplyFriendActivity.class));
-			}
-		});
 
 	}
 

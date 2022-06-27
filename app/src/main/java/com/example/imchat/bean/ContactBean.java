@@ -1,6 +1,6 @@
 package com.example.imchat.bean;
 
-import org.litepal.crud.LitePalSupport;
+
 
 /**
  * @author: yzy
@@ -8,7 +8,7 @@ import org.litepal.crud.LitePalSupport;
  * @description：联系人bean类
  * @version: 1.0
  */
-public class ContactBean extends LitePalSupport {
+public class ContactBean  {
     private String indexTag;
     private String nickName;
     private String userName;
