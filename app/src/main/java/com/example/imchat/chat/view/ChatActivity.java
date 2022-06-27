@@ -296,6 +296,8 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
             }
 
             File file = new File(path);
+
+            LogUtil.d(path);
             if (file.exists()) {
 
                 //发送语音

@@ -2,13 +2,11 @@ package com.example.imchat.adapter;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -54,14 +52,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private LinkedList<Message> mLinkedList = new LinkedList();
 
     private Context mContext;
-
-    private int mWidth;
-    private int mHeight;
-
-    public void setWidthHeight(int mWidth, int mHeight) {
-        this.mWidth = mWidth;
-        this.mHeight = mHeight;
-    }
 
     public ChatAdapter(Context mContext) {
         this.mContext = mContext;
@@ -117,22 +107,22 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case SEND_TEXT: {
-                return new SendTextViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text_send, parent, false));
+                return new TextViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text_send, parent, false));
             }
             case RECEIVE_TEXT: {
-                return new ReceiveTextViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text_receive, parent, false));
+                return new TextViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text_receive, parent, false));
             }
             case SEND_VOICE: {
-                return new SendVoiceViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_voice_send, parent, false));
+                return new VoiceViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_voice_send, parent, false));
             }
             case RECEIVE_VOICE: {
-                return new ReceiveVoiceViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_voice_receive, parent, false));
+                return new VoiceViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_voice_receive, parent, false));
             }
             case SEND_IMAGE: {
-                return new SendImageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image_send, parent, false));
+                return new ImageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image_send, parent, false));
             }
             case RECEIVE_IMAGE: {
-                return new ReceiveImageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image_receive, parent, false));
+                return new ImageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image_receive, parent, false));
             }
         }
         return null;
@@ -140,29 +130,29 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        switch (getItemViewType(position)) {
-            case SEND_TEXT: {
-                onBindSendTextViewHolder(holder, position);
-                return;
-            }
+        onBindChatViewHolder((ChatViewHolder) holder, position);
+        int itemViewType = getItemViewType(position);
+        switch (itemViewType) {
+            case SEND_TEXT:
+            case SEND_VOICE:
+            case SEND_IMAGE:
+                onBindSendViewHolder((SendViewHolder) holder, position);
+                break;
+        }
+        switch (itemViewType) {
+            case SEND_TEXT:
             case RECEIVE_TEXT: {
-                onBindReceiveTextViewHolder(holder, position);
+                onBindTextViewHolder((TextViewHolder) holder, position);
                 return;
             }
-            case SEND_VOICE: {
-                onBindSendVoiceViewHolder(holder, position);
-                return;
-            }
+            case SEND_VOICE:
             case RECEIVE_VOICE: {
-                onBindReceiveVoiceViewHolder(holder, position);
+                onBindVoiceViewHolder((VoiceViewHolder) holder, position);
                 return;
             }
-            case SEND_IMAGE: {
-                onBindSendImageViewHolder(holder, position);
-                return;
-            }
+            case SEND_IMAGE:
             case RECEIVE_IMAGE: {
-                onBindReceiveImageViewHolder(holder, position);
+                onBindImageViewHolder((ImageViewHolder) holder, position);
                 return;
             }
         }
@@ -170,89 +160,32 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     //消息状态（用于新发消息）
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List<Object> payloads) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position, @NonNull List<Object> payloads) {
         if (payloads.isEmpty()) {
-            super.onBindViewHolder(holder, position, payloads);
+            super.onBindViewHolder(viewHolder, position, payloads);
             return;
         }
-        switch (getItemViewType(position)) {
-            case SEND_TEXT: {
-                SendTextViewHolder sendHolder = (SendTextViewHolder) holder;
-                for (Object payload : payloads) {
-                    LogUtil.d("发送状态" + String.valueOf(payload));
-                    switch (String.valueOf(payload)) {
-                        case "going": {
-                            sendHolder.fail.setVisibility(View.INVISIBLE);
-                            sendHolder.progress.setVisibility(View.VISIBLE);
-                            break;
-                        }
-                        case "fail": {
-                            sendHolder.fail.setVisibility(View.VISIBLE);
-                            sendHolder.progress.setVisibility(View.INVISIBLE);
-                            break;
-                        }
-                        case "success": {
-                            sendHolder.progress.setVisibility(View.INVISIBLE);
-                            sendHolder.progress.setVisibility(View.INVISIBLE);
-                            break;
-                        }
-                        default:
-                            break;
-                    }
+        SendViewHolder holder = (SendViewHolder) viewHolder;
+        for (Object payload : payloads) {
+            LogUtil.d("发送状态" + payload);
+            switch (String.valueOf(payload)) {
+                case "going": {
+                    holder.fail.setVisibility(View.INVISIBLE);
+                    holder.progress.setVisibility(View.VISIBLE);
+                    break;
                 }
-                return;
-            }
-            case SEND_VOICE: {
-                SendVoiceViewHolder sendHolder = (SendVoiceViewHolder) holder;
-                for (Object payload : payloads) {
-                    LogUtil.d("发送状态" + String.valueOf(payload));
-                    switch (String.valueOf(payload)) {
-                        case "going": {
-                            sendHolder.fail.setVisibility(View.INVISIBLE);
-                            sendHolder.progress.setVisibility(View.VISIBLE);
-                            break;
-                        }
-                        case "fail": {
-                            sendHolder.fail.setVisibility(View.VISIBLE);
-                            sendHolder.progress.setVisibility(View.INVISIBLE);
-                            break;
-                        }
-                        case "success": {
-                            sendHolder.progress.setVisibility(View.INVISIBLE);
-                            sendHolder.progress.setVisibility(View.INVISIBLE);
-                            break;
-                        }
-                        default:
-                            break;
-                    }
+                case "fail": {
+                    holder.fail.setVisibility(View.VISIBLE);
+                    holder.progress.setVisibility(View.INVISIBLE);
+                    break;
                 }
-                return;
-            }
-            case SEND_IMAGE: {
-                SendImageViewHolder sendHolder = (SendImageViewHolder) holder;
-                for (Object payload : payloads) {
-                    LogUtil.d("发送状态" + String.valueOf(payload));
-                    switch (String.valueOf(payload)) {
-                        case "going": {
-                            sendHolder.fail.setVisibility(View.INVISIBLE);
-                            sendHolder.progress.setVisibility(View.VISIBLE);
-                            break;
-                        }
-                        case "fail": {
-                            sendHolder.fail.setVisibility(View.VISIBLE);
-                            sendHolder.progress.setVisibility(View.INVISIBLE);
-                            break;
-                        }
-                        case "success": {
-                            sendHolder.progress.setVisibility(View.INVISIBLE);
-                            sendHolder.progress.setVisibility(View.INVISIBLE);
-                            break;
-                        }
-                        default:
-                            break;
-                    }
+                case "success": {
+                    holder.progress.setVisibility(View.INVISIBLE);
+                    holder.progress.setVisibility(View.INVISIBLE);
+                    break;
                 }
-                return;
+                default:
+                    break;
             }
         }
     }
@@ -262,8 +195,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return mLinkedList.size();
     }
 
-    public void onBindSendTextViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        SendTextViewHolder holder = (SendTextViewHolder) viewHolder;
+    private void onBindChatViewHolder(ChatViewHolder holder, int position) {
         Message message = mLinkedList.get(position);
         if (message == null)
             return;
@@ -295,105 +227,44 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         //头像》》
+    }
+
+    private void onBindSendViewHolder(SendViewHolder holder, int position) {
+        Message message = mLinkedList.get(position);
+
+        //消息状态（用于历史消息）
+        switch (message.getStatus()) {
+            case created:
+            case send_going: {
+                holder.progress.setVisibility(View.VISIBLE);
+                break;
+            }
+            case send_fail: {
+                holder.fail.setVisibility(View.VISIBLE);
+                holder.progress.setVisibility(View.INVISIBLE);
+                break;
+            }
+            case send_success: {
+                holder.progress.setVisibility(View.INVISIBLE);
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
+    public void onBindTextViewHolder(TextViewHolder holder, int position) {
+        Message message = mLinkedList.get(position);
 
         //文本内容
         TextContent textContent = (TextContent) message.getContent();
         //设置文本消息
         holder.content.setText((textContent.getText()));
 
-        //消息状态（用于历史消息）
-        switch (message.getStatus()) {
-            case created:
-            case send_going: {
-                holder.progress.setVisibility(View.VISIBLE);
-                break;
-            }
-            case send_fail: {
-                holder.fail.setVisibility(View.VISIBLE);
-                holder.progress.setVisibility(View.INVISIBLE);
-                break;
-            }
-            case send_success: {
-                holder.progress.setVisibility(View.INVISIBLE);
-                break;
-            }
-            default:
-                break;
-        }
     }
 
-    public void onBindReceiveTextViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        ReceiveTextViewHolder holder = (ReceiveTextViewHolder) viewHolder;
+    public void onBindVoiceViewHolder(VoiceViewHolder holder, int position) {
         Message message = mLinkedList.get(position);
-        if (message == null)
-            return;
-        //设置时间
-        if (position == 0) {
-            TimeFormat timeFormat = new TimeFormat(mContext, message.getCreateTime());
-            holder.time.setText(timeFormat.getDetailTime());
-            holder.time.setVisibility(View.VISIBLE);
-        } else {
-            Message oldMessage = mLinkedList.get(position - 1);
-
-            if (oldMessage != null) {
-
-                long oldTime = oldMessage.getCreateTime();
-                long newTime = message.getCreateTime();
-
-                // 如果两条消息之间的间隔超过五分钟则显示时间
-                if (newTime - oldTime > 300000) {
-                    TimeFormat timeFormat = new TimeFormat(mContext, newTime);
-                    holder.time.setText(timeFormat.getDetailTime());
-                    holder.time.setVisibility(View.VISIBLE);
-                } else {
-                    holder.time.setVisibility(View.GONE);
-                }
-
-            } else {
-                holder.time.setVisibility(View.GONE);
-            }
-        }
-
-        //头像》》
-
-        //设置文本消息
-        holder.content.setText(((TextContent) message.getContent()).getText());
-
-    }
-
-    public void onBindSendVoiceViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        SendVoiceViewHolder holder = (SendVoiceViewHolder) viewHolder;
-        Message message = mLinkedList.get(position);
-        if (message == null)
-            return;
-        //设置时间
-        if (position == 0) {
-            TimeFormat timeFormat = new TimeFormat(mContext, message.getCreateTime());
-            holder.time.setText(timeFormat.getDetailTime());
-            holder.time.setVisibility(View.VISIBLE);
-        } else {
-            Message oldMessage = mLinkedList.get(position - 1);
-
-            if (oldMessage != null) {
-
-                long oldTime = oldMessage.getCreateTime();
-                long newTime = message.getCreateTime();
-
-                // 如果两条消息之间的间隔超过五分钟则显示时间
-                if (newTime - oldTime > 300000) {
-                    TimeFormat timeFormat = new TimeFormat(mContext, newTime);
-                    holder.time.setText(timeFormat.getDetailTime());
-                    holder.time.setVisibility(View.VISIBLE);
-                } else {
-                    holder.time.setVisibility(View.GONE);
-                }
-
-            } else {
-                holder.time.setVisibility(View.GONE);
-            }
-        }
-
-        //头像》》
 
         //语音内容
         VoiceContent voiceContent = (VoiceContent) message.getContent();
@@ -404,106 +275,33 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             public void onClick(View v) {
                 //这里设置。。。
                 LogUtil.d("路径" + voiceContent.getLocalPath());
+                MessageDirect direct = message.getDirect();
                 AudioPlayManager.getInstance().startPlay(mContext, Uri.parse(voiceContent.getLocalPath()), new IAudioPlayListener() {
                     @Override
                     public void onStart(Uri var1) {
-
+                        //声音播放动画
+                        if (direct == MessageDirect.send) {
+                            holder.ivVoice.setBackgroundResource(R.drawable.audio_animation_right_list);
+                        } else
+                            holder.ivVoice.setBackgroundResource(R.drawable.audio_animation_left_list);
+                        AnimationDrawable drawable = (AnimationDrawable) holder.ivVoice.getBackground();
+                        drawable.start();
                     }
 
                     @Override
                     public void onStop(Uri var1) {
-
+                        if (direct == MessageDirect.send) {
+                            holder.ivVoice.setBackgroundResource(R.mipmap.voice_animation_list_right_3);
+                        } else
+                            holder.ivVoice.setBackgroundResource(R.mipmap.voice_animation_list_left_3);
                     }
 
                     @Override
                     public void onComplete(Uri var1) {
-
-                    }
-                });
-            }
-        });
-
-        //设置语音长度
-        holder.duration.setText(String.valueOf(voiceContent.getDuration()));
-
-        //消息状态（用于历史消息）
-        switch (message.getStatus()) {
-            case created:
-            case send_going: {
-                holder.progress.setVisibility(View.VISIBLE);
-                break;
-            }
-            case send_fail: {
-                holder.fail.setVisibility(View.VISIBLE);
-                holder.progress.setVisibility(View.INVISIBLE);
-                break;
-            }
-            case send_success: {
-                holder.progress.setVisibility(View.INVISIBLE);
-                break;
-            }
-            default:
-                break;
-        }
-    }
-
-    public void onBindReceiveVoiceViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        ReceiveVoiceViewHolder holder = (ReceiveVoiceViewHolder) viewHolder;
-        Message message = mLinkedList.get(position);
-        if (message == null)
-            return;
-        //设置时间
-        if (position == 0) {
-            TimeFormat timeFormat = new TimeFormat(mContext, message.getCreateTime());
-            holder.time.setText(timeFormat.getDetailTime());
-            holder.time.setVisibility(View.VISIBLE);
-        } else {
-            Message oldMessage = mLinkedList.get(position - 1);
-
-            if (oldMessage != null) {
-
-                long oldTime = oldMessage.getCreateTime();
-                long newTime = message.getCreateTime();
-
-                // 如果两条消息之间的间隔超过五分钟则显示时间
-                if (newTime - oldTime > 300000) {
-                    TimeFormat timeFormat = new TimeFormat(mContext, newTime);
-                    holder.time.setText(timeFormat.getDetailTime());
-                    holder.time.setVisibility(View.VISIBLE);
-                } else {
-                    holder.time.setVisibility(View.GONE);
-                }
-
-            } else {
-                holder.time.setVisibility(View.GONE);
-            }
-        }
-
-        //头像》》
-
-        //语音内容
-        VoiceContent voiceContent = (VoiceContent) message.getContent();
-
-        //设置语音播放
-        holder.voice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //这里设置。。。
-                LogUtil.d("路径" + voiceContent.getLocalPath());
-                AudioPlayManager.getInstance().startPlay(mContext, Uri.parse(voiceContent.getLocalPath()), new IAudioPlayListener() {
-                    @Override
-                    public void onStart(Uri var1) {
-
-                    }
-
-                    @Override
-                    public void onStop(Uri var1) {
-
-                    }
-
-                    @Override
-                    public void onComplete(Uri var1) {
-
+                        if (direct == MessageDirect.send) {
+                            holder.ivVoice.setBackgroundResource(R.mipmap.voice_animation_list_right_3);
+                        } else
+                            holder.ivVoice.setBackgroundResource(R.mipmap.voice_animation_list_left_3);
                     }
                 });
             }
@@ -514,124 +312,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     }
 
-    public void onBindSendImageViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        SendImageViewHolder holder = (SendImageViewHolder) viewHolder;
+    public void onBindImageViewHolder(ImageViewHolder holder, int position) {
         Message message = mLinkedList.get(position);
-        if (message == null)
-            return;
-        //设置时间
-        if (position == 0) {
-            TimeFormat timeFormat = new TimeFormat(mContext, message.getCreateTime());
-            holder.time.setText(timeFormat.getDetailTime());
-            holder.time.setVisibility(View.VISIBLE);
-        } else {
-            Message oldMessage = mLinkedList.get(position - 1);
-
-            if (oldMessage != null) {
-
-                long oldTime = oldMessage.getCreateTime();
-                long newTime = message.getCreateTime();
-
-                // 如果两条消息之间的间隔超过五分钟则显示时间
-                if (newTime - oldTime > 300000) {
-                    TimeFormat timeFormat = new TimeFormat(mContext, newTime);
-                    holder.time.setText(timeFormat.getDetailTime());
-                    holder.time.setVisibility(View.VISIBLE);
-                } else {
-                    holder.time.setVisibility(View.GONE);
-                }
-
-            } else {
-                holder.time.setVisibility(View.GONE);
-            }
-        }
-
-        //头像》》
 
         //图片内容
         ImageContent imageContent = (ImageContent) message.getContent();
 
-        //设置缩略图
-        GlideUtils.loadChatImage(mContext, imageContent.getLocalThumbnailPath(), holder.picture);
-
-        //设置图片点击
-        holder.picture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //这里设置。。。
-                ImageDialog imageDialog = new ImageDialog(mContext);
-                imageDialog.show();
-
-                View view = imageDialog.getView();
-                PhotoView photoView = view.findViewById(R.id.photo_view);
-                Button originPicture = view.findViewById(R.id.bt_originPicture);
-
-                photoView.setImageBitmap(BitmapFactory.decodeFile(imageContent.getLocalPath()));
-                originPicture.setVisibility(View.INVISIBLE);
-
-                photoView.setOnClickListener(v1 -> imageDialog.dismiss());
-
-            }
-        });
-
-        //消息状态（用于历史消息）
-        switch (message.getStatus()) {
-            case created:
-            case send_going: {
-                holder.progress.setVisibility(View.VISIBLE);
-                break;
-            }
-            case send_fail: {
-                holder.fail.setVisibility(View.VISIBLE);
-                holder.progress.setVisibility(View.INVISIBLE);
-                break;
-            }
-            case send_success: {
-                holder.progress.setVisibility(View.INVISIBLE);
-                break;
-            }
-            default:
-                break;
-        }
-    }
-
-    public void onBindReceiveImageViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        ReceiveImageViewHolder holder = (ReceiveImageViewHolder) viewHolder;
-        Message message = mLinkedList.get(position);
-        if (message == null)
-            return;
-        //设置时间
-        if (position == 0) {
-            TimeFormat timeFormat = new TimeFormat(mContext, message.getCreateTime());
-            holder.time.setText(timeFormat.getDetailTime());
-            holder.time.setVisibility(View.VISIBLE);
-        } else {
-            Message oldMessage = mLinkedList.get(position - 1);
-
-            if (oldMessage != null) {
-
-                long oldTime = oldMessage.getCreateTime();
-                long newTime = message.getCreateTime();
-
-                // 如果两条消息之间的间隔超过五分钟则显示时间
-                if (newTime - oldTime > 300000) {
-                    TimeFormat timeFormat = new TimeFormat(mContext, newTime);
-                    holder.time.setText(timeFormat.getDetailTime());
-                    holder.time.setVisibility(View.VISIBLE);
-                } else {
-                    holder.time.setVisibility(View.GONE);
-                }
-
-            } else {
-                holder.time.setVisibility(View.GONE);
-            }
-        }
-
-        //头像》》
-
-        //图片内容
-        ImageContent imageContent = (ImageContent) message.getContent();
-
+        LogUtil.d("suo"+imageContent.getLocalThumbnailPath());
         //设置缩略图
         GlideUtils.loadChatImage(mContext, imageContent.getLocalThumbnailPath(), holder.picture);
 
@@ -650,10 +337,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 if (imageContent.getLocalPath() == null) {
                     photoView.setImageBitmap(BitmapFactory.decodeFile(imageContent.getLocalThumbnailPath()));
                     originPicture.setVisibility(View.VISIBLE);
-                  } else {
+                } else {
                     photoView.setImageBitmap(BitmapFactory.decodeFile(imageContent.getLocalPath()));
                     originPicture.setVisibility(View.INVISIBLE);
                 }
+
                 photoView.setOnClickListener(v1 -> imageDialog.dismiss());
 
                 originPicture.setOnClickListener(new View.OnClickListener() {
@@ -678,96 +366,56 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     }
 
-    static class SendTextViewHolder extends RecyclerView.ViewHolder {
-        TextView time;
-        CircleImageView header;
-        TextView content;
-        ImageView fail;
-        ProgressBar progress;
-
-        public SendTextViewHolder(View itemView) {
-            super(itemView);
-            time = itemView.findViewById(R.id.item_tv_time);
-            header = itemView.findViewById(R.id.chat_item_header);
-            content = itemView.findViewById(R.id.chat_item_content_text);
-            fail = itemView.findViewById(R.id.chat_item_fail);
-            progress = itemView.findViewById(R.id.chat_item_progress);
-        }
-    }
-
-    static class ReceiveTextViewHolder extends RecyclerView.ViewHolder {
-        TextView time;
-        CircleImageView header;
+    static class TextViewHolder extends SendViewHolder {
         TextView content;
 
-        public ReceiveTextViewHolder(View itemView) {
+        public TextViewHolder(View itemView) {
             super(itemView);
-            time = itemView.findViewById(R.id.item_tv_time);
-            header = itemView.findViewById(R.id.chat_item_header);
             content = itemView.findViewById(R.id.chat_item_content_text);
         }
     }
 
-    static class SendVoiceViewHolder extends RecyclerView.ViewHolder {
-        TextView time;
-        CircleImageView header;
+    static class VoiceViewHolder extends SendViewHolder {
         TextView duration;
         RelativeLayout voice;
+        ImageView ivVoice;
+
+        public VoiceViewHolder(View itemView) {
+            super(itemView);
+            duration = itemView.findViewById(R.id.tvDuration);
+            voice = itemView.findViewById(R.id.rlVoice);
+            ivVoice = itemView.findViewById(R.id.ivVoice);
+        }
+    }
+
+    static class ImageViewHolder extends SendViewHolder {
+        BubbleImageView picture;
+
+        public ImageViewHolder(View itemView) {
+            super(itemView);
+            picture = itemView.findViewById(R.id.bivPic);
+        }
+    }
+
+    static class ChatViewHolder extends RecyclerView.ViewHolder {
+        TextView time;
+        CircleImageView header;
+
+        public ChatViewHolder(View itemView) {
+            super(itemView);
+            time = itemView.findViewById(R.id.item_tv_time);
+            header = itemView.findViewById(R.id.chat_item_header);
+        }
+    }
+
+    static class SendViewHolder extends ChatViewHolder {
         ImageView fail;
         ProgressBar progress;
 
-        public SendVoiceViewHolder(View itemView) {
+        public SendViewHolder(View itemView) {
             super(itemView);
-            time = itemView.findViewById(R.id.item_tv_time);
-            duration = itemView.findViewById(R.id.tvDuration);
-            voice = itemView.findViewById(R.id.rlVoice);
             fail = itemView.findViewById(R.id.chat_item_fail);
             progress = itemView.findViewById(R.id.chat_item_progress);
-        }
-    }
-
-    static class ReceiveVoiceViewHolder extends RecyclerView.ViewHolder {
-        TextView time;
-        CircleImageView header;
-        TextView duration;
-        RelativeLayout voice;
-
-        public ReceiveVoiceViewHolder(View itemView) {
-            super(itemView);
-            time = itemView.findViewById(R.id.item_tv_time);
-            header = itemView.findViewById(R.id.chat_item_header);
-            duration = itemView.findViewById(R.id.tvDuration);
-            voice = itemView.findViewById(R.id.rlVoice);
-        }
-    }
-
-    static class SendImageViewHolder extends RecyclerView.ViewHolder {
-        TextView time;
-        CircleImageView header;
-        BubbleImageView picture;
-        ImageView fail;
-        ProgressBar progress;
-
-        public SendImageViewHolder(View itemView) {
-            super(itemView);
-            time = itemView.findViewById(R.id.item_tv_time);
-            header = itemView.findViewById(R.id.chat_item_header);
-            picture = itemView.findViewById(R.id.bivPic);
-            fail = itemView.findViewById(R.id.chat_item_fail);
-            progress = itemView.findViewById(R.id.chat_item_progress);
-        }
-    }
-
-    static class ReceiveImageViewHolder extends RecyclerView.ViewHolder {
-        TextView time;
-        CircleImageView header;
-        BubbleImageView picture;
-
-        public ReceiveImageViewHolder(View itemView) {
-            super(itemView);
-            time = itemView.findViewById(R.id.item_tv_time);
-            header = itemView.findViewById(R.id.chat_item_header);
-            picture = itemView.findViewById(R.id.bivPic);
         }
     }
 
