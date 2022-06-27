@@ -1,23 +1,25 @@
 package com.example.imchat.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.AnimationDrawable;
-import android.media.MediaPlayer;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.imchat.R;
-import com.example.imchat.chat.view.ChatActivity;
 import com.example.imchat.util.AudioPlayManager;
 import com.example.imchat.util.GlideUtils;
 import com.example.imchat.util.IAudioPlayListener;
@@ -25,10 +27,14 @@ import com.example.imchat.util.LogUtil;
 import com.example.imchat.util.TimeFormat;
 import com.example.imchat.widget.BubbleImageView;
 import com.example.imchat.widget.CircleImageView;
+import com.example.imchat.widget.ImageDialog;
+import com.github.chrisbanes.photoview.PhotoView;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
+import cn.jpush.im.android.api.callback.DownloadCompletionCallback;
 import cn.jpush.im.android.api.content.ImageContent;
 import cn.jpush.im.android.api.content.TextContent;
 import cn.jpush.im.android.api.content.VoiceContent;
@@ -45,9 +51,17 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int SEND_IMAGE = R.layout.item_image_send;
     private static final int RECEIVE_IMAGE = R.layout.item_image_receive;
 
-    LinkedList<Message> mLinkedList = new LinkedList();
+    private LinkedList<Message> mLinkedList = new LinkedList();
 
-    Context mContext;
+    private Context mContext;
+
+    private int mWidth;
+    private int mHeight;
+
+    public void setWidthHeight(int mWidth, int mHeight) {
+        this.mWidth = mWidth;
+        this.mHeight = mHeight;
+    }
 
     public ChatAdapter(Context mContext) {
         this.mContext = mContext;
@@ -381,7 +395,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         //头像》》
 
-
         //语音内容
         VoiceContent voiceContent = (VoiceContent) message.getContent();
 
@@ -394,23 +407,17 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 AudioPlayManager.getInstance().startPlay(mContext, Uri.parse(voiceContent.getLocalPath()), new IAudioPlayListener() {
                     @Override
                     public void onStart(Uri var1) {
-                        //声音播放动画
-                        holder.ivVoice.setBackgroundResource(R.drawable.audio_animation_right_list);
-                        AnimationDrawable drawable = (AnimationDrawable) holder.ivVoice.getBackground();
-                        drawable.start();
 
                     }
 
                     @Override
                     public void onStop(Uri var1) {
-                        holder.ivVoice.setBackgroundResource(R.mipmap.voice_animation_list_right_3);
 
                     }
 
                     @Override
                     public void onComplete(Uri var1) {
 
-                        holder.ivVoice.setBackgroundResource(R.mipmap.voice_animation_list_right_3);
                     }
                 });
             }
@@ -476,7 +483,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         //语音内容
         VoiceContent voiceContent = (VoiceContent) message.getContent();
-        holder.ivVoice.setBackgroundResource(R.drawable.audio_animation_left_list);
 
         //设置语音播放
         holder.voice.setOnClickListener(new View.OnClickListener() {
@@ -484,28 +490,20 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             public void onClick(View v) {
                 //这里设置。。。
                 LogUtil.d("路径" + voiceContent.getLocalPath());
-
-
                 AudioPlayManager.getInstance().startPlay(mContext, Uri.parse(voiceContent.getLocalPath()), new IAudioPlayListener() {
                     @Override
                     public void onStart(Uri var1) {
-                        //声音播放动画
-                        holder.ivVoice.setBackgroundResource(R.drawable.voice_animation_left_list);
-                        AnimationDrawable drawable = (AnimationDrawable) holder.ivVoice.getBackground();
-                        drawable.start();
 
                     }
 
                     @Override
                     public void onStop(Uri var1) {
-                        holder.ivVoice.setBackgroundResource(R.mipmap.voice_animation_list_left_3);
 
                     }
 
                     @Override
                     public void onComplete(Uri var1) {
 
-                        holder.ivVoice.setBackgroundResource(R.mipmap.voice_animation_list_left_3);
                     }
                 });
             }
@@ -554,13 +552,25 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         ImageContent imageContent = (ImageContent) message.getContent();
 
         //设置缩略图
-        GlideUtils.loadChatImage(mContext,imageContent.getLocalThumbnailPath(),holder.picture);
+        GlideUtils.loadChatImage(mContext, imageContent.getLocalThumbnailPath(), holder.picture);
 
         //设置图片点击
         holder.picture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //这里设置。。。
+                ImageDialog imageDialog = new ImageDialog(mContext);
+                imageDialog.show();
+
+                View view = imageDialog.getView();
+                PhotoView photoView = view.findViewById(R.id.photo_view);
+                Button originPicture = view.findViewById(R.id.bt_originPicture);
+
+                photoView.setImageBitmap(BitmapFactory.decodeFile(imageContent.getLocalPath()));
+                originPicture.setVisibility(View.INVISIBLE);
+
+                photoView.setOnClickListener(v1 -> imageDialog.dismiss());
+
             }
         });
 
@@ -623,19 +633,50 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         ImageContent imageContent = (ImageContent) message.getContent();
 
         //设置缩略图
-        GlideUtils.loadChatImage(mContext,imageContent.getLocalThumbnailPath(),holder.picture);
+        GlideUtils.loadChatImage(mContext, imageContent.getLocalThumbnailPath(), holder.picture);
 
         //设置图片点击
         holder.picture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //这里设置。。。
+                ImageDialog imageDialog = new ImageDialog(mContext);
+                imageDialog.show();
+
+                View view = imageDialog.getView();
+                PhotoView photoView = view.findViewById(R.id.photo_view);
+                Button originPicture = view.findViewById(R.id.bt_originPicture);
+
+                if (imageContent.getLocalPath() == null) {
+                    photoView.setImageBitmap(BitmapFactory.decodeFile(imageContent.getLocalThumbnailPath()));
+                    originPicture.setVisibility(View.VISIBLE);
+                  } else {
+                    photoView.setImageBitmap(BitmapFactory.decodeFile(imageContent.getLocalPath()));
+                    originPicture.setVisibility(View.INVISIBLE);
+                }
+                photoView.setOnClickListener(v1 -> imageDialog.dismiss());
+
+                originPicture.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        imageContent.downloadOriginImage(message, new DownloadCompletionCallback() {
+                            @Override
+                            public void onComplete(int i, String s, File file) {
+                                LogUtil.d(s);
+                                if (i == 0) {
+                                    photoView.setImageBitmap(BitmapFactory.decodeFile(imageContent.getLocalPath()));
+                                    originPicture.setVisibility(View.INVISIBLE);
+                                } else {
+                                    Toast.makeText(mContext, "查看失败", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                });
             }
         });
 
     }
-
-
 
     static class SendTextViewHolder extends RecyclerView.ViewHolder {
         TextView time;
@@ -664,7 +705,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             time = itemView.findViewById(R.id.item_tv_time);
             header = itemView.findViewById(R.id.chat_item_header);
             content = itemView.findViewById(R.id.chat_item_content_text);
-
         }
     }
 
@@ -675,18 +715,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         RelativeLayout voice;
         ImageView fail;
         ProgressBar progress;
-        ImageView ivVoice;
 
         public SendVoiceViewHolder(View itemView) {
             super(itemView);
             time = itemView.findViewById(R.id.item_tv_time);
-            header = itemView.findViewById(R.id.chat_item_header);
             duration = itemView.findViewById(R.id.tvDuration);
             voice = itemView.findViewById(R.id.rlVoice);
             fail = itemView.findViewById(R.id.chat_item_fail);
             progress = itemView.findViewById(R.id.chat_item_progress);
-            ivVoice = itemView.findViewById(R.id.ivVoice);
-
         }
     }
 
@@ -695,7 +731,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         CircleImageView header;
         TextView duration;
         RelativeLayout voice;
-        ImageView ivVoice;
 
         public ReceiveVoiceViewHolder(View itemView) {
             super(itemView);
@@ -703,7 +738,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             header = itemView.findViewById(R.id.chat_item_header);
             duration = itemView.findViewById(R.id.tvDuration);
             voice = itemView.findViewById(R.id.rlVoice);
-            ivVoice = itemView.findViewById(R.id.ivVoice);
         }
     }
 
@@ -734,7 +768,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             time = itemView.findViewById(R.id.item_tv_time);
             header = itemView.findViewById(R.id.chat_item_header);
             picture = itemView.findViewById(R.id.bivPic);
-
         }
     }
 

@@ -80,5 +80,5 @@ dependencies {
     implementation 'com.github.promeg:tinypinyin-lexicons-android-cncity:2.0.3'
     //BaseQuickAdapter
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.46'
-
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 }
