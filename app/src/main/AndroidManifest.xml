@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.imchat">
+        xmlns:tools="http://schemas.android.com/tools"
+        package="com.example.imchat">
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-feature android:name="android.hardware.type.watch" />
 
     <uses-permission android:name="com.example.imchat.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -18,14 +21,38 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
     <application
-        android:name=".MyApplication"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.IMChat"
-        tools:replace="android:icon, android:theme">
+            android:name=".MyApplication"
+            android:allowBackup="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:supportsRtl="true"
+            android:theme="@style/Theme.IMChat"
+            tools:replace="android:icon, android:theme">
+        <uses-library
+                android:name="com.google.android.wearable"
+                android:required="true" />
+
+        <!--
+               Set to true if your app is Standalone, that is, it does not require the handheld
+               app to run.
+        -->
+        <meta-data
+                android:name="com.google.android.wearable.standalone"
+                android:value="true" />
+
+        <activity
+                android:name=".main.activity.NewFriends"
+                android:label="@string/title_activity_new_friends">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".main.activity.ApplyFriend"
+                android:label="@string/title_activity_apply_friend" />
         <activity android:name=".login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,19 +60,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".login.RegisterActivity"></activity>
+        <activity android:name=".login.RegisterActivity" />
         <activity
-            android:name=".chat.view.ChatActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"></activity>
-        <activity android:name=".main.activity.MainActivity">
-        </activity> <!-- Required SDK 核心功能 -->
+                android:name=".chat.view.ChatActivity"
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".main.activity.MainActivity" /> <!-- Required SDK 核心功能 -->
         <!-- 可配置android:process参数将PushService放在其他进程中 -->
         <!-- 如果JCore使用的是2.0.0及以上版本可移除本配置 -->
         <service
-            android:name="cn.jpush.android.service.PushService"
-            android:enabled="true"
-            android:exported="false">
+                android:name="cn.jpush.android.service.PushService"
+                android:enabled="true"
+                android:exported="false">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.REGISTER" />
                 <action android:name="cn.jpush.android.intent.REPORT" />
@@ -55,16 +81,16 @@
         </service> <!-- Since JCore2.0.0 Required SDK核心功能 -->
         <!-- 这个Service要继承JCommonService -->
         <service
-            android:name=".service.IMService"
-            android:process=":pushcore">
+                android:name=".service.IMService"
+                android:process=":pushcore">
             <intent-filter>
                 <action android:name="cn.jiguang.user.service.action" />
             </intent-filter>
         </service> <!-- Required SDK核心功能 -->
         <receiver
-            android:name="cn.jpush.android.service.PushReceiver"
-            android:enabled="true"
-            android:exported="false">
+                android:name="cn.jpush.android.service.PushReceiver"
+                android:enabled="true"
+                android:exported="false">
             <intent-filter android:priority="1000">
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
 
@@ -83,20 +109,20 @@
             </intent-filter>
         </receiver> <!-- Required SDK核心功能 -->
         <receiver
-            android:name="cn.jpush.android.service.AlarmReceiver"
-            android:exported="false" /> <!-- Required since JCore 1.1.7. SDK 核心功能 -->
+                android:name="cn.jpush.android.service.AlarmReceiver"
+                android:exported="false" /> <!-- Required since JCore 1.1.7. SDK 核心功能 -->
         <provider
-            android:name="cn.jpush.android.service.DataProvider"
-            android:authorities="com.example.imchat.DataProvider"
-            android:exported="false" /> <!-- Required since JMessage 2.7.0 SDK 核心功能 -->
+                android:name="cn.jpush.android.service.DataProvider"
+                android:authorities="com.example.imchat.DataProvider"
+                android:exported="false" /> <!-- Required since JMessage 2.7.0 SDK 核心功能 -->
         <provider
-            android:name="cn.jpush.im.android.helpers.ipc.IMProvider"
-            android:authorities="com.example.imchat.IMProvider"
-            android:exported="false" /> <!-- Required JMessage SDK核心功能 -->
+                android:name="cn.jpush.im.android.helpers.ipc.IMProvider"
+                android:authorities="com.example.imchat.IMProvider"
+                android:exported="false" /> <!-- Required JMessage SDK核心功能 -->
         <receiver
-            android:name="cn.jpush.im.android.helpers.IMReceiver"
-            android:enabled="true"
-            android:exported="false" />
+                android:name="cn.jpush.im.android.helpers.IMReceiver"
+                android:enabled="true"
+                android:exported="false" />
     </application>
 
 </manifest>
