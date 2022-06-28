@@ -13,22 +13,28 @@ import org.litepal.crud.DataSupport;
 public class User  extends DataSupport {
 
 
-	private String userName;
+	private String targetUserName;
 
+	private String myUserName;
 
-
-	//改造为存别人发来的邀请
-	public User(String userName) {
-		this.userName = userName;
+	public User(String targetUserName, String myUserName) {
+		this.targetUserName = targetUserName;
+		this.myUserName = myUserName;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getTargetUserName() {
+		return targetUserName;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setTargetUserName(String targetUserName) {
+		this.targetUserName = targetUserName;
 	}
 
+	public String getMyUserName() {
+		return myUserName;
+	}
 
+	public void setMyUserName(String myUserName) {
+		this.myUserName = myUserName;
+	}
 }

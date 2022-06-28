@@ -301,7 +301,7 @@ public class MainActivity extends BaseActivity {
     	if(event.getType()== ContactNotifyEvent.Type.invite_received){
 
     		//添加到本地数据库
-			DataBaseHelper.insertUser(new User(event.getFromUsername()));
+			DataBaseHelper.insertUser(new User(event.getFromUsername(),userName));
 
 			runOnUiThread(new Runnable() {
 				@Override public void run() {

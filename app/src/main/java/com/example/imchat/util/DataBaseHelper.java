@@ -25,16 +25,27 @@ public class DataBaseHelper {
 	 * example
 	 * @return
 	 */
-	public static void insertUser(User user){
-		user.save();
+	public static void insertUser(User user) {
+
+		//查重
+		if (DataSupport.where("myUserName = ? and targetUserName = ?",user.getMyUserName(),user.getTargetUserName()).find(User.class).isEmpty()){
+
+			user.save();
+		}
+
 	}
 
 	public static void deleteUser(User user){
 		user.delete();
 	}
 
-	public static List<User> getAllUser( ){
-		return DataSupport.findAll(User.class);
+	public static List<User> getAllUser(String userName){
+
+
+
+		List<User> users = DataSupport.where("myUserName = ?", userName).find(User.class);
+
+		return users;
 	}
 
 

@@ -47,6 +47,8 @@ public class NewFriendActivity extends AppCompatActivity {
                             public void gotResult(int i, String s, UserInfo userInfo) {
                                 if(i==0){
                                     newFriend.setVisibility(View.VISIBLE);
+                                    confirm.setText("申请");
+                                    confirm.setClickable(true);
 
                                     userInfo.getAvatarBitmap(new GetAvatarBitmapCallback() {
                                         @Override
@@ -62,7 +64,7 @@ public class NewFriendActivity extends AppCompatActivity {
                                                             header.setImageBitmap(bitmap);
 
                                                         }catch (Exception e){
-                                                            LogUtil.d("cnmmmmmmmmmm"+e);
+                                                            LogUtil.d("cnmmmmmmm"+e);
                                                         }
 
                                                     }
@@ -73,7 +75,8 @@ public class NewFriendActivity extends AppCompatActivity {
                                                 runOnUiThread(new Runnable() {
                                                     @Override public void run() {
                                                         //更改头像布局
-                                                        Toast.makeText(MyApplication.getContext(), "头像获取失败！", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(MyApplication.getContext(), "该用户没头像！", Toast.LENGTH_SHORT).show();
+                                                        header.setImageResource(R.mipmap.ic_head_default_right);
                                                     }
                                                 });
 
@@ -93,7 +96,7 @@ public class NewFriendActivity extends AppCompatActivity {
                                                         confirm.setText("已申请");
                                                         confirm.setClickable(false);
                                                     }else{
-                                                        Toast.makeText(MyApplication.getContext(), "发送失败！", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(MyApplication.getContext(), s, Toast.LENGTH_SHORT).show();
                                                     }
                                                 }
                                             });
