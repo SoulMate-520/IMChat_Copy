@@ -92,9 +92,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyRecycl
             @NonNull List<Object> payloads) {
         super.onBindViewHolder(holder, position, payloads);
 
-
         holder.iv_img.setImageBitmap(contactBeanList.get(position).getBitmap());
-
 
     }
 

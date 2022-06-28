@@ -63,6 +63,10 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 	private String mParam1;
 	private String mParam2;
 
+	public ContactPresenter getPresenter() {
+		return presenter;
+	}
+
 	public ContentFragment2() {
 		// Required empty public constructor
 	}
@@ -128,7 +132,7 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 
 	@Override
 	protected void initData() {
-		presenter = new ContactPresenter(this,this);
+		presenter = new ContactPresenter(this);
 
 	}
 

@@ -39,7 +39,7 @@ public class ContactFragment extends BaseFragment implements IContactsView, ICon
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter = new ContactPresenter(this,this);
+        presenter = new ContactPresenter(this);
         initData();
         initView();
     }
@@ -90,6 +90,5 @@ public class ContactFragment extends BaseFragment implements IContactsView, ICon
     @Override
     public void onResume() {
         super.onResume();
-        presenter.getContactsList();
     }
 }
