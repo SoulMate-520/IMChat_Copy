@@ -8,6 +8,7 @@ import com.example.imchat.chat.presenter.IChatPresenter;
 import com.example.imchat.chat.view.IChatView;
 import com.example.imchat.contact.model.IContactModel;
 import com.example.imchat.contact.view.IContactsView;
+import com.example.imchat.util.LogUtil;
 import com.example.imchat.util.getNameUtil;
 
 import java.util.ArrayList;

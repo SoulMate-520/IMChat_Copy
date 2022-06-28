@@ -2,6 +2,7 @@ package com.example.imchat.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,89 +38,92 @@ import cn.jpush.im.android.api.model.UserInfo;
  */
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyRecycleHolder> {
 
-    private List<ContactBean> contactBeanList;
-//    private Context mContext;
-    private String myUserName;
+	private List<ContactBean> contactBeanList;
+	//    private Context mContext;
+	private String myUserName;
 
-    public ContactAdapter(List<ContactBean> contactBeanList,String myUserName) {
-//        this.mContext = context;
-          this.contactBeanList = contactBeanList;
-          this.myUserName = myUserName;
-    }
+	public ContactAdapter(List<ContactBean> contactBeanList, String myUserName) {
+		//        this.mContext = context;
+		this.contactBeanList = contactBeanList;
+		this.myUserName = myUserName;
+	}
 
+	public ContactAdapter(List<ContactBean> contactBeanList) {
+		//        this.mContext = context;
+		this.contactBeanList = contactBeanList;
+	}
 
-    @NonNull
-    @Override
-    public ContactAdapter.MyRecycleHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_contacts, parent, false);
-        MyRecycleHolder holder = new MyRecycleHolder(view);
+	@NonNull @Override public ContactAdapter.MyRecycleHolder onCreateViewHolder(
+			@NonNull ViewGroup parent, int viewType) {
+		View view = LayoutInflater.from(parent.getContext())
+				.inflate(R.layout.item_contacts, parent, false);
+		MyRecycleHolder holder = new MyRecycleHolder(view);
 
-        return holder;
-    }
+		return holder;
+	}
 
-    @Override
-    public void onBindViewHolder(@NonNull ContactAdapter.MyRecycleHolder holder, int position) {
-        //若无数据源
-        if (contactBeanList == null || contactBeanList.size() == 0 || contactBeanList.size() <= position)
-            return;
-        ContactBean bean = contactBeanList.get(position);
-        if (bean != null) {
-            holder.tv_name.setText(bean.getNickName());
-        }
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: 2022/6/13 跳转逻辑
-
-                //获取聊天的对象账号
-
-                ContactBean contactBean = contactBeanList.get(position);
-                String userName = contactBean.getUserName();
-
-                Intent intent = new Intent(MyApplication.getContext(),ChatActivity.class);
-                intent.putExtra("targetUserName",userName);
-                intent.putExtra("myUserName",myUserName);
+	@Override public void onBindViewHolder(@NonNull ContactAdapter.MyRecycleHolder holder,
+			int position) {
+		//若无数据源
+		if (contactBeanList == null || contactBeanList.size() == 0
+				|| contactBeanList.size() <= position)
+			return;
+		ContactBean bean = contactBeanList.get(position);
+		if (bean != null) {
+			holder.tv_name.setText(bean.getNickName());
+		}
 
 
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                com.example.imchat.MyApplication.getContext().startActivity(intent);
-                //用不了
-//                ActivityUtil.actionStart(ChatActivity.class,userName,"userName");
+		holder.itemView.setOnClickListener(new View.OnClickListener() {
+			@Override public void onClick(View v) {
+				// TODO: 2022/6/13 跳转逻辑
 
+				//获取聊天的对象账号
 
-            }
-        });
-    }
+				ContactBean contactBean = contactBeanList.get(position);
+				String userName = contactBean.getUserName();
 
-    //更新消息
-    @Override public void onBindViewHolder(@NonNull MyRecycleHolder holder, int position,
-            @NonNull List<Object> payloads) {
-        super.onBindViewHolder(holder, position, payloads);
+				Intent intent = new Intent(MyApplication.getContext(), ChatActivity.class);
+				intent.putExtra("targetUserName", userName);
+				intent.putExtra("myUserName", myUserName);
 
-        holder.iv_img.setImageBitmap(contactBeanList.get(position).getBitmap());
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				com.example.imchat.MyApplication.getContext().startActivity(intent);
+				//用不了
+				//                ActivityUtil.actionStart(ChatActivity.class,userName,"userName");
 
-    }
+			}
+		});
+	}
 
-    @Override
-    public int getItemCount() {
-        return contactBeanList.size();
-    }
-//
-//    public void refreshList() {
-//        LitePal.deleteAll(ContactBean.class);
-//        LitePal.saveAll(contactBeanList);
-//    }
+	//更新消息
+	@Override public void onBindViewHolder(@NonNull MyRecycleHolder holder, int position,
+			@NonNull List<Object> payloads) {
+		super.onBindViewHolder(holder, position, payloads);
+		Bitmap bitmap = contactBeanList.get(position).getBitmap();
+		if (bitmap != null)
+			holder.iv_img.setImageBitmap(bitmap);
+		else
+			holder.iv_img.setImageResource(R.mipmap.ic_head_default_right);
 
-    public static class MyRecycleHolder extends RecyclerView.ViewHolder{
-        @BindView(R.id.tv_cont_name)
-        TextView tv_name;
-        @BindView(R.id.iv_cont_img)
-        ImageView iv_img;
+	}
 
-        public MyRecycleHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this,itemView);
-        }
-    }
+	@Override public int getItemCount() {
+		return contactBeanList.size();
+	}
+	//
+	//    public void refreshList() {
+	//        LitePal.deleteAll(ContactBean.class);
+	//        LitePal.saveAll(contactBeanList);
+	//    }
+
+	public static class MyRecycleHolder extends RecyclerView.ViewHolder {
+		@BindView(R.id.tv_cont_name) TextView tv_name;
+		@BindView(R.id.iv_cont_img) ImageView iv_img;
+
+		public MyRecycleHolder(View itemView) {
+			super(itemView);
+			ButterKnife.bind(this, itemView);
+		}
+	}
 }

@@ -28,6 +28,7 @@ public class ApplyFriendActivity extends AppCompatActivity {
 	List<User> list;
 	ApplyFriendAdapter applyFriendAdapter;
 	String userName;
+	RecyclerView recyclerView;
 
 	@Override protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -41,7 +42,7 @@ public class ApplyFriendActivity extends AppCompatActivity {
 
 		applyFriendAdapter = new ApplyFriendAdapter(userName);
 
-		RecyclerView recyclerView = findViewById(R.id.recyc);
+		recyclerView = findViewById(R.id.recyc);
 		recyclerView.setAdapter(applyFriendAdapter);
 
 		LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -64,19 +65,21 @@ public class ApplyFriendActivity extends AppCompatActivity {
 									//获取头像
 									userInfo.getAvatarBitmap(new GetAvatarBitmapCallback() {
 										@Override public void gotResult(int i, String s,
-                                                Bitmap bitmap) {
+												Bitmap bitmap) {
 
-                                            LogUtil.d("applyHead" + bitmap);
+											LogUtil.d("applyHead" + bitmap);
 
-                                            if (bitmap != null) {
+											if (bitmap != null) {
 
+												LogUtil.d(userInfos.indexOf(userInfo)+"d1");
+												LogUtil.d(finalJ+"d2");
+												LogUtil.d(applyFriendAdapter.getItemCount()+"d3");
+												applyFriendAdapter.notifyItemChanged(
+														userInfos.indexOf(userInfo), bitmap);
 
-                                                applyFriendAdapter
-                                                        .notifyItemChanged(userInfos.indexOf(userInfo), bitmap);
-
-                                            }
-                                        }
-                                    });
+											}
+										}
+									});
 
 								}
 							}
@@ -112,8 +115,8 @@ public class ApplyFriendActivity extends AppCompatActivity {
 
 	}
 
-    @Override public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
+	@Override public void onBackPressed() {
+		super.onBackPressed();
+		finish();
+	}
 }
