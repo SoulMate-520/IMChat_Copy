@@ -21,5 +21,6 @@ public interface IContactsView {
      * @param userList
      */
     void initEvents(List<ContactBean> userList);
+    void updateHead(int pos);
 
 }

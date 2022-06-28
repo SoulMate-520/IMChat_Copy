@@ -55,6 +55,8 @@ public class ChatPresenter implements IChatPresenter {
 				} else {
 					mChatView.sendFailed(index);
 				}
+				//更新一下
+				conversation = Conversation.createSingleConversation(userName);
 
 			}
 		});
@@ -93,14 +95,14 @@ public class ChatPresenter implements IChatPresenter {
 	@Override
 	public List<Message> getListMessage() {
 
-//		if(conversation==null){
-//			return null;
-//
-//		}else{
-//
-//		}
+		if(conversation==null){
+			return null;
 
-		return conversation.getAllMessage();
+		}else{
+			return conversation.getAllMessage();
+		}
+
+
 
 	}
 

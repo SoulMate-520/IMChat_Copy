@@ -1,6 +1,6 @@
 package com.example.imchat.bean;
 
-
+import android.graphics.Bitmap;
 
 /**
  * @author: yzy
@@ -12,6 +12,15 @@ public class ContactBean  {
     private String indexTag;
     private String nickName;
     private String userName;
+    private Bitmap bitmap;
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
+    }
 
     public String getIndexTag() {
         return indexTag;

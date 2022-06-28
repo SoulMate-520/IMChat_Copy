@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.imchat.MyApplication;
 import com.example.imchat.R;
+import com.example.imchat.util.LogUtil;
 import com.example.imchat.widget.CircleImageView;
 
 import java.util.ArrayList;
@@ -25,12 +26,9 @@ import cn.jpush.im.api.BasicCallback;
 public class ApplyFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<UserInfo> mUserInfoList=new ArrayList<>();
 
-    public void setData(List<UserInfo> userInfoList){
-        if(userInfoList.size()!=0) {
-            mUserInfoList.clear();
-            mUserInfoList.addAll(userInfoList);
-            notifyDataSetChanged();
-        }
+    public void addData(UserInfo userInfo){
+        mUserInfoList.add(userInfo);
+        notifyItemChanged(getItemCount()-1);
     }
 
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -44,8 +42,12 @@ public class ApplyFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         userInfo.getAvatarBitmap(new GetAvatarBitmapCallback() {
             @Override
             public void gotResult(int i, String s, Bitmap bitmap) {
+
+                LogUtil.d("获取头像："+s+"\n"+bitmap);
+
                 if (i == 0){
                     //更改头像布局
+                    
                     holder.header.setImageBitmap(bitmap);
                 }else {
                     Toast.makeText(MyApplication.getContext(), "头像获取失败！", Toast.LENGTH_SHORT).show();
@@ -63,13 +65,28 @@ public class ApplyFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                 holder.confirm.setText("已同意");
                                 holder.confirm.setClickable(false);
                             }else{
-                                Toast.makeText(MyApplication.getContext(), "同意失败！", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MyApplication.getContext(), s, Toast.LENGTH_SHORT).show();
+                                LogUtil.d(s);
                             }
                     }
                 });
             }
         });
     }
+
+    @Override public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position,
+            @NonNull List<Object> payloads ) {
+        super.onBindViewHolder(holder, position, payloads);
+
+
+        ApplyFriendViewHolder applyFriendViewHolder = (ApplyFriendViewHolder)holder;
+        for(Object o :payloads){
+            Bitmap bitmap = (Bitmap) o;
+            applyFriendViewHolder.header.setImageBitmap(bitmap);
+        }
+
+    }
+
 
     @Override
     public int getItemCount() {

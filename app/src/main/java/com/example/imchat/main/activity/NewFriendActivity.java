@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.imchat.MyApplication;
 import com.example.imchat.R;
 import com.example.imchat.bean.Constant;
+import com.example.imchat.util.LogUtil;
 import com.example.imchat.widget.CircleImageView;
 
 import cn.jpush.im.android.api.ContactManager;
@@ -31,7 +32,7 @@ public class NewFriendActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_friend);
         EditText editText = findViewById(R.id.et_userName);
         RelativeLayout newFriend=findViewById(R.id.rl_new_friend);
-        CircleImageView header=findViewById(R.id.iv_header);
+        CircleImageView header=findViewById(R.id.iv_new_friend_header);
         TextView name=findViewById(R.id.tv_name);
         TextView confirm=findViewById(R.id.tv_confirm);
 
@@ -50,11 +51,32 @@ public class NewFriendActivity extends AppCompatActivity {
                                     userInfo.getAvatarBitmap(new GetAvatarBitmapCallback() {
                                         @Override
                                         public void gotResult(int i, String s, Bitmap bitmap) {
+
+
+                                            LogUtil.d("获取头像："+s+"\n"+bitmap);
                                             if (i == 0){
-                                                //更改头像布局
-                                                header.setImageBitmap(bitmap);
+                                                runOnUiThread(new Runnable() {
+                                                    @Override public void run() {
+                                                        //更改头像布局
+                                                        try {
+                                                            header.setImageBitmap(bitmap);
+
+                                                        }catch (Exception e){
+                                                            LogUtil.d("cnmmmmmmmmmm"+e);
+                                                        }
+
+                                                    }
+                                                });
+
                                             }else {
-                                                Toast.makeText(MyApplication.getContext(), "头像获取失败！", Toast.LENGTH_SHORT).show();
+
+                                                runOnUiThread(new Runnable() {
+                                                    @Override public void run() {
+                                                        //更改头像布局
+                                                        Toast.makeText(MyApplication.getContext(), "头像获取失败！", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+
                                             }
                                         }
                                     });

@@ -13,11 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.imchat.MyApplication;
 import com.example.imchat.R;
 import com.example.imchat.bean.ContactBean;
 import com.example.imchat.chat.view.ChatActivity;
 import com.example.imchat.util.ActivityUtil;
-import com.example.imchat.util.MyApplication;
 
 import org.litepal.LitePal;
 
@@ -77,6 +77,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyRecycl
 
                 Intent intent = new Intent(MyApplication.getContext(),ChatActivity.class);
                 intent.putExtra("userName",userName);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 com.example.imchat.MyApplication.getContext().startActivity(intent);
                 //用不了
 //                ActivityUtil.actionStart(ChatActivity.class,userName,"userName");
@@ -86,11 +87,22 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyRecycl
         });
     }
 
+    //更新消息
+    @Override public void onBindViewHolder(@NonNull MyRecycleHolder holder, int position,
+            @NonNull List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+
+
+        holder.iv_img.setImageBitmap(contactBeanList.get(position).getBitmap());
+
+
+    }
+
     @Override
     public int getItemCount() {
         return contactBeanList.size();
     }
-
+//
 //    public void refreshList() {
 //        LitePal.deleteAll(ContactBean.class);
 //        LitePal.saveAll(contactBeanList);

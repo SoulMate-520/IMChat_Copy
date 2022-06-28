@@ -353,7 +353,10 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
             AudioPlayManager.getInstance().stopPlay();
 
             //设置所有消息已读
-           JMessageClient.getSingleConversation(userName).resetUnreadCount();
+            if(JMessageClient.getSingleConversation(userName)!=null){
+                JMessageClient.getSingleConversation(userName).resetUnreadCount();
+            }
+
 
             super.onBackPressed();
 

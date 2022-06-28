@@ -132,7 +132,7 @@ public class ContentFragment1 extends BaseFragment implements IConversationView 
 				String userName = userInfo.getUserName();
 
 				Intent intent = new Intent(MyApplication.getContext(),ChatActivity.class);
-				intent.putExtra("userName","123456");
+				intent.putExtra("userName",userName);
 
 				startActivity(intent);
 

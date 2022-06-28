@@ -114,10 +114,10 @@ public class MainActivity extends BaseActivity {
 
 
 
-		Intent intent1 = new Intent(getApplicationContext(),ChatActivity.class);
-		intent1.putExtra("userName","123456");
-
-		startActivity(intent1);
+//		Intent intent1 = new Intent(getApplicationContext(),ChatActivity.class);
+//		intent1.putExtra("userName","123456");
+//
+//		startActivity(intent1);
 
 
 
@@ -314,7 +314,7 @@ public class MainActivity extends BaseActivity {
     	if( event.getType()== ContactNotifyEvent.Type.invite_accepted ){
 			runOnUiThread(new Runnable() {
 				@Override public void run() {
-					contentFragment2.getPresenter().updateData();
+					contentFragment2.getPresenter().getContactsList();
 				}
 			});
 		}

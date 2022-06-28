@@ -67,6 +67,10 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 		// Required empty public constructor
 	}
 
+	public ContactPresenter getPresenter() {
+		return presenter;
+	}
+
 	/**
 	 * Use this factory method to create a new instance of
 	 * this fragment using the provided parameters.
@@ -124,7 +128,7 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 
 	@Override
 	protected void initData() {
-		presenter = new ContactPresenter(this);
+		presenter = new ContactPresenter(this,this);
 
 	}
 
@@ -146,6 +150,14 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 						return;
 					}
 				}
+			}
+		});
+	}
+
+	@Override public void updateHead(int pos) {
+		getActivity().runOnUiThread(new Runnable() {
+			@Override public void run() {
+				adapter.notifyItemChanged(pos,null);
 			}
 		});
 	}

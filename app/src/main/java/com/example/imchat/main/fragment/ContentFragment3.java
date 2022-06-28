@@ -268,4 +268,9 @@ public class ContentFragment3 extends BaseFragment {
         //更改账号布局
         userNameTV.setText(userName);
     }
+
+    @Override public void onResume() {
+        super.onResume();
+        initData();
+    }
 }
