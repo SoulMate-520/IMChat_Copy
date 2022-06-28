@@ -31,6 +31,7 @@ import com.example.imchat.R;
 import com.example.imchat.base.BaseFragment;
 import com.example.imchat.login.LoginActivity;
 import com.example.imchat.main.activity.MainActivity;
+import com.example.imchat.util.LogUtil;
 
 import java.io.File;
 
@@ -118,10 +119,16 @@ public class ContentFragment3 extends BaseFragment {
 
         //登出按钮点击事件
         exitTV.setOnClickListener(v -> {
-            getActivity().onBackPressed();
+//
+//
+//            getActivity().onBackPressed();
+
+
+            //关闭其他所有activity
+            Intent intent = new Intent(getActivity(), LoginActivity.class) .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+
         });
-//        Intent intent = new Intent(activity.getBaseContext(), LoginActivity.class);
-//        startActivity(intent);
 
         //修改密码点击事件
         updatePwdRL.setOnClickListener(v -> updatePwd());
@@ -166,7 +173,7 @@ public class ContentFragment3 extends BaseFragment {
             JMessageClient.updateUserAvatar(file, new BasicCallback() {
                 @Override
                 public void gotResult(int i, String s) {
-                    System.out.println(s);
+                    LogUtil.d("修改头像"+s);
                     if (i == 0) {
                         Toast.makeText(MyApplication.getContext(), "修改成功！", Toast.LENGTH_SHORT).show();
                         head.setImageBitmap(BitmapFactory.decodeFile(finalPath));

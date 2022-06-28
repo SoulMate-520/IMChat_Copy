@@ -63,8 +63,9 @@ public class RegisterActivity extends AppCompatActivity {
                         public void gotResult(int i, String s) {
                         }
                     });
+                    //关闭其他所有activity
                     //跳转页面
-                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); ;
                     intent.putExtra("userName", registerUserName);
                     startActivity(intent);
                 } else {

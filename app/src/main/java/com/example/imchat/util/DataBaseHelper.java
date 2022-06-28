@@ -35,8 +35,12 @@ public class DataBaseHelper {
 
 	}
 
-	public static void deleteUser(User user){
-		user.delete();
+	public static void deleteUser(String my,String target){
+
+		List<User> users = DataSupport.where("myUserName = ? and targetUserName = ?",my,target).find(User.class);
+		if(!users.isEmpty()){
+			users.get(0).delete();
+		}
 	}
 
 	public static List<User> getAllUser(String userName){

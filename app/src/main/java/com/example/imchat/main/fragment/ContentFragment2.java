@@ -29,6 +29,7 @@ import com.example.imchat.util.SortUtil;
 import com.example.imchat.util.contactUtil.CustomItemDecoration;
 import com.example.imchat.util.contactUtil.SideBar;
 
+import java.nio.channels.InterruptedByTimeoutException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -54,6 +55,8 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 	private ContactAdapter adapter;
 	private ContactPresenter presenter;
 
+	private String userName;
+
 	// TODO: Rename parameter arguments, choose names that match
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 	private static final String ARG_PARAM1 = "param1";
@@ -71,24 +74,18 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 		// Required empty public constructor
 	}
 
-	public ContactPresenter getPresenter() {
-		return presenter;
-	}
+
 
 	/**
 	 * Use this factory method to create a new instance of
 	 * this fragment using the provided parameters.
-	 *
-	 * @param param1 Parameter 1.
-	 * @param param2 Parameter 2.
 	 * @return A new instance of fragment ContentFragment2.
 	 */
 	// TODO: Rename and change types and number of parameters
-	public static ContentFragment2 newInstance(String param1, String param2) {
+	public static ContentFragment2 newInstance(String username) {
 		ContentFragment2 fragment = new ContentFragment2();
 		Bundle args = new Bundle();
-		args.putString(ARG_PARAM1, param1);
-		args.putString(ARG_PARAM2, param2);
+		args.putString("userName", username);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -96,8 +93,8 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			mParam1 = getArguments().getString(ARG_PARAM1);
-			mParam2 = getArguments().getString(ARG_PARAM2);
+			userName = getArguments().getString("userName");
+
 		}
 	}
 
@@ -119,20 +116,25 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 		mRecyclerView.addItemDecoration(decoration = new CustomItemDecoration(getContext()));
 		newFriend.setOnClickListener(new View.OnClickListener() {
 			@Override public void onClick(View v) {
+
 				startActivity(new Intent(getActivity(), NewFriendActivity.class));
 			}
 		});
 
 		applyFriend.setOnClickListener(new View.OnClickListener() {
 			@Override public void onClick(View v) {
-				startActivity(new Intent(getActivity(), ApplyFriendActivity.class));
+
+				Intent intent = new Intent(getActivity(), ApplyFriendActivity.class);
+				intent.putExtra("userName",userName);
+
+				startActivity(intent);
 			}
 		});
 	}
 
 	@Override
 	protected void initData() {
-		presenter = new ContactPresenter(this);
+		presenter = new ContactPresenter(this,this);
 
 	}
 

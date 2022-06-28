@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.imchat.MyApplication;
 import com.example.imchat.R;
+import com.example.imchat.util.DataBaseHelper;
 import com.example.imchat.util.LogUtil;
 import com.example.imchat.widget.CircleImageView;
 
@@ -24,13 +25,21 @@ import cn.jpush.im.android.api.model.UserInfo;
 import cn.jpush.im.api.BasicCallback;
 
 public class ApplyFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<UserInfo> mUserInfoList;
+    private List<UserInfo> mUserInfoList = new ArrayList<>();
+    private String userName;
 
-    public void setData(List<UserInfo> userInfoList){
-        if(userInfoList!=null) {
-            mUserInfoList = userInfoList;
-            notifyDataSetChanged();
-        }
+    public void addData(UserInfo userInfo){
+
+        LogUtil.d("setData"+userInfo);
+
+        mUserInfoList.add(userInfo);
+        notifyItemChanged(mUserInfoList.size()-1);
+
+
+    }
+
+    public ApplyFriendAdapter(String userName){
+        this.userName = userName;
     }
 
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -52,6 +61,10 @@ public class ApplyFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             if(i==0){
                                 holder.confirm.setText("已同意");
                                 holder.confirm.setClickable(false);
+
+                                //删除数据库
+                                DataBaseHelper.deleteUser(userName,userInfo.getUserName());
+
                             }else{
                                 Toast.makeText(MyApplication.getContext(), s, Toast.LENGTH_SHORT).show();
                                 LogUtil.d(s);

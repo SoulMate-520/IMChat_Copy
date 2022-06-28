@@ -66,6 +66,7 @@ public class MainActivity extends BaseActivity {
 
 
 
+
 	@Override public int getLayoutId() {
 		return R.layout.activity_main;
 	}
@@ -181,7 +182,7 @@ public class MainActivity extends BaseActivity {
 
 		//相关业务逻辑数据传入碎片
 		contentFragment1 = ContentFragment1.newInstance("","");
-		contentFragment2 = ContentFragment2.newInstance("","");
+		contentFragment2 = ContentFragment2.newInstance(userName);
 		contentFragment3 = ContentFragment3.newInstance("","");
 
 		fragmentList.add(contentFragment1);
@@ -401,6 +402,14 @@ public class MainActivity extends BaseActivity {
 //		}
 	}
 
+//回到桌面
 
+	@Override public void onBackPressed() {
+		Intent intent = new Intent();// 创建Intent对象
+		intent.setAction(Intent.ACTION_MAIN);// 设置Intent动作
+		intent.addCategory(Intent.CATEGORY_HOME);// 设置Intent种类
+		startActivity(intent);// 将Intent传递给Activity
 
 	}
+
+}

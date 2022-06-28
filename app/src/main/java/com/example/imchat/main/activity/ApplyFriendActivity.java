@@ -1,5 +1,6 @@
 package com.example.imchat.main.activity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
@@ -24,60 +25,95 @@ import cn.jpush.im.android.api.model.UserInfo;
 
 public class ApplyFriendActivity extends AppCompatActivity {
 
-    List<User> list;
-    ApplyFriendAdapter applyFriendAdapter;
+	List<User> list;
+	ApplyFriendAdapter applyFriendAdapter;
+	String userName;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_apply_friend);
+	@Override protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        List<UserInfo> userInfos=new ArrayList<>();
+		Intent intent = getIntent();
+		userName = intent.getStringExtra("userName");
 
-        applyFriendAdapter = new ApplyFriendAdapter();
+		setContentView(R.layout.activity_apply_friend);
 
-        RecyclerView recyclerView = findViewById(R.id.recyc);
-        recyclerView.setAdapter(applyFriendAdapter);
+		List<UserInfo> userInfos = new ArrayList<>();
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
+		applyFriendAdapter = new ApplyFriendAdapter(userName);
+
+		RecyclerView recyclerView = findViewById(R.id.recyc);
+		recyclerView.setAdapter(applyFriendAdapter);
+
+		LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+		recyclerView.setLayoutManager(linearLayoutManager);
+
+		list = DataBaseHelper.getAllUser(userName);
+		LogUtil.d(list + "");
+		if (!list.isEmpty()) {
+			for (int j = 0; j < list.size(); j++) {
+				User user = list.get(j);
+				int finalJ = j;
+				JMessageClient
+						.getUserInfo(user.getTargetUserName(), null, new GetUserInfoCallback() {
+							@Override public void gotResult(int i, String s, UserInfo userInfo) {
+								LogUtil.d(i + "");
+								if (i == 0) {
+									applyFriendAdapter.addData(userInfo);
+									userInfos.add(userInfo);
+
+									//获取头像
+									userInfo.getAvatarBitmap(new GetAvatarBitmapCallback() {
+										@Override public void gotResult(int i, String s,
+                                                Bitmap bitmap) {
+
+                                            LogUtil.d("applyHead" + bitmap);
+
+                                            if (bitmap != null) {
 
 
-        list = DataBaseHelper.getAllUser(user);
-        if (!list.isEmpty()) {
-            for (User user : list) {
-                JMessageClient.getUserInfo(user.getTargetUserName(), null, new GetUserInfoCallback() {
-                    @Override
-                    public void gotResult(int i, String s, UserInfo userInfo) {
-                        LogUtil.d(i + "");
-                        if (i == 0) {
-                            userInfos.add(userInfo);
-                        }
-                    }
-                });
-            }
-        }
+                                                applyFriendAdapter
+                                                        .notifyItemChanged(userInfos.indexOf(userInfo), bitmap);
 
-        userInfos.sort((o1, o2) -> o1.getUserName().compareTo(o2.getUserName()));
+                                            }
+                                        }
+                                    });
 
-        applyFriendAdapter.setData(userInfos);
+								}
+							}
+						});
+			}
+		}
 
-        for (int j=0;j<userInfos.size();j++){
-            UserInfo userInfo=userInfos.get(j);
-            int finalJ = j;
-            userInfo.getAvatarBitmap(new GetAvatarBitmapCallback() {
-                @Override
-                public void gotResult(int i, String s, Bitmap bitmap) {
-                    if(bitmap!=null){
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                applyFriendAdapter.notifyItemChanged(finalJ,bitmap);
-                            }
-                        });
-                    }
-                }
-            });
-        }
+		//        userInfos.sort((o1, o2) -> o1.getUserName().compareTo(o2.getUserName()));
+		//
+		//        applyFriendAdapter.setData(userInfos);
+
+		//        for (int j=0;j<userInfos.size();j++){
+		//            UserInfo userInfo=userInfos.get(j);
+		//            int finalJ = j;
+		//            userInfo.getAvatarBitmap(new GetAvatarBitmapCallback() {
+		//                @Override
+		//                public void gotResult(int i, String s, Bitmap bitmap) {
+		//
+		//                    LogUtil.d("applyHead"+bitmap);
+		//
+		//                    if(bitmap!=null){
+		//                        runOnUiThread(new Runnable() {
+		//                            @Override
+		//                            public void run() {
+		//                                applyFriendAdapter.notifyItemChanged(finalJ,bitmap);
+		//                            }
+		//                        });
+		//                    }
+		//                }
+		//            });
+		//        }
+		//
+
+	}
+
+    @Override public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

@@ -61,9 +61,13 @@ public class LoginActivity extends AppCompatActivity {
                     //登录成功
                     //判断密码正确与否
                     if (JMessageClient.isCurrentUserPasswordValid(loginPwd)) {
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class) .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); ;
                         intent.putExtra("userName", loginUserName);
                         startActivity(intent);
+
+//                        //关闭其他所有activity
+//                        Intent intent = new Intent(getActivity(), LoginActivity.class) .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                        startActivity(intent);
                     } else {
                         JMessageClient.logout();
                         Toast toast = Toast.makeText(MyApplication.getContext(), "密码错误，登录失败！", Toast.LENGTH_SHORT);
