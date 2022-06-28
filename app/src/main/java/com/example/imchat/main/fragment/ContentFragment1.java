@@ -47,6 +47,7 @@ public class ContentFragment1 extends BaseFragment implements IConversationView 
 
 	ConversationAdapter adapter;
 	ConversationPresenter presenter;
+	String myUserName;
 
 	public ConversationPresenter getPresenter() {
 		return presenter;
@@ -68,17 +69,15 @@ public class ContentFragment1 extends BaseFragment implements IConversationView 
 	/**
 	 * Use this factory method to create a new instance of
 	 * this fragment using the provided parameters.
-	 *
-	 * @param param1 Parameter 1.
-	 * @param param2 Parameter 2.
+
 	 * @return A new instance of fragment ContentFragment1.
 	 */
 	// TODO: Rename and change types and number of parameters
-	public static ContentFragment1 newInstance(String param1, String param2) {
+	public static ContentFragment1 newInstance(String param1) {
 		ContentFragment1 fragment = new ContentFragment1();
 		Bundle args = new Bundle();
-		args.putString(ARG_PARAM1, param1);
-		args.putString(ARG_PARAM2, param2);
+		args.putString("myUserName", param1);
+
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -86,8 +85,8 @@ public class ContentFragment1 extends BaseFragment implements IConversationView 
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			mParam1 = getArguments().getString(ARG_PARAM1);
-			mParam2 = getArguments().getString(ARG_PARAM2);
+			myUserName = getArguments().getString("myUserName");
+
 		}
 	}
 
@@ -132,7 +131,8 @@ public class ContentFragment1 extends BaseFragment implements IConversationView 
 				String userName = userInfo.getUserName();
 
 				Intent intent = new Intent(MyApplication.getContext(),ChatActivity.class);
-				intent.putExtra("userName",userName);
+				intent.putExtra("myUserName",myUserName);
+				intent.putExtra("targetUserName",userName);
 
 				startActivity(intent);
 

@@ -2,6 +2,7 @@ package com.example.imchat.chat.view;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.provider.MediaStore;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,8 +41,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.callback.GetAvatarBitmapCallback;
+import cn.jpush.im.android.api.callback.GetUserInfoCallback;
 import cn.jpush.im.android.api.event.MessageEvent;
 import cn.jpush.im.android.api.model.Message;
+import cn.jpush.im.android.api.model.UserInfo;
 import cn.jpush.im.api.BasicCallback;
 
 public class ChatActivity extends BaseActivity implements IChatView, SwipeRefreshLayout.OnRefreshListener {
@@ -82,11 +87,12 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
 
     private IChatPresenter mPresenter;
 
-    private ChatAdapter chatAdapter = new ChatAdapter(this);
+    private ChatAdapter chatAdapter;
 
     //需要传进来的参数
     //目标用户
-    private String userName ;
+    private String targetUserName ;
+    private String myUserName ;
 
     //会话聊天消息
     List<Message> messageList;
@@ -103,10 +109,11 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
 
         Intent intent = getIntent();
 
-		userName = intent.getStringExtra("userName");
+		myUserName = intent.getStringExtra("myUserName");
+        targetUserName = intent.getStringExtra("targetUserName");
 
         //目标user账号
-        mPresenter = new ChatPresenter(this, userName);
+        mPresenter = new ChatPresenter(this, targetUserName);
 
         initUI();
 
@@ -142,12 +149,19 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
 
 
         //标题
-        mTitle.setText(userName);
+        mTitle.setText(targetUserName);
+
+
+
+        chatAdapter = new ChatAdapter(this);
+
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRvChat.setLayoutManager(linearLayoutManager);
 
         messageList = mPresenter.getListMessage();
+
+        LogUtil.d(messageList.size()+"ccccccccccccccc");
 
         //初始化时最多加载15条消息
         if (messageList != null) {
@@ -167,7 +181,63 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
 
         mSwipeRefresh.setOnRefreshListener(this);
 
-        mRvChat.setAdapter(chatAdapter);
+
+
+        //获取头像
+        JMessageClient.getUserInfo(myUserName, new GetUserInfoCallback() {
+            @Override public void gotResult(int i, String s, UserInfo userInfo) {
+                if(i==0){
+                    userInfo.getAvatarBitmap(new GetAvatarBitmapCallback() {
+                        @Override public void gotResult(int i, String s, Bitmap bitmap) {
+                            chatAdapter.setRight(bitmap);
+
+                            JMessageClient.getUserInfo(targetUserName, new GetUserInfoCallback() {
+                                @Override public void gotResult(int i, String s,
+                                        UserInfo userInfo) {
+                                    if(i==0){
+                                        userInfo.getAvatarBitmap(new GetAvatarBitmapCallback() {
+                                            @Override public void gotResult(int i, String s,
+                                                    Bitmap bitmap) {
+                                                chatAdapter.setLeft(bitmap);
+                                                runOnUiThread(new Runnable() {
+                                                    @Override public void run() {
+                                                        mRvChat.setAdapter(chatAdapter);
+                                                    }
+                                                });
+
+                                            }
+                                        });
+                                    }else{
+                                        runOnUiThread(new Runnable() {
+                                            @Override public void run() {
+                                                mRvChat.setAdapter(chatAdapter);
+                                            }
+                                        });
+
+                                    }
+                                }
+                            });
+
+                        }
+                    });
+
+                }else{
+
+
+                    runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                            mRvChat.setAdapter(chatAdapter);
+                        }
+                    });
+
+                }
+            }
+        });
+
+
+
+
+
 
         //底部布局弹出,聊天列表上滑
         mRvChat.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
@@ -202,7 +272,7 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
             public void onClick(View v) {
 
                 //设置所有消息已读
-                JMessageClient.getSingleConversation(userName).resetUnreadCount();
+                JMessageClient.getSingleConversation(targetUserName).resetUnreadCount();
 
                 //结束
                 finish();
@@ -216,7 +286,7 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
                 String text = mEtContent.getText().toString();
                 mEtContent.setText("");
 
-                Message message = JMessageClient.createSingleTextMessage(userName, null, text);
+                Message message = JMessageClient.createSingleTextMessage(targetUserName, null, text);
 
 //                messageList.add(message);
                 chatAdapter.addDataLast(message);
@@ -243,7 +313,7 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
                     Message message = null;
 
                     try {
-                        message = JMessageClient.createSingleVoiceMessage(userName, null, file, duration);
+                        message = JMessageClient.createSingleVoiceMessage(targetUserName, null, file, duration);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -304,7 +374,7 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
                 Message message = null;
 
                 try {
-                    message = JMessageClient.createSingleImageMessage(userName, null, file);
+                    message = JMessageClient.createSingleImageMessage(targetUserName, null, file);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -353,8 +423,8 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
             AudioPlayManager.getInstance().stopPlay();
 
             //设置所有消息已读
-            if(JMessageClient.getSingleConversation(userName)!=null){
-                JMessageClient.getSingleConversation(userName).resetUnreadCount();
+            if(JMessageClient.getSingleConversation(targetUserName)!=null){
+                JMessageClient.getSingleConversation(targetUserName).resetUnreadCount();
             }
 
 
@@ -372,7 +442,7 @@ public class ChatActivity extends BaseActivity implements IChatView, SwipeRefres
     public void onEvent(MessageEvent event) {
 
         //判断是否当前会话
-        if (userName.equals(event.getMessage().getFromUser().getUserName())) {
+        if (targetUserName.equals(event.getMessage().getFromUser().getUserName())) {
 
             Message message = event.getMessage();
             //设置已读

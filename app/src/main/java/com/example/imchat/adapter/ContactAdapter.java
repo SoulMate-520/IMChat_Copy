@@ -39,10 +39,12 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyRecycl
 
     private List<ContactBean> contactBeanList;
 //    private Context mContext;
+    private String myUserName;
 
-    public ContactAdapter(List<ContactBean> contactBeanList) {
+    public ContactAdapter(List<ContactBean> contactBeanList,String myUserName) {
 //        this.mContext = context;
           this.contactBeanList = contactBeanList;
+          this.myUserName = myUserName;
     }
 
 
@@ -76,7 +78,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyRecycl
                 String userName = contactBean.getUserName();
 
                 Intent intent = new Intent(MyApplication.getContext(),ChatActivity.class);
-                intent.putExtra("userName",userName);
+                intent.putExtra("targetUserName",userName);
+                intent.putExtra("myUserName",myUserName);
+
+
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 com.example.imchat.MyApplication.getContext().startActivity(intent);
                 //用不了

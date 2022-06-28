@@ -140,7 +140,7 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 
 	@Override
 	public void setContactsList(List<ContactBean> userList) {
-		adapter = new ContactAdapter(userList);
+		adapter = new ContactAdapter(userList,userName);
 		mRecyclerView.setAdapter(adapter);
 	}
 

@@ -8,6 +8,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,7 +23,7 @@ import com.example.imchat.adapter.viewPageAdapter;
 import com.example.imchat.base.BaseActivity;
 import com.example.imchat.bean.User;
 import com.example.imchat.chat.view.ChatActivity;
-import com.example.imchat.contact.view.ContactFragment;
+//import com.example.imchat.contact.view.ContactFragment;
 import com.example.imchat.main.fragment.ContentFragment1;
 import com.example.imchat.main.fragment.ContentFragment2;
 import com.example.imchat.main.fragment.ContentFragment3;
@@ -181,7 +182,7 @@ public class MainActivity extends BaseActivity {
 		fragmentManager = getSupportFragmentManager();
 
 		//相关业务逻辑数据传入碎片
-		contentFragment1 = ContentFragment1.newInstance("","");
+		contentFragment1 = ContentFragment1.newInstance(userName);
 		contentFragment2 = ContentFragment2.newInstance(userName);
 		contentFragment3 = ContentFragment3.newInstance("","");
 
@@ -405,6 +406,8 @@ public class MainActivity extends BaseActivity {
 //回到桌面
 
 	@Override public void onBackPressed() {
+
+
 		Intent intent = new Intent();// 创建Intent对象
 		intent.setAction(Intent.ACTION_MAIN);// 设置Intent动作
 		intent.addCategory(Intent.CATEGORY_HOME);// 设置Intent种类

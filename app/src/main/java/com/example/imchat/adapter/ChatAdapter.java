@@ -1,6 +1,7 @@
 package com.example.imchat.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
@@ -53,8 +54,21 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
 
+    private Bitmap left;
+    private Bitmap right;
+
     public ChatAdapter(Context mContext) {
         this.mContext = mContext;
+
+
+    }
+
+    public void setLeft(Bitmap left) {
+        this.left = left;
+    }
+
+    public void setRight(Bitmap right) {
+        this.right = right;
     }
 
     //设置数据
@@ -227,6 +241,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         //头像》》
+        if(message.getDirect()==MessageDirect.receive){
+            holder.header.setImageBitmap(left);
+        }else{
+            holder.header.setImageBitmap(right);
+
+        }
     }
 
     private void onBindSendViewHolder(SendViewHolder holder, int position) {
