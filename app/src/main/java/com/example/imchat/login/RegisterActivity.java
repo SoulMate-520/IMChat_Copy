@@ -57,7 +57,13 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast toast = Toast.makeText(getContext(), "注册成功！", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
-                    //注册成功即登录,跳转页面
+                    //注册成功即登录
+                    JMessageClient.login(registerUserName, registerPwd, new BasicCallback() {
+                        @Override
+                        public void gotResult(int i, String s) {
+                        }
+                    });
+                    //跳转页面
                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                     intent.putExtra("userName", registerUserName);
                     startActivity(intent);
