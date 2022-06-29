@@ -57,6 +57,9 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 
 	private String userName;
 
+	@BindView(R.id.v_new)
+	View redPot ;
+
 	// TODO: Rename parameter arguments, choose names that match
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 	private static final String ARG_PARAM1 = "param1";
@@ -124,6 +127,8 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 		applyFriend.setOnClickListener(new View.OnClickListener() {
 			@Override public void onClick(View v) {
 
+				redPot.setVisibility(View.INVISIBLE);
+
 				Intent intent = new Intent(getActivity(), ApplyFriendActivity.class);
 				intent.putExtra("userName",userName);
 
@@ -180,5 +185,10 @@ public class ContentFragment2 extends BaseFragment implements IContactsView, ICo
 	public void onResume() {
 		super.onResume();
 		presenter.getContactsList();
+	}
+
+	//显示红点
+	public void showRed(){
+		redPot.setVisibility(View.VISIBLE);
 	}
 }

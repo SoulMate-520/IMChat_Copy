@@ -63,7 +63,7 @@ public class MainActivity extends BaseActivity {
 	private androidx.fragment.app.FragmentManager fragmentManager;
 
 
-	View view;
+
 
 
 
@@ -218,7 +218,7 @@ public class MainActivity extends BaseActivity {
 		bottomNavigationBar =  findViewById(R.id.bottom_navigation_bar);
 		mTitle = findViewById(R.id.tv_title);
 		mViewPager = findViewById(R.id.viewPager);
-		view = findViewById(R.id.v_new);
+
 	}
 
 	/**
@@ -307,7 +307,14 @@ public class MainActivity extends BaseActivity {
 
 			runOnUiThread(new Runnable() {
 				@Override public void run() {
-					view.setVisibility(View.VISIBLE);
+					LogUtil.d("收到邀请");
+					try {
+						//显示红点
+						contentFragment2.showRed();
+					}catch (Exception e){
+						LogUtil.d("收到邀请"+e);
+					}
+
 				}
 			});
 		}
